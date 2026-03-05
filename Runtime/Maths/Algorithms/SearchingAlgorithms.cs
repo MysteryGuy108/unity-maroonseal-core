@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace MaroonSeal {
+namespace MaroonSeal.Maths {
 
     static public class SearchingAlgorithms
     {
