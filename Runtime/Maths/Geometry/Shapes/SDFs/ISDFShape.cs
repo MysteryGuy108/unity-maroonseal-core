@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace MaroonSeal.Maths.SDFs {
+namespace MaroonSeal.Maths.Geometry.SDFs {
 
     #region 3D
     public interface ISDFShape {

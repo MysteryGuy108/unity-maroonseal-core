@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace MaroonSeal.Maths {
+namespace MaroonSeal.Maths.Geometry {
     [System.Serializable]
     public struct PointTransform2D : IPointTransform
     {

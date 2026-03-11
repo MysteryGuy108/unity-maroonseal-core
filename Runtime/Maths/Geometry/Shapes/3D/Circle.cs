@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace MaroonSeal.Maths.Shapes {
+namespace MaroonSeal.Maths.Geometry.Shapes {
     [System.Serializable]
     public struct Circle : IShape3D, IPolarShape
     {

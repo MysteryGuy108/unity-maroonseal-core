@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace MaroonSeal.Maths.Shapes {
+namespace MaroonSeal.Maths.Geometry.Shapes {
     public struct Line2D : IShape2D, IInterpolationShape
     {
         public Vector2 from;

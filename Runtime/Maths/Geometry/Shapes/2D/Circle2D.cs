@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-namespace MaroonSeal.Maths.Shapes {
+namespace MaroonSeal.Maths.Geometry.Shapes {
     [System.Serializable]
     public struct Circle2D : IShape2D, IPolarShape
     {

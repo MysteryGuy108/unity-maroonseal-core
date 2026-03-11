@@ -1,8 +1,8 @@
 using UnityEngine;
 
-using MaroonSeal.Maths.SDFs;
+using MaroonSeal.Maths.Geometry.SDFs;
 
-namespace MaroonSeal.Maths {
+namespace MaroonSeal.Maths.Geometry.Shapes {
     [System.Serializable]
     public struct Sphere : ISDFShape
     {

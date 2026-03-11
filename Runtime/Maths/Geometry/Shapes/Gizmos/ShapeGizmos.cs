@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace MaroonSeal.Maths.Shapes {
+namespace MaroonSeal.Maths.Geometry.Shapes {
     public static class ShapeGizmos
     {
         public static void DrawLine(Line _line, float _pointRadii = 0.03125f) {

@@ -8,36 +8,73 @@ namespace MaroonSeal
 {
     public interface IMonoBehaviourState : IState
     {
-        public void OnTransitionEnter();
+        public void TransitionEnter();
 
-        public IEnumerator EnterRoutine();
         public void LateUpdate();
         public void FixedUpdate();
 
+        public void TriggerEnter(Collider _collider);
+        public void TriggerExit(Collider _collider);
 
-        public void OnTriggerEnter(Collider _collider);
-        public void OnTriggerExit(Collider _collider);
-
-        public void OnCollisionEnter(Collision _collision);
-        public void OnCollisionExit(Collision _collision);
+        public void CollisionEnter(Collision _collision);
+        public void CollisionExit(Collision _collision);
     }
 
-    public class MonoBehaviourState : IMonoBehaviourState
+    abstract public class MonoBehaviourState : StateBase, IMonoBehaviourState
     {
-        virtual public void OnEnter() {}
-        virtual public void OnTransitionEnter() {}
-        virtual public IEnumerator EnterRoutine() => null;
+        #region IMonoBehaviourState
+        public void TransitionEnter()
+        {
+            if (!IsActive) { return; }
+            OnTransitionEnter();
+        }
 
-        virtual public void Update() {}
-        virtual public void LateUpdate() {}
-        virtual public void FixedUpdate() {}
+        public void LateUpdate()
+        {
+            if (!IsActive) { return; }
+            OnLateUpdate();
+        }
 
-        virtual public void OnExit() {}
+        public void FixedUpdate()
+        {
+            if (!IsActive) { return; }
+            OnFixedUpdate();
+        }
 
-        virtual public void OnTriggerEnter(Collider _collider) {}
-        virtual public void OnTriggerExit(Collider _collider) {}
+        public void TriggerEnter(Collider _collider)
+        {
+            if (!IsActive) { return; }
+            OnTriggerEnter(_collider);
+        }
 
-        virtual public void OnCollisionEnter(Collision _collision) {}
-        virtual public void OnCollisionExit(Collision _collision) {}
+        public void TriggerExit(Collider _collider)
+        {
+            if (!IsActive) { return; }
+            OnTriggerExit(_collider);
+        }
+
+        public void CollisionEnter(Collision _collision)
+        {
+            if (!IsActive) { return; }
+            OnCollisionEnter(_collision);
+        }
+
+        public void CollisionExit(Collision _collision)
+        {
+            if (!IsActive) { return; }
+            OnCollisionExit(_collision);
+        }
+        #endregion
+
+        virtual protected void OnTransitionEnter() {}
+
+        virtual protected void OnLateUpdate() {}
+        virtual protected void OnFixedUpdate() {}
+
+        virtual protected void OnTriggerEnter(Collider _collider) {}
+        virtual protected void OnTriggerExit(Collider _collider) {}
+
+        virtual protected void OnCollisionEnter(Collision _collision) {}
+        virtual protected void OnCollisionExit(Collision _collision) {}
     }
 }

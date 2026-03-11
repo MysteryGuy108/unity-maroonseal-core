@@ -1,8 +1,8 @@
 using UnityEngine;
 
-using MaroonSeal.Maths.SDFs;
+using MaroonSeal.Maths.Geometry.SDFs;
 
-namespace MaroonSeal.Maths.Shapes {
+namespace MaroonSeal.Maths.Geometry.Shapes {
     public struct Box : IShape3D, ISDFShape 
     {
         public PointTransform transform;

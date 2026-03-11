@@ -10,7 +10,7 @@ namespace MaroonSeal.Maths.DataStructures.Graphs.StateMachines
 
     public class Predicate : IPredicate
     {
-        Func<bool> func;
+        readonly Func<bool> func;
 
         public Predicate(Func<bool> _func) => func = _func;
         public bool Execute() => func.Invoke();

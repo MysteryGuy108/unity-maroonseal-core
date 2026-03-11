@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-using MaroonSeal.Maths.SDFs;
+using MaroonSeal.Maths.Geometry.SDFs;
 
-namespace MaroonSeal.Maths.Shapes {
+namespace MaroonSeal.Maths.Geometry.Shapes {
     [System.Serializable]
     public struct Box2D : IShape2D, ISDFShape
     {

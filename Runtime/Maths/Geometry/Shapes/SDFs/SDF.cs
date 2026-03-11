@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace MaroonSeal.Maths.SDFs {
+namespace MaroonSeal.Maths.Geometry.SDFs {
 
     public static class SDF {
         #region Operators

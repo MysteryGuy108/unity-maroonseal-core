@@ -8,11 +8,11 @@ namespace MaroonSeal.Maths.DataStructures.Graphs.StateMachines
         public void FixedUpdate() => current.Value?.FixedUpdate();
         public void LateUpdate() => current.Value?.LateUpdate();
 
-        public void OnTriggerEnter(Collider _collider) => current.Value?.OnTriggerEnter(_collider);
-        public void OnTriggerExit(Collider _collider) => current.Value?.OnTriggerExit(_collider);
+        public void TriggerEnter(Collider _collider) => current.Value?.TriggerEnter(_collider);
+        public void TriggerExit(Collider _collider) => current.Value?.TriggerExit(_collider);
 
-        public void OnCollisionEnter(Collision _collision) => current.Value?.OnCollisionEnter(_collision);
-        public void OnCollisionExit(Collision _collision) => current.Value?.OnCollisionExit(_collision);
+        public void CollisionEnter(Collision _collision) => current.Value?.CollisionEnter(_collision);
+        public void CollisionExit(Collision _collision) => current.Value?.CollisionExit(_collision);
         #endregion
     }
 

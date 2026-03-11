@@ -2,9 +2,9 @@ using System;
 
 using UnityEngine;
 
-using MaroonSeal.Maths.SDFs;
+using MaroonSeal.Maths.Geometry.SDFs;
 
-namespace MaroonSeal.Maths.Shapes {
+namespace MaroonSeal.Maths.Geometry.Shapes {
 
     [System.Serializable]
     public struct ConicSection : IShape3D, IPolarShape, ISDFShape

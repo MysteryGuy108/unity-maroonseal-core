@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace MaroonSeal.Maths.Shapes 
+namespace MaroonSeal.Maths.Geometry.Shapes 
 {
     public interface IPolarShape : IInterpolationShape
     {

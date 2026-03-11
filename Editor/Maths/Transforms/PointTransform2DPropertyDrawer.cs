@@ -4,7 +4,7 @@ using UnityEngine.UIElements;
 using UnityEditor;
 using UnityEditor.UIElements;
 
-using MaroonSeal.Maths;
+using MaroonSeal.Maths.Geometry;
 
 namespace MaroonSealEditor.Maths {
     [CustomPropertyDrawer(typeof(PointTransform2D))]

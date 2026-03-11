@@ -7,7 +7,7 @@ using MaroonSeal.Maths.DataStructures.Graphs.Generic;
 
 namespace MaroonSeal.Maths.DataStructures.Graphs.StateMachines
 {
-    abstract public class StateMachine<TState> : Graph<TState, StateTransition<TState>> where TState : IState
+    public class StateMachine<TState> : Graph<TState, Transition<TState>> where TState : IState
     {
         protected Node current;
         public TState CurrentState
@@ -45,8 +45,8 @@ namespace MaroonSeal.Maths.DataStructures.Graphs.StateMachines
             var previousState = current;
             var nextState = GetNode(_state);
 
-            previousState?.Value.OnExit();
-            nextState?.Value.OnEnter();
+            previousState?.Value.Exit();
+            nextState?.Value.Enter();
 
             current = nextState;
         }
@@ -55,7 +55,7 @@ namespace MaroonSeal.Maths.DataStructures.Graphs.StateMachines
         #endregion
 
         #region Transitions
-        StateTransition<TState> EvaluateTransitions()
+        Transition<TState> EvaluateTransitions()
         {
             foreach(var transition in current.Edges)
             {
@@ -65,7 +65,7 @@ namespace MaroonSeal.Maths.DataStructures.Graphs.StateMachines
             return null;
         }
 
-        public void AddTransition(TState _state, StateTransition<TState> _transition) => AddEdge(_state, _transition);
+        public void AddTransition(TState _state, Transition<TState> _transition) => AddEdge(_state, _transition);
         public void AddTransition(TState _from, TState _to, IPredicate _condition) => AddTransition(_from, new(_to, _condition));
         public void AddTransition(TState _from, TState _to, Func<bool> _condition) => AddTransition(_from, _to, new Predicate(_condition));
         #endregion

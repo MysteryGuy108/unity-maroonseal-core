@@ -2,5 +2,8 @@ using UnityEngine;
 
 namespace MaroonSeal
 {
-    public interface IInputContext {}
+    public interface IInputContext
+    {
+        
+    }
 }

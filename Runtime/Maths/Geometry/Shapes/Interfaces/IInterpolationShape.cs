@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace MaroonSeal.Maths.Shapes 
+namespace MaroonSeal.Maths.Geometry.Shapes 
 {
     public interface IInterpolationShape {
         public Vector3 EvaluatePositionAtTime(float _t);

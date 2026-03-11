@@ -12,6 +12,7 @@ using UnityEngine.InputSystem;
 namespace MaroonSealEditor.Inputs
 {
     [CustomEditor(typeof(InputHandler<>), true)]
+    [CanEditMultipleObjects]
     public class InputHandlerEditor : Editor
     {
         public override VisualElement CreateInspectorGUI()
@@ -23,8 +24,8 @@ namespace MaroonSealEditor.Inputs
             root.Q<PropertyField>("PropertyField:OnInputChanged").BringToFront();
 
             PropertyField currentInputField = root.Q<PropertyField>("PropertyField:currentInput");
-            currentInputField.BringToFront();
-            currentInputField.SetEnabled(false);
+            currentInputField?.BringToFront();
+            currentInputField?.SetEnabled(false);
 
             return root;
         }
