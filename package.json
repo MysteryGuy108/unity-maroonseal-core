@@ -20,5 +20,8 @@
     "name": "MaroonSeal",
     "email": "rory@maroonseal.com",
     "url": "https://www.maroonseal.com"
+  },
+  "dependencies": {
+    "com.unity.inputsystem": "1.14.2"
   }
 }

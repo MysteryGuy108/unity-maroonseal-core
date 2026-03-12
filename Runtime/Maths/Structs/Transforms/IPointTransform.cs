@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace MaroonSeal.Maths.Geometry {
+namespace MaroonSeal.Maths {
     public interface IPointTransform
     {
         public Matrix4x4 ToWorldMatrix { get; }

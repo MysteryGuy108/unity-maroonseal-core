@@ -11,7 +11,7 @@ namespace MaroonSeal.Maths.Geometry.Shapes
             return new Vector2(Mathf.Cos(_radians), Mathf.Sin(_radians)) * _radius;
         }
 
-        public static Vector2 GetCartesianPosition(IPointTransform _transform, float _radius, float _radians) {
+        public static Vector3 GetCartesianPosition(IPointTransform _transform, float _radius, float _radians) {
             return _transform.TransformPosition(ToCartesian(_radius, _radians));
         }
 

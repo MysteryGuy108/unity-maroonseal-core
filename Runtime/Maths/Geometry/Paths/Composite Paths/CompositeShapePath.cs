@@ -6,11 +6,11 @@ using MaroonSeal.Maths.Geometry.Paths.LUTs;
 
 namespace MaroonSeal.Maths.Geometry.Paths {
 
-    public interface ICompositePath : IShapePath {
+    public interface ICompositeShapePath : IShapePath {
         public int SegmentCount { get;}
     }
 
-    public class CompositePath<TPathSegment> : ShapePath, ICompositePath where TPathSegment : IShapePath 
+    public class CompositeShapePath<TPathSegment> : ShapePath, ICompositeShapePath where TPathSegment : IShapePath 
     {
         protected List<TPathSegment> segments;
         public int SegmentCount => segments == null ? 0 : segments.Count;
@@ -21,8 +21,8 @@ namespace MaroonSeal.Maths.Geometry.Paths {
         public override bool IsLoop => false;
 
         #region Constructors
-        public CompositePath() { segments = new(); }
-        ~CompositePath() { segments.Clear(); }
+        public CompositeShapePath() { segments = new(); }
+        ~CompositeShapePath() { segments.Clear(); }
         #endregion
 
         #region GeometryPath

@@ -10,7 +10,7 @@ namespace MaroonSeal.Maths.Geometry.Shapes {
 
         public Vector3 dimensions;
 
-        #region Constructors and
+        #region Constructors
         public Box(PointTransform _transform, Vector3 _dimensions) {
             transform = _transform;
             dimensions = _dimensions;

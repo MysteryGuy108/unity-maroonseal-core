@@ -5,12 +5,12 @@ using UnityEngine;
 
 namespace MaroonSeal.Maths.Geometry.Paths {
 
-    public interface IPointPath : ICompositePath{
+    public interface IPointPath : ICompositeShapePath{
         public int PointCount { get; }
     }
 
     [System.Serializable]
-    abstract public class PointPath<TPoint, TSegment> : CompositePath<TSegment>, IPointPath where TSegment : ShapePath, new() {
+    abstract public class PointPath<TPoint, TSegment> : CompositeShapePath<TSegment>, IPointPath where TSegment : ShapePath, new() {
         [SerializeField] private bool isLoop;
         public override bool IsLoop => isLoop;
 

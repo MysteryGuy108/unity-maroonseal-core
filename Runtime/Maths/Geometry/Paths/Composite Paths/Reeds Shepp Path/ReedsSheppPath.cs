@@ -15,7 +15,7 @@ namespace MaroonSeal.Maths.Geometry.Paths.ReedsShepp {
     /// Reeds Shepp vehicle with a fixed minimum turn radius. 
     /// </summary>
     [System.Serializable]
-    public class ReedsSheppPath : CompositePath<ShapePath>
+    public class ReedsSheppPath : CompositeShapePath<ShapePath>
     {
         override public bool IsLoop => false;
 

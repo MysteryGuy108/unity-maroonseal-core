@@ -4,9 +4,9 @@ using UnityEngine.UIElements;
 using UnityEditor;
 using UnityEditor.UIElements;
 
-using MaroonSeal.Maths.Geometry;
+using MaroonSeal.Maths;
 
-namespace MaroonSealEditor.Maths.Geometry {
+namespace MaroonSealEditor.Maths {
     [CustomPropertyDrawer(typeof(PointTransform))]
     public class PointTransformPropertyDrawer : PropertyDrawer
     {
