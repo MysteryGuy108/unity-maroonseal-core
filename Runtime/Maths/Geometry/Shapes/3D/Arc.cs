@@ -28,6 +28,13 @@ namespace MaroonSeal.Maths.Geometry.Shapes {
             this.startDegrees = _startDegrees;
             this.endDegrees = _endDegrees;
         }
+
+        public Arc(float _radius, float _startDegrees, float _endDegrees) {
+            this.transform = new(Vector3.zero);
+            this.radius = _radius;
+            this.startDegrees = _startDegrees;
+            this.endDegrees = _endDegrees;
+        }
         #endregion
 
         readonly public float GetLength() => Mathf.Abs(GetRadiansDelta() * radius);
