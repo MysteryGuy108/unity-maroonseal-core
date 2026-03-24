@@ -65,13 +65,11 @@ namespace MaroonSeal.Maths.DataStructures {
 
         public void Clear() { dictionary.Clear(); itemList.Clear(); }
 
-        public bool ContainsKey(TKey _key) { return dictionary.ContainsKey(_key); }
+        public bool ContainsKey(TKey _key) => dictionary.ContainsKey(_key);
 
-        public bool ContainsValue(TValue _value) { return dictionary.ContainsValue(_value); }
+        public bool ContainsValue(TValue _value) => dictionary.ContainsValue(_value);
 
-        public bool TryGetValue(TKey _key, out TValue _value) {
-            return dictionary.TryGetValue(_key, out _value);
-        }
+        public bool TryGetValue(TKey _key, out TValue _value) => dictionary.TryGetValue(_key, out _value);
 
         public bool Contains(KeyValuePair<TKey, TValue> item) {
             if (!dictionary.ContainsKey(item.Key)) { return false;}
@@ -82,9 +80,9 @@ namespace MaroonSeal.Maths.DataStructures {
             _array[_arrayIndex] = (KeyValuePair<TKey, TValue>)itemList[_arrayIndex];
         }
 
-        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() { return dictionary.GetEnumerator(); }
+        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() => dictionary.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         #endregion
 
         #region ISerializationCallbackReceiver

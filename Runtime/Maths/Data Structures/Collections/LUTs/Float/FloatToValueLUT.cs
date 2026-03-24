@@ -21,9 +21,9 @@ namespace MaroonSeal.Maths.DataStructures {
             return (GetValueAtIndex(indexes.Item1), GetValueAtIndex(indexes.Item2));
         }
 
-        public (TValue, TValue) SearchKeyForValues(float _key) { return SearchKeyForValues(_key, out float t); }
-        public TValue SearchFlooredKeyForValue(float _key) { return SearchKeyForValues(_key).Item1; }
-        public TValue SearchCeiledKeyForValue(float _key) { return SearchKeyForValues(_key).Item2; }
+        public (TValue, TValue) SearchKeyForValues(float _key) => SearchKeyForValues(_key, out float t);
+        public TValue SearchFlooredKeyForValue(float _key) =>  SearchKeyForValues(_key).Item1;
+        public TValue SearchCeiledKeyForValue(float _key) =>  SearchKeyForValues(_key).Item2; 
         public TValue SearchKeysForRoundedValue(float _key) {
             (TValue, TValue) values = SearchKeyForValues(_key, out float t);
             return t < 0.5f ? values.Item1 : values.Item2;
@@ -59,9 +59,7 @@ namespace MaroonSeal.Maths.DataStructures {
         #endregion
 
         #region ISerializableDictionary<,>
-        protected override void RefreshItemList()  {
-            SortByKeys();
-        }
+        protected override void RefreshItemList() => SortByKeys();
         #endregion
     }
 }
