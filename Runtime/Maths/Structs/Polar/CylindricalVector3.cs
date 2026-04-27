@@ -2,6 +2,9 @@ using System;
 using UnityEngine;
 
 namespace MaroonSeal.Maths {
+    /// <summary>
+    /// Struct used to represent a cylindrical polar coordinate.
+    /// </summary>
     [System.Serializable]
     public struct CylindricalVector3 : IEquatable<CylindricalVector3>
     {
@@ -58,25 +61,21 @@ namespace MaroonSeal.Maths {
         #endregion
 
         #region Operators
-        // +
         static public CylindricalVector3 operator +(CylindricalVector3 _a, CylindricalVector3 _b) => 
             new(_a.radius + _b.radius, _a.theta + _b.theta, _a.height + _b.height);
 
-        // -
         static public CylindricalVector3 operator -(CylindricalVector3 _a, CylindricalVector3 _b) => 
             new(_a.radius - _b.radius, _a.theta - _b.theta, _a.height - _b.height);
 
-        // *
         static public CylindricalVector3 operator *(CylindricalVector3 _a, float _b) => 
             new(_a.radius * _b, _a.theta * _b, _a.height * _b);
+
         static public CylindricalVector3 operator *(float _b, CylindricalVector3 _a) => 
             _a * _b;
 
-        // /
         static public CylindricalVector3 operator /(CylindricalVector3 _a, float _b) => 
             new(_a.radius / _b, _a.theta / _b, _a.height / _b);
 
-        // ==
         readonly public bool Equals(CylindricalVector3 _other) => 
             this.radius == _other.radius && this.theta == _other.theta;
         public override readonly bool Equals(object obj) => this.Equals((CylindricalVector3)obj);
@@ -91,7 +90,6 @@ namespace MaroonSeal.Maths {
     
         #region Methods
         readonly public Vector3 GetVector3AlongAxis(Vector3 _axis) => Quaternion.LookRotation(_axis, Vector3.up) * Vector3Forward;
-
         #endregion
     }
 }

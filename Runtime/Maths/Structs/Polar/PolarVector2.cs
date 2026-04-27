@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace MaroonSeal.Maths {
+    /// <summary>
+    /// Struct used to represent a 2D polar coordinate.
+    /// </summary>
     [System.Serializable]
     public struct PolarVector2 : IEquatable<PolarVector2>
     {
@@ -67,6 +70,12 @@ namespace MaroonSeal.Maths {
         #endregion
 
         #region Distances
+        /// <summary>
+        /// Calculates the distance between two polar coordinates as if they were cartesian
+        /// </summary>
+        /// <param name="_a"></param>
+        /// <param name="_b"></param>
+        /// <returns></returns>
         static public float CartesianDistance(PolarVector2 _a, PolarVector2 _b) => Vector2.Distance(_a.Vector2, _b.Vector2);
 
         static public float LinearRadialDistance(PolarVector2 _a, PolarVector2 _b) => _a.radius + _b.radius;
@@ -122,8 +131,6 @@ namespace MaroonSeal.Maths {
             return new PolarVector2(newRadius, newTheta);
         }
         #endregion
-
-
     }
 }
 

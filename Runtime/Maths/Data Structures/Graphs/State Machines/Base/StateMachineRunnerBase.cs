@@ -3,6 +3,11 @@ using UnityEngine;
 
 namespace MaroonSeal.Maths.DataStructures.Graphs.StateMachines
 {
+    /// <summary>
+    /// Component used to run state machines.
+    /// </summary>
+    /// <typeparam name="TState">The type of state machines to run. </typeparam>
+    /// <typeparam name="TStateMachine">The type of state machine to run. </typeparam>
     abstract public class StateMachineRunnerBase<TState, TStateMachine> : MonoBehaviour
         where TState : IState
         where TStateMachine : StateMachine<TState>, new()

@@ -1,8 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 
 namespace MaroonSeal.Maths.DataStructures.NodeGraphs.Traversal {
+    [Obsolete("Use Generic Graph Instead")]
     abstract public class NodeGraphDijkstraTraversal
     {
         public class DistanceTable {

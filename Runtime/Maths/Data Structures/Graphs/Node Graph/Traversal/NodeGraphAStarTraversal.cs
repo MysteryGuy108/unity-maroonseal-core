@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace MaroonSeal.Maths.DataStructures.NodeGraphs.Traversal {
+    [Obsolete("Use Generic Graph Instead")]
     public class DistanceTable {
         readonly public PriorityQueue<int> vertexQueue;
         readonly public HashSet<int> visitedVertices;
@@ -63,6 +64,7 @@ namespace MaroonSeal.Maths.DataStructures.NodeGraphs.Traversal {
         }
     }
     
+    [Obsolete("Use Generic Graph Instead")]
     static public class NodeGraphAStarTraversal
     {
         #region Traversal

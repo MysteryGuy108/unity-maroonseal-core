@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace MaroonSeal.Maths.DataStructures.NodeGraphs.Traversal {
+    [Obsolete("Use Generic Graph Instead")]
     static public class NodeGraphBreadthFirstTraversal {
 
         #region Path to Node that meets condition

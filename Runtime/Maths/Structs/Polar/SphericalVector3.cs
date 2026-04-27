@@ -2,6 +2,9 @@ using System;
 using UnityEngine;
 
 namespace MaroonSeal.Maths {
+    /// <summary>
+    /// Struct used to represent spherical polar coordinates.
+    /// </summary>
     [System.Serializable]
     public struct SphericalVector3 : IEquatable<SphericalVector3>
     {
@@ -49,26 +52,21 @@ namespace MaroonSeal.Maths {
         #endregion
 
         #region Operators
-        // +
         static public SphericalVector3 operator +(SphericalVector3 _a, SphericalVector3 _b) => 
             new(_a.radius + _b.radius, _a.theta + _b.theta, _a.phi + _b.phi);
 
-        // -
         static public SphericalVector3 operator -(SphericalVector3 _a, SphericalVector3 _b) => 
             new(_a.radius - _b.radius, _a.theta - _b.theta, _a.phi - _b.phi);
 
-        // *
         static public SphericalVector3 operator *(SphericalVector3 _a, float _b) => 
             new(_a.radius * _b, _a.theta * _b, _a.phi * _b);
 
         static public SphericalVector3 operator *(float _b, SphericalVector3 _a) => 
             _a * _b;
 
-        // /
         static public SphericalVector3 operator /(SphericalVector3 _a, float _b) => 
             new(_a.radius / _b, _a.theta / _b, _a.phi / _b);
 
-        // ==
         readonly public bool Equals(SphericalVector3 _other) => this.radius == _other.radius && this.theta == _other.theta;
         public override readonly bool Equals(object obj) => this.Equals((SphericalVector3)obj);
 

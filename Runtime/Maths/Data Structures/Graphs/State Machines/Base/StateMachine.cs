@@ -7,6 +7,11 @@ using MaroonSeal.Maths.DataStructures.Graphs.Generic;
 
 namespace MaroonSeal.Maths.DataStructures.Graphs.StateMachines
 {
+/// <summary>
+    /// A class used to define a state machine data structure where each state can be updated
+    /// at runtime.
+    /// </summary>
+    /// <typeparam name="TState">State to represent each node in the graph</typeparam>
     public class StateMachine<TState> : Graph<TState, Transition<TState>> where TState : IState
     {
         protected Node current;

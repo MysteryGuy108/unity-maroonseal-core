@@ -23,5 +23,12 @@
   },
   "dependencies": {
     "com.unity.inputsystem": "1.14.2"
-  }
+  },
+  "samples": [
+    {
+      "displayName": "Maroon Seal Splashscreen",
+      "description": "Example of how the routine player class can be used to make custom video sequences.",
+      "path": "Samples~/Splashscreen"
+    }
+  ]
 }

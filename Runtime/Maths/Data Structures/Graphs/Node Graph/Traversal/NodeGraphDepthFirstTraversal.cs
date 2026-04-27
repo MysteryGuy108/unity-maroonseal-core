@@ -5,6 +5,7 @@ using UnityEngine;
 
 
 namespace MaroonSeal.Maths.DataStructures.NodeGraphs.Traversal {
+    [Obsolete("Use Generic Graph Instead")]
     static public class NodeGraphDepthFirstTraversal
     {
         #region Path to Node that meets condition

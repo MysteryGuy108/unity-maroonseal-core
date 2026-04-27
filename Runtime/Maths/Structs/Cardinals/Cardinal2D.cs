@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace MaroonSeal.Maths {
+    /// <summary>
+    /// A struct used to represent a cardinal direction (North, South, East, West).
+    /// </summary>
     [System.Serializable]
     public struct Cardinal2D
     {
@@ -35,6 +38,37 @@ namespace MaroonSeal.Maths {
         public static Cardinal2D Left { get { return new Cardinal2D { cardinalDirection = CardinalIndex.West }; } }
         
         public static Cardinal2D[] Directions { get { return new Cardinal2D[4] { North, East, South, West }; } }
+        #endregion
+
+        #region Operators
+
+        public static Cardinal2D operator +(Cardinal2D x, Cardinal2D y) {
+            return new Cardinal2D { cardinalDirection = (CardinalIndex)(((int)x.cardinalDirection + (int)y.cardinalDirection) % 4) };
+        }
+
+        public static Cardinal2D operator +(Cardinal2D x, int y) {
+            return new Cardinal2D { cardinalDirection = (CardinalIndex)(((int)x.cardinalDirection + y )% 4) };
+        }
+
+        public static Cardinal2D operator -(Cardinal2D x, Cardinal2D y) {
+            return new Cardinal2D { cardinalDirection = (CardinalIndex)Mathf.Repeat((int)x.cardinalDirection + (int)y.cardinalDirection, 4) };
+        }
+
+        public static bool operator ==(Cardinal2D x, Cardinal2D y) {
+            return x.cardinalDirection == y.cardinalDirection;
+        }
+        
+        public static bool operator !=(Cardinal2D x, Cardinal2D y) {
+            return x.cardinalDirection != y.cardinalDirection;
+        }
+        readonly public override bool Equals(object obj) {
+            if (obj == null) { return false; }
+            if (obj is not Cardinal2D) { return false; }
+            return (Cardinal2D)obj == this;
+        }
+        readonly public override int GetHashCode() {
+            unchecked { return cardinalDirection.GetHashCode(); }
+        }
         #endregion
 
         #region Conversions
@@ -131,32 +165,5 @@ namespace MaroonSeal.Maths {
         public void Rotate(Cardinal2D _rotateAmount) { Rotate(_rotateAmount.Direction); }
         
 
-        public static Cardinal2D operator +(Cardinal2D x, Cardinal2D y) {
-            return new Cardinal2D { cardinalDirection = (CardinalIndex)(((int)x.cardinalDirection + (int)y.cardinalDirection) % 4) };
-        }
-
-        public static Cardinal2D operator +(Cardinal2D x, int y) {
-            return new Cardinal2D { cardinalDirection = (CardinalIndex)(((int)x.cardinalDirection + y )% 4) };
-        }
-
-        public static Cardinal2D operator -(Cardinal2D x, Cardinal2D y) {
-            return new Cardinal2D { cardinalDirection = (CardinalIndex)Mathf.Repeat((int)x.cardinalDirection + (int)y.cardinalDirection, 4) };
-        }
-
-        public static bool operator ==(Cardinal2D x, Cardinal2D y) {
-            return x.cardinalDirection == y.cardinalDirection;
-        }
-        
-        public static bool operator !=(Cardinal2D x, Cardinal2D y) {
-            return x.cardinalDirection != y.cardinalDirection;
-        }
-        readonly public override bool Equals(object obj) {
-            if (obj == null) { return false; }
-            if (obj is not Cardinal2D) { return false; }
-            return (Cardinal2D)obj == this;
-        }
-        readonly public override int GetHashCode() {
-            unchecked { return cardinalDirection.GetHashCode(); }
-        }
     }
 }

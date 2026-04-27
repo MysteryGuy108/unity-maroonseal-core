@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace MaroonSeal.Maths.DataStructures.Graphs.StateMachines
 {
+    /// <summary>
+    /// Base class for state machine states.
+    /// </summary>
     public abstract class StateBase : IState
     {
         [SerializeField][HideInInspector] private bool isActive;
@@ -27,10 +30,19 @@ namespace MaroonSeal.Maths.DataStructures.Graphs.StateMachines
         }
         #endregion
 
+        /// <summary>
+        /// Called upon state entered.
+        /// </summary>
         virtual protected  void OnEnter() {}
 
+        /// <summary>
+        /// Called upon state updated.
+        /// </summary>
         virtual protected void OnUpdate() {}
 
+        /// <summary>
+        /// Called upon state exit.
+        /// </summary>
         virtual protected void OnExit()  { }
     }
 }

@@ -2,6 +2,9 @@ using System;
 using UnityEngine;
 
 namespace MaroonSeal.Maths {
+    /// <summary>
+    /// A struct used to represent a transform at a point in 3D space.
+    /// </summary>
     [System.Serializable]
     public struct PointTransform : IPointTransform, IEquatable<PointTransform> {
         public Vector3 position;
@@ -129,41 +132,41 @@ namespace MaroonSeal.Maths {
         /// <summary>
         /// Transforms position from local space to world space.
         /// </summary>
-        /// <param name="_position"></param>
-        /// <returns></returns>
+        /// <param name="_position">Position in local space</param>
+        /// <returns>Position in world space</returns>
         readonly public Vector3 TransformPosition(Vector3 _position) => ToWorldMatrix.MultiplyPoint(_position);
         /// <summary>
         /// Transforms position from world space to local space.
         /// </summary>
-        /// <param name="_position"></param>
-        /// <returns></returns>
+        /// <param name="_position">Position in world space</param>
+        /// <returns>Position in local space</returns>
         readonly public Vector3 InverseTransformPosition(Vector3 _position) => ToLocalMatrix.MultiplyPoint(_position);
 
         /// <summary>
         /// Transforms vector from local space to world space.
         /// </summary>
-        /// <param name="_position"></param>
-        /// <returns></returns>
+        /// <param name="_vector">Vector in local space</param>
+        /// <returns>Vector in world space</returns>
         readonly public Vector3 TransformVector(Vector3 _vector) => ToWorldMatrix.MultiplyVector(_vector);
         
         /// <summary>
         /// Transforms vector from world space to local space.
         /// </summary>
-        /// <param name="_position"></param>
-        /// <returns></returns>
+        /// <param name="_vector">Vector in world space</param>
+        /// <returns>Vector in local space</returns>
         readonly public Vector3 InverseTransformVector(Vector3 _vector) => ToLocalMatrix.MultiplyVector(_vector);
 
         /// <summary>
         /// Transforms direction from local space to world space.
         /// </summary>
-        /// <param name="_position"></param>
-        /// <returns></returns>
+        /// <param name="_direction">Direction in local space</param>
+        /// <returns>Direction in world space</returns>
         readonly public Vector3 TransformDirection(Vector3 _direction) => TransformVector(_direction).normalized;
         /// <summary>
         /// Transforms direction from world space to local space.
         /// </summary>
-        /// <param name="_position"></param>
-        /// <returns></returns>
+        /// <param name="_direction">Direction in world space</param>
+        /// <returns>Direction in local space</returns>
         readonly public Vector3 InverseTransformDirection(Vector3 _direction) => InverseTransformVector(_direction).normalized;
         #endregion
 

@@ -1,10 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 
 using MaroonSeal.Maths.Geometry.Shapes;
 
 namespace MaroonSeal.Maths.DataStructures.NodeGraphs.Generators {
+    [Obsolete("Use Generic Graph Instead")]
     public class DelaunayTriangulatorGraphCalculator
     {
         static public NodeGraphWeighted<Vector2> CalculateGraph(List<Vector2> _points, float _pointsSquareBounds) {

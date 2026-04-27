@@ -2,6 +2,9 @@ using System;
 using UnityEngine;
 
 namespace MaroonSeal.Maths {
+    /// <summary>
+    /// A struct used to represent a transform at a point in 2D space.
+    /// </summary>
     [System.Serializable]
     public struct PointTransform2D : IPointTransform
     {
@@ -103,40 +106,41 @@ namespace MaroonSeal.Maths {
         /// <summary>
         /// Transforms position from local space to world space.
         /// </summary>
-        /// <param name="_position"></param>
-        /// <returns></returns>
+        /// <param name="_position">position in local space</param>
+        /// <returns>position in world space</returns>
         readonly public Vector2 TransformPosition(Vector2 _position) => ToWorldMatrix.MultiplyPoint(_position.ToXY());
         /// <summary>
         /// Transforms position from world space to local space.
         /// </summary>
-        /// <param name="_position"></param>
-        /// <returns></returns>
+        /// <param name="_position">position in world space</param>
+        /// <returns>position in local space</returns>
         readonly public Vector2 InverseTransformPosition(Vector2 _position) => ToLocalMatrix.MultiplyPoint(_position.ToXY());
 
         /// <summary>
         /// Transforms vector from local space to world space.
         /// </summary>
-        /// <param name="_position"></param>
-        /// <returns></returns>
+        /// <param name="_vector">Vector in local space</param>
+        /// <returns>Vector in world space</returns>
         readonly public Vector2 TransformVector(Vector2 _vector) => ToWorldMatrix.MultiplyVector(_vector.ToXY());
+
         /// <summary>
         /// Transforms vector from world space to local space.
         /// </summary>
-        /// <param name="_position"></param>
-        /// <returns></returns>
+        /// <param name="_vector">Vector in world space</param>
+        /// <returns>Vector in local space</returns>
         readonly public Vector2 InverseTransformVector(Vector2 _vector) => ToLocalMatrix.MultiplyVector(_vector.ToXY());
 
         /// <summary>
         /// Transforms direction from local space to world space.
         /// </summary>
-        /// <param name="_position"></param>
-        /// <returns></returns>
+        /// <param name="_direction">Direction in local space</param>
+        /// <returns>Direction in world space</returns>
         readonly public Vector2 TransformDirection(Vector2 _direction) => TransformVector(_direction.ToXY()).normalized;
         /// <summary>
         /// Transforms direction from world space to local space.
         /// </summary>
-        /// <param name="_position"></param>
-        /// <returns></returns>
+        /// <param name="_direction">Direction in world space</param>
+        /// <returns>Direction in local space</returns>
         readonly public Vector2 InverseTransformDirection(Vector2 _direction) => InverseTransformVector(_direction.ToXY()).normalized;
         #endregion
     }
