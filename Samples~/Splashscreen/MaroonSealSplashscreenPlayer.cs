@@ -32,8 +32,7 @@ namespace MaroonSeal.Routines
             videoRender.texture = videoPlayer.targetTexture;
             videoRender.color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
 
-            videoPlayer.Prepare();
-            videoPlayer.prepareCompleted += cntx => Play(PlaySplashscreen());
+            Play(PlaySplashscreen());
         }
         #endregion
 

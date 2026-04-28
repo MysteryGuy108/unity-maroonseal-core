@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Material_Splashscreen
+  m_Name: maroonseal_material_chromaKey
   m_Shader: {fileID: -6465566751694194690, guid: 7579cb78fe8061546a4eb91e955f41a5, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -46,7 +46,7 @@ Material:
     - _Fuzziness: 0.1
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Range: 0.1
+    - _Range: 0
     - _Theshold: 0.186
     m_Colors:
     - _ChromaKey: {r: 0.25882354, g: 0, b: 0, a: 1}
