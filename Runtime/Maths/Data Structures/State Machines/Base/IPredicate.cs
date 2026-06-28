@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace MaroonSeal.Maths.DataStructures.Graphs.StateMachines
+namespace MaroonSeal.Maths.DataStructures.StateMachines
 {
     public interface IPredicate
     {

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace MaroonSeal.Maths.DataStructures.Graphs.StateMachines
+namespace MaroonSeal.Maths.DataStructures.StateMachines
 {
     /// <summary>
     /// Interface for classes that are to be used as states in a state machine.

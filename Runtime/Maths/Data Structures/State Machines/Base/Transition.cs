@@ -1,9 +1,9 @@
 
 using UnityEngine;
 
-using MaroonSeal.Maths.DataStructures.Graphs.Generic;
+using MaroonSeal.Maths.DataStructures.Graphs;
 
-namespace MaroonSeal.Maths.DataStructures.Graphs.StateMachines
+namespace MaroonSeal.Maths.DataStructures.StateMachines
 {
     public class Transition<TState> : Edge<TState> where TState : IState
     {

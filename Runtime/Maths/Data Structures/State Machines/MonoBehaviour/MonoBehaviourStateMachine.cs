@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace MaroonSeal.Maths.DataStructures.Graphs.StateMachines
+namespace MaroonSeal.Maths.DataStructures.StateMachines
 {
     public class MonoBehaviourStateMachine<TState> : StateMachine<TState> where TState : IMonoBehaviourState
     {

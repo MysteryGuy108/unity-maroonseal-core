@@ -1,10 +1,8 @@
-
+using System.Collections;
 using UnityEngine;
 
-using MaroonSeal.Maths.DataStructures.Graphs.StateMachines;
-using System.Collections;
 
-namespace MaroonSeal
+namespace MaroonSeal.Maths.DataStructures.StateMachines
 {
     public interface IMonoBehaviourState : IState
     {

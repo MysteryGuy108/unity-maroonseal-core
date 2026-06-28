@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-using MaroonSeal.Maths.DataStructures.Graphs.Generic;
+using MaroonSeal.Maths.DataStructures.Graphs;
 
-namespace MaroonSeal.Maths.DataStructures.Graphs.StateMachines
+namespace MaroonSeal.Maths.DataStructures.StateMachines
 {
 /// <summary>
     /// A class used to define a state machine data structure where each state can be updated

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 
-using MaroonSeal.Maths.DataStructures.Graphs.StateMachines;
+using MaroonSeal.Maths.DataStructures.StateMachines;
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;
 

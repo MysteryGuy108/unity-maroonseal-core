@@ -1,9 +1,9 @@
 using System;
 using UnityEngine;
 
-namespace MaroonSeal.Maths.DataStructures.Graphs.StateMachines
+namespace MaroonSeal.Maths.DataStructures.StateMachines
 {
-    abstract public class MonoBehaviourStateMachineRunnerBase<TState, TStateMachine> : StateMachineRunnerBase<TState, TStateMachine> 
+    abstract public class StateMachineRunner<TState, TStateMachine> : StateMachineRunnerBase<TState, TStateMachine> 
         where TState : IMonoBehaviourState
         where TStateMachine : MonoBehaviourStateMachine<TState>, new()
     {
@@ -17,11 +17,9 @@ namespace MaroonSeal.Maths.DataStructures.Graphs.StateMachines
         virtual protected  void OnCollisionEnter(Collision _collision) => stateMachine.CollisionEnter(_collision);
         virtual protected  void OnCollisionExit(Collision _collision) => stateMachine.CollisionExit(_collision);
         #endregion
-
-
     }
 
-    abstract public class MonoBehaviourStateMachineRunnerBase : MonoBehaviourStateMachineRunnerBase<IMonoBehaviourState, MonoBehaviourStateMachine>
+    abstract public class StateMachineRunner : StateMachineRunner<IMonoBehaviourState, MonoBehaviourStateMachine>
     {
         
     }

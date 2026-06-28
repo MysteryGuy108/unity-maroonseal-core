@@ -13,10 +13,10 @@ namespace MaroonSealTesting.Maths.Cardinal
         #region Constructors
         [Test]
         public void Constructor_NoParametres_EqualsNorth() {
-            var cardinal = new Cardinal2D();
+            var cardinal = new MaroonSeal.Maths.Cardinal8();
 
-            Assert.AreEqual(Cardinal2D.CardinalIndex.North, cardinal.Direction);
-            Assert.AreEqual(Cardinal2D.North, cardinal);
+            Assert.AreEqual(MaroonSeal.Maths.Cardinal8.Direction.N, cardinal.direction);
+            Assert.AreEqual(MaroonSeal.Maths.Cardinal8.N, cardinal);
         }
         #endregion
     }

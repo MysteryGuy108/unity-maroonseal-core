@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace MaroonSeal.Maths.DataStructures.Graphs.Generic
+namespace MaroonSeal.Maths.DataStructures.Graphs
 {
     /// <summary>
     /// A class used to define a graph edge to be used in the Graph class.

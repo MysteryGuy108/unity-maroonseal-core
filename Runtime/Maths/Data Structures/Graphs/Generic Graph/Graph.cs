@@ -2,14 +2,14 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace MaroonSeal.Maths.DataStructures.Graphs.Generic
+namespace MaroonSeal.Maths.DataStructures.Graphs
 {
     /// <summary>
     /// A class used to define a simple generic graph data structure.
     /// </summary>
     /// <typeparam name="TValue"> The value to be stored in each node. </typeparam>
     /// <typeparam name="TEdge"> The type of edge used to connect each node. </typeparam>
-    public class Graph<TValue, TEdge> : IEnumerable where TEdge : Edge<TValue>
+    abstract public class Graph<TValue, TEdge> : IEnumerable where TEdge : Edge<TValue>
     {
         Dictionary<TValue, Node> valueToNodeLUT;
 
@@ -103,6 +103,13 @@ namespace MaroonSeal.Maths.DataStructures.Graphs.Generic
         {
             if (!valueToNodeLUT.ContainsKey(_nodeValue)) { return null; }
             return valueToNodeLUT[_nodeValue].Edges.ToList();
+        }
+        
+        public TEdge GetEdge(TValue _from, TValue _to)
+        {
+            Node node = GetNode(_from);
+            if (node == null) { return null; }
+            return node.FindEdge(_to);
         }
 
         public List<TEdge> GetAllEdges()
@@ -200,7 +207,7 @@ namespace MaroonSeal.Maths.DataStructures.Graphs.Generic
         #endregion
     }
 
-    public class GenericGraph<TValue> : Graph<TValue, Edge<TValue>>
+    public class Graph<TValue> : Graph<TValue, Edge<TValue>>
     {
         public void AddEdge(TValue _value, TValue _next)
         {

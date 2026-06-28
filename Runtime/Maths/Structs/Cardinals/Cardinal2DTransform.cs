@@ -6,13 +6,24 @@ namespace MaroonSeal.Maths {
     public class Cardinal2DTransform : MonoBehaviour
     {
         [Header("Cardinal Transform")]
-        [SerializeField] protected Cardinal2D transformDirection;
-        virtual public Cardinal2D Direction {
-            get { return transformDirection; }
+        [SerializeField] protected Cardinal8 cardinalDirection;
+        virtual public Cardinal8 Direction {
+            get => cardinalDirection; 
             set {
-                transformDirection = value;
-                this.transform.rotation = transformDirection.Rotation;
+                cardinalDirection = value;
+                this.transform.rotation = cardinalDirection.ToRotation();
             }
         }
+
+        #region MonoBehaviour
+        private void Awake() => Direction = cardinalDirection;
+
+        #if UNITY_EDITOR
+        private void OnValidate()
+        {
+            Direction = cardinalDirection;
+        }
+        #endif
+        #endregion
     }
 }
