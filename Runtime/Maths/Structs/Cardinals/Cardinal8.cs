@@ -10,19 +10,20 @@ namespace MaroonSeal.Maths {
     [System.Serializable]
     public struct Cardinal8 : ICardinal
     {
-        public static readonly int Count = 8;
+        readonly public int DirectionCount => 8;
 
         public enum Direction { N, NE, E, SE, S, SW, W, NW }
         public Direction direction;
+        
         readonly public int Index {  get { return (int)direction; } }
         readonly public float Theta => Index * 45.0f;
         
         #region Constructors
         public Cardinal8(Direction _dir) { direction = _dir; }
 
-        public Cardinal8(int _index) { direction = (Direction)(_index % Count); }
-        public Cardinal8(float _theta) { direction = (Direction)ICardinal.FromThetaToIndex(_theta, Count); }
-        public Cardinal8(Vector2 _vector) { direction = (Direction)ICardinal.FromVectorToIndex(_vector, Count); }
+        public Cardinal8(int _index) { direction = Direction.N; direction = (Direction)(_index % DirectionCount); }
+        public Cardinal8(float _theta) { direction = Direction.N; direction = (Direction)ICardinal.FromThetaToIndex(_theta, DirectionCount); }
+        public Cardinal8(Vector2 _vector) { direction = Direction.N; direction = (Direction)ICardinal.FromVectorToIndex(_vector, DirectionCount); }
         #endregion
 
         #region Casting
@@ -58,9 +59,9 @@ namespace MaroonSeal.Maths {
         #endregion
 
         #region Rotation
-        readonly private int GetRotatedIndex(int _rotateAmount) => (int)Mathf.Repeat(Index + _rotateAmount, Count);
+        readonly private int GetRotatedIndex(int _rotateAmount) => (int)Mathf.Repeat(Index + _rotateAmount, DirectionCount);
 
-        public void Rotate(int _rotateAmount) { direction = (Direction)Mathf.Repeat(Index + _rotateAmount, Count); }
+        public void Rotate(int _rotateAmount) { direction = (Direction)Mathf.Repeat(Index + _rotateAmount, DirectionCount); }
         public void Rotate(Direction _rotateAmount) { Rotate((int)_rotateAmount); }
         public void Rotate(Cardinal8 _rotateAmount) { Rotate(_rotateAmount.direction); }
 

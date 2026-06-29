@@ -8,7 +8,7 @@ using MaroonSeal.Maths;
 
 namespace MaroonSealTesting.Maths.Cardinal
 {
-    public class Cardinal2DTests
+    public class Cardinal8Tests
     {
         #region Constructors
         [Test]

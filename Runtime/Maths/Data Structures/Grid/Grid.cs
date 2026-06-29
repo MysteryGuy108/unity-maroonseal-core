@@ -15,7 +15,7 @@ namespace MaroonSeal.Maths.DataStructures.Grid
         private class Cell
         {
             TValue value;
-            CardinalArray<TEdge> edges;
+            Cardinal8Array<TEdge> edges;
         }
 
         #region Constructor/Destructor

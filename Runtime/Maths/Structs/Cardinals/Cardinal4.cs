@@ -2,22 +2,23 @@ using UnityEngine;
 
 namespace MaroonSeal.Maths
 {
+    [System.Serializable]
     public struct Cardinal4 : ICardinal
     {
-        public static readonly int Count = 4;
+        readonly public int DirectionCount => 4;
 
         public enum Direction { North, East, South, West }
         public Direction direction;
         
-        readonly public int Index {  get { return (int)direction; } }
+        readonly public int Index => (int)direction;
         readonly public float Theta => Index * 90.0f;
 
         #region Constructors
         public Cardinal4(Direction _dir) { direction = _dir; }
 
-        public Cardinal4(int _index) { direction = (Direction)(_index % Count); }
-        public Cardinal4(float _theta) { direction = (Direction)ICardinal.FromThetaToIndex(_theta, Count); }
-        public Cardinal4(Vector2 _vector) { direction = (Direction)ICardinal.FromVectorToIndex(_vector, Count); }
+        public Cardinal4(int _index) { direction = Direction.North; direction = (Direction)(_index % DirectionCount); }
+        public Cardinal4(float _theta) { direction = Direction.North; direction = (Direction)ICardinal.FromThetaToIndex(_theta, DirectionCount); }
+        public Cardinal4(Vector2 _vector) { direction = Direction.North; direction = (Direction)ICardinal.FromVectorToIndex(_vector, DirectionCount); }
         #endregion
 
         #region Casting
@@ -29,8 +30,6 @@ namespace MaroonSeal.Maths
         public static Cardinal4 East { get { return new Cardinal4 { direction = Direction.East }; } }
         public static Cardinal4 South { get { return new Cardinal4 { direction = Direction.South }; } }
         public static Cardinal4 West { get { return new Cardinal4 { direction = Direction.West }; } }
-        
-        public static Cardinal4[] Directions { get { return new Cardinal4[4] { North, East, South, West }; } }
         #endregion
 
         #region Operators
@@ -48,7 +47,7 @@ namespace MaroonSeal.Maths
         #endregion
         
         #region Rotation
-        readonly private int GetRotatedIndex(int _rotateAmount) => (int)Mathf.Repeat(Index + _rotateAmount, Count);
+        readonly private int GetRotatedIndex(int _rotateAmount) => (int)Mathf.Repeat(Index + _rotateAmount, DirectionCount);
 
         public void Rotate(int _rotateAmount) => direction = (Direction)GetRotatedIndex(_rotateAmount);
         public void Rotate(Direction _rotateAmount) => Rotate((int)_rotateAmount);
@@ -59,7 +58,7 @@ namespace MaroonSeal.Maths
         readonly public Cardinal4 GetRotated(Direction _direction) => GetRotated((int)_direction);
         readonly public Cardinal4 GetRotated(Cardinal4 _cardinal) => GetRotated(_cardinal.direction);
 
-        readonly public Cardinal4 Opposite => new((Direction)GetRotatedIndex(2));
+        readonly public Cardinal4 Opposite => new((Direction)GetRotatedIndex(DirectionCount/2));
         readonly public Cardinal4 Clockwise  => new((Direction)GetRotatedIndex(1));
         readonly public Cardinal4 Anticlockwise => new((Direction)GetRotatedIndex(-1));
         #endregion

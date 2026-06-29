@@ -4,6 +4,7 @@ namespace MaroonSeal.Maths
 {
     public interface ICardinal
     {
+        public int DirectionCount { get; }
         public int Index { get; }
         public float Theta { get; }
         
