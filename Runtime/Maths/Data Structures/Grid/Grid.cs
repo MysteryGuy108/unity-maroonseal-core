@@ -8,25 +8,19 @@ namespace MaroonSeal.Maths.DataStructures.Grid
     /// </summary>
     /// <typeparam name="TValue"></typeparam>
     /// <typeparam name="TEdge"></typeparam>
-    abstract public class GridBase<TValue, TEdge>
+    abstract public class GridBase<TCell, TValue, TEdge> where TCell : CellBase<TValue, TEdge>
     {
-        Cell[,] gridLookup;
-
-        private class Cell
-        {
-            TValue value;
-            Cardinal8Array<TEdge> edges;
-        }
+        readonly TCell[,] gridLookup;
 
         #region Constructor/Destructor
-        public GridBase(Vector2Int _size) { gridLookup = new Cell[_size.x, _size.y]; }
+        public GridBase(Vector2Int _size) { gridLookup = new TCell[_size.x, _size.y]; }
 
         ~GridBase() {
             
         }
         #endregion
 
-        private Cell GetCellContainer(int _x, int _y) => gridLookup[_x, _y];
+        private TCell GetCellContainer(int _x, int _y) => gridLookup[_x, _y];
         
     }
 }

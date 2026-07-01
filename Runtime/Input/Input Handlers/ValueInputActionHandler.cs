@@ -8,7 +8,7 @@ namespace MaroonSeal.Inputs
     [System.Serializable]
     public class ValueInputActionHandler<TValue> : InputActionHandlerBase where TValue : struct
     {
-        [EditorReadonly][SerializeField] private TValue value;
+        [EditorReadOnly][SerializeField] private TValue value;
         public TValue Value => value;
         public event Action<TValue> OnValueChanged;
 

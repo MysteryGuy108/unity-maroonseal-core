@@ -5,14 +5,14 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 using MaroonSeal.Maths.Geometry.Shapes;
-
-
+using MaroonSeal.Maths.DataStructures;
+using MaroonSeal.Maths.DataStructures.Grid;
 
 namespace MaroonSeal.Maths {
     public class Cardinal8Transform : MonoBehaviour
     {
-        [SerializeField] protected Cardinal8Array<Vector3> test8Array;
-        [SerializeField] protected Cardinal4Array<Vector3> test4Array;
+        //[SerializeField] protected PolarArray<Vector3> testPolarArray;
+        [SerializeField] protected SquareCell<string, float> testCell;
 
         [Header("Cardinal Transform")]
         [SerializeField] protected Cardinal8 cardinalDirection;

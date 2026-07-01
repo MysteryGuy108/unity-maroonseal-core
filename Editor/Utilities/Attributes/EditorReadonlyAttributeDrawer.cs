@@ -8,8 +8,8 @@ using MaroonSeal;
 
 namespace MaroonSealEditor
 {
-    [CustomPropertyDrawer(typeof(EditorReadonlyAttribute))]
-    public class EditorReadonlyAttributeDrawer : PropertyDrawer
+    [CustomPropertyDrawer(typeof(EditorReadOnlyAttribute))]
+    public class EditorReadOnlyAttributeDrawer : PropertyDrawer
     {
         public override VisualElement CreatePropertyGUI(SerializedProperty property) {
             PropertyField root = new(property) {
