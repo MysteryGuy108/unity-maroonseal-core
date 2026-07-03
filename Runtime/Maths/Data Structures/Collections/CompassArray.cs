@@ -6,29 +6,28 @@ using UnityEngine;
 namespace MaroonSeal.Maths.DataStructures
 {
     [System.Serializable]
-    public class PolarArray<TValue>
+    public class CompassArray<TValue>
     {
         [NonReorderable][SerializeField] private TValue[] valueArray;
         public int Length => valueArray.Length;
-
-        private float DeltaTheta => 360.0f / valueArray.Length;
+        public float DeltaTheta => 360.0f / valueArray.Length;
 
         #region Constructors
-        public PolarArray(int _length) => valueArray = new TValue[_length];
+        public CompassArray(int _length) => valueArray = new TValue[_length];
 
-        public PolarArray(int _length, TValue _value) : this(_length) {
+        public CompassArray(int _length, TValue _value) : this(_length) {
             for(int i = 0; i < _length; i++) {
                 valueArray[i] = _value;
             }
         }
 
-        public PolarArray(int _length, TValue[] _values) : this(_length) {
+        public CompassArray(int _length, TValue[] _values) : this(_length) {
             for(int i = 0; i < _length && i < _values.Length; i++) {
                 valueArray[i] = _values[i];
             }
         }
 
-        public PolarArray(TValue[] _values) : this(_values.Length, _values) {}
+        public CompassArray(TValue[] _values) : this(_values.Length, _values) {}
         #endregion
 
         #region Get/Set
@@ -42,15 +41,11 @@ namespace MaroonSeal.Maths.DataStructures
             set => this[(int)(_theta / DeltaTheta)] = value;
         }
 
-        public TValue this[ICardinal _cardinal]
-        {
-            get => this[_cardinal.Theta];
-            set => this[_cardinal.Theta] = value;
-        }
+        public float GetBearing(int _index) => _index * DeltaTheta;
         #endregion
 
         #region Operators
-        public static bool operator == (PolarArray<TValue> _x, PolarArray<TValue> _y) {
+        public static bool operator == (CompassArray<TValue> _x, CompassArray<TValue> _y) {
             if (_x.Length != _y.Length) { return false; }
 
             bool isEqual = true;
@@ -61,7 +56,7 @@ namespace MaroonSeal.Maths.DataStructures
             return isEqual;
         }
 
-        public static bool operator != (PolarArray<TValue> _x, PolarArray<TValue> _y) {
+        public static bool operator != (CompassArray<TValue> _x, CompassArray<TValue> _y) {
             if (_x.Length == _y.Length) { return false; }
 
             bool isEqual = true;
@@ -73,8 +68,8 @@ namespace MaroonSeal.Maths.DataStructures
         }
 
         public override bool Equals(object obj) {
-            if (obj is not PolarArray<TValue>) { return false; }
-            return this == (PolarArray<TValue>) obj;
+            if (obj is not CompassArray<TValue>) { return false; }
+            return this == (CompassArray<TValue>) obj;
         }
 
         public override int GetHashCode() {

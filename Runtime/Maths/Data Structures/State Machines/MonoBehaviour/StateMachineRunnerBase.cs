@@ -25,9 +25,8 @@ namespace MaroonSeal.Maths.DataStructures.StateMachines
 
         protected TCast GetCurrentState<TCast>() => CurrentState is TCast cast ? cast : default;
 
-        protected void AddTransition(TState _state, Transition<TState> _transition) => stateMachine.AddEdge(_state, _transition);
 
-        protected void AddTransition(TState _from, TState _to, IPredicate _condition) => AddTransition(_from, new(_to, _condition));
+        protected void AddTransition(TState _from, TState _to, IPredicate _condition) => stateMachine.AddEdge(_from, _to, _condition);
 
         protected void AddTransition(TState _from, TState _to, Func<bool> _condition) => AddTransition(_from, _to, new Predicate(_condition));
         #endregion

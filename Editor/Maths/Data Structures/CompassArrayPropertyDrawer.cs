@@ -10,8 +10,8 @@ using System.Collections.Generic;
 
 namespace MaroonSealEditor.Maths.DataStructures
 {
-    [CustomPropertyDrawer(typeof(PolarArray<>))]
-    public class PolarArrayPropertyDrawer : PropertyDrawer
+    [CustomPropertyDrawer(typeof(CompassArray<>))]
+    public class CompassArrayPropertyDrawer : PropertyDrawer
     {
         public static Dictionary<float, string> cardinalDisplayNames = new()
         {
@@ -41,17 +41,14 @@ namespace MaroonSealEditor.Maths.DataStructures
                 label = _property.displayName
             };
 
-            ListView list = null;
-
-            root.schedule.Execute(SetList).Until(() => list != null);
-
+            root.RegisterCallbackOnce<GeometryChangedEvent>(SetList);
             root.AddToClassList("unity-base-field__aligned");
 
             return root;
 
-            void SetList()
+            void SetList(GeometryChangedEvent _evnt)
             {
-                list = root.Q<ListView>();
+                ListView list = root.Q<ListView>();
                 if (list == null) { return; } 
                 list.bindItem += BindItem;
             }

@@ -6,8 +6,10 @@ namespace MaroonSeal.Maths.DataStructures.Grid
     abstract public class CellBase<TValue, TEdge> : ISerializationCallbackReceiver
     {
         abstract public int EdgeCount { get; }
+        abstract public int NeighbourCount { get; }
+
         [SerializeField] private TValue value;
-        [SerializeField] private PolarArray<TEdge> edges;
+        [SerializeField][FixedListView(true, true)] private CompassArray<TEdge> edges;
 
         #region Constructors
         public CellBase()

@@ -24,22 +24,25 @@ namespace MaroonSeal.Maths.Geometry.Shapes {
 
         #region Line
         public static void DrawLine(Line _line, float _pointRadii = 0.03125f) {
-            Gizmos.DrawLine(_line.start, _line.end);
+            Gizmos.DrawLine(_line.p1, _line.p2);
             if (_pointRadii <= 0.0f) { return; }
-            Gizmos.DrawSphere(_line.start, _pointRadii);
-            Gizmos.DrawSphere(_line.end, _pointRadii);
+            Gizmos.DrawSphere(_line.p1, _pointRadii);
+            Gizmos.DrawSphere(_line.p2, _pointRadii);
         }
 
         public static void DrawLine(Line2D _line, float _pointRadii = 0.03125f) {
-            Gizmos.DrawLine(_line.from, _line.to);
+            Gizmos.DrawLine(_line.p1, _line.p2);
             if (_pointRadii <= 0.0f) { return; }
-            Gizmos.DrawSphere(_line.from, _pointRadii);
-            Gizmos.DrawSphere(_line.to, _pointRadii);
+            Gizmos.DrawSphere(_line.p1, _pointRadii);
+            Gizmos.DrawSphere(_line.p2, _pointRadii);
         }
         #endregion
 
         #region Triangle
         public static void DrawTriangle(Triangle _triangle, float _pointRadii = 0.03125f) {
+            DrawPolygonShape(_triangle, _pointRadii);
+        }
+        public static void DrawTriangle(Triangle2D _triangle, float _pointRadii = 0.03125f) {
             DrawPolygonShape(_triangle, _pointRadii);
         }
         #endregion

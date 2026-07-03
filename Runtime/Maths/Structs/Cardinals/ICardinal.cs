@@ -5,7 +5,7 @@ namespace MaroonSeal.Maths
     public interface ICardinal
     {
         public int DirectionCount { get; }
-        public int Index { get; }
+        public int Index { get; set; }
         public float Theta { get; }
         
         static protected int FromThetaToIndex(float _theta, int _maxIndex)
@@ -38,5 +38,9 @@ namespace MaroonSeal.Maths
         {
             return Quaternion.Euler(0.0f, _cardinal.Theta, 0.0f);
         }
+
+        static public int GetRotatedIndex(this ICardinal _cardinal, int _rotationAmount) => (int)Mathf.Repeat(_cardinal.Index + _rotationAmount, _cardinal.DirectionCount);
+        static public void Rotate(this ICardinal _cardinal, int _rotationAmount) => _cardinal.Index = _cardinal.GetRotatedIndex(_rotationAmount);
+
     }
 }

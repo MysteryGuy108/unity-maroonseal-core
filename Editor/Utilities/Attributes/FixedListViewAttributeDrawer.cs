@@ -17,24 +17,26 @@ namespace MaroonSealEditor
             
             FixedListViewAttribute fixedCollectionAttribute = attribute as FixedListViewAttribute;
 
-            root.schedule.Execute(SetListView);
+            root.RegisterCallbackOnce<GeometryChangedEvent>(SetListView);
             
             return root;
 
-            void SetListView()
+            void SetListView(GeometryChangedEvent _evnt)
             {
                 ListView listView = root.Q<ListView>();
-                if (listView == null) { Debug.Log("NO LIST FOUND"); return; }
+                if (listView == null) { Debug.Log("No ListView Found"); return; }
 
-                if (fixedCollectionAttribute.isFixedSize)
-                {
-                    
-                }
+                TextField sizeTextField = listView.Q<TextField>("unity-list-view__size-field");
+                sizeTextField.enabledSelf = !fixedCollectionAttribute.isFixedSize;
 
-                listView.reorderable = fixedCollectionAttribute.isFixedOrder;
+                VisualElement listFooter = listView.Q("unity-list-view__footer");
+                listFooter.style.display = fixedCollectionAttribute.isFixedSize ? DisplayStyle.None : listFooter.style.display;
+
+                listView.allowAdd = !fixedCollectionAttribute.isFixedSize;
+                listView.allowRemove = !fixedCollectionAttribute.isFixedSize;
+
+                listView.reorderable = !fixedCollectionAttribute.isFixedOrder;
                 listView.reorderMode = fixedCollectionAttribute.isFixedOrder ? ListViewReorderMode.Simple : listView.reorderMode;
-
-                //if ()
             }
         }
     }

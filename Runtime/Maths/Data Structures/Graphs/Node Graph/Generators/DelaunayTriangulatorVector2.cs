@@ -10,20 +10,20 @@ namespace MaroonSeal.Maths.DataStructures.NodeGraphs.Generators {
     [Obsolete("Use Generic Graph Instead")]
     public class DelaunayTriangulatorGraphCalculator
     {
-        static public NodeGraphWeighted<Vector2> CalculateGraph(List<Vector2> _points, float _pointsSquareBounds) {
+        static public NodeGraphWeighted<Vector2> CalculateGraph(List<Vector2> _points, float _squareBounds) {
 
             NodeGraphWeighted<Vector2> graph = new();
             
             // Adding points to graph.
             graph.PushNodeRange(_points);
 
-            List<Triangle2D> triangles = CaluclateTrianglesFromPoints(_points, _pointsSquareBounds);
+            List<Triangle2D> triangles = CaluclateTrianglesFromPoints(_points, _squareBounds);
 
             for(int i = 0; i < triangles.Count; i++) {
                 
-                int indexA = graph[triangles[i].pointA];
-                int indexB = graph[triangles[i].pointB];
-                int indexC = graph[triangles[i].pointC];
+                int indexA = graph[triangles[i].p1];
+                int indexB = graph[triangles[i].p2];
+                int indexC = graph[triangles[i].p3];
                 
                 if (indexA < 0 || indexB < 0 || indexC < 0) { continue; }
                 if (indexA == indexB || indexB == indexC || indexC == indexA) { continue; }
@@ -60,7 +60,7 @@ namespace MaroonSeal.Maths.DataStructures.NodeGraphs.Generators {
                     foreach(Line2D edge in edges) {
                         int count = 0;
                         foreach(Triangle2D badTri2 in badTriangles) { 
-                            if (badTri2.ContainsPoint(edge.from) && badTri2.ContainsPoint(edge.to)) { count++; }
+                            if (badTri2.ContainsVertex(edge.p1) && badTri2.ContainsVertex(edge.p2)) { count++; }
                         }
 
                         if (count <= 1) { polygonEdges.Add(edge); }
@@ -79,7 +79,7 @@ namespace MaroonSeal.Maths.DataStructures.NodeGraphs.Generators {
                 badTriangles.Clear();
 
                 foreach(Line2D edge in polygonEdges) {
-                    Triangle2D newTri = new(point, edge.from, edge.to);
+                    Triangle2D newTri = new(point, edge.p1, edge.p2);
                     triangles.Add(newTri);
                 }
                 polygonEdges.Clear();

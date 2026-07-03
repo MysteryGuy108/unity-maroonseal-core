@@ -10,7 +10,7 @@ namespace MaroonSeal.Maths
         public enum Direction { N, NNE, NE, ENE, E, ESE, SE, SSE, S, SSW, SW, WSW, W, WNW, NW, NNW }
         public Direction direction;
         
-        readonly public int Index => (int)direction;
+        public int Index { readonly get => (int)direction; set => direction = (Direction)value; }
         readonly public float Theta => Index * 22.5f;
 
         #region Constructors

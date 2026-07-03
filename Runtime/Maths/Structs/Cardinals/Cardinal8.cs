@@ -15,7 +15,7 @@ namespace MaroonSeal.Maths {
         public enum Direction { N, NE, E, SE, S, SW, W, NW }
         public Direction direction;
         
-        readonly public int Index {  get { return (int)direction; } }
+        public int Index { readonly get => (int)direction; set => direction = (Direction)value; }
         readonly public float Theta => Index * 45.0f;
         
         #region Constructors

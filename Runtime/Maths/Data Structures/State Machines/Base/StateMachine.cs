@@ -12,15 +12,15 @@ namespace MaroonSeal.Maths.DataStructures.StateMachines
     /// at runtime.
     /// </summary>
     /// <typeparam name="TState">State to represent each node in the graph</typeparam>
-    public class StateMachine<TState> : Graph<TState, Transition<TState>> where TState : IState
+    public class StateMachine<TState> : Graph<TState, IPredicate> where TState : IState
     {
-        protected Node current;
+        protected TState current;
         public TState CurrentState
         {
             get
             {
                 if (current == null) { return default; }
-                return current.Value;
+                return current;
             }
         }
 
@@ -33,12 +33,12 @@ namespace MaroonSeal.Maths.DataStructures.StateMachines
         {
             var transition = EvaluateTransitions();
 
-            if (transition != null)
+            if (transition.Key != null)
             {
-                SetState(transition.Next);
+                SetState(transition.Key);
             }
 
-            current.Value?.Update();
+            current?.Update();
         }
         #endregion
 
@@ -47,11 +47,11 @@ namespace MaroonSeal.Maths.DataStructures.StateMachines
         {
             if (_state.Equals(CurrentState) && CurrentState != null) { return; }
 
-            var previousState = current;
-            var nextState = GetNode(_state);
+            TState previousState = current;
+            TState nextState = _state;
 
-            previousState?.Value.Exit();
-            nextState?.Value.Enter();
+            previousState?.Exit();
+            nextState?.Enter();
 
             current = nextState;
         }
@@ -60,18 +60,17 @@ namespace MaroonSeal.Maths.DataStructures.StateMachines
         #endregion
 
         #region Transitions
-        Transition<TState> EvaluateTransitions()
+        KeyValuePair<TState, IPredicate> EvaluateTransitions()
         {
-            foreach(var transition in current.Edges)
+            foreach(KeyValuePair<TState, IPredicate> transition in GetNodeNeighbors(current))
             {
-                if (transition.Condition.Execute()) { return transition; }
+                if (transition.Value.Execute()) { return transition; }
             }
 
-            return null;
+            return new();
         }
 
-        public void AddTransition(TState _state, Transition<TState> _transition) => AddEdge(_state, _transition);
-        public void AddTransition(TState _from, TState _to, IPredicate _condition) => AddTransition(_from, new(_to, _condition));
+        public void AddTransition(TState _from, TState _to, IPredicate _condition) => AddEdge(_from, _to, _condition);
         public void AddTransition(TState _from, TState _to, Func<bool> _condition) => AddTransition(_from, _to, new Predicate(_condition));
         #endregion
     }

@@ -5,39 +5,39 @@ namespace MaroonSeal.Maths.Geometry.Shapes {
     [System.Serializable]
     public struct Line : IShape3D, IInterpolationShape
     {
-        public Vector3 start;
-        public Vector3 end;
+        public Vector3 p1;
+        public Vector3 p2;
 
         readonly public PointTransform Transform => PointTransform.Origin;
 
         #region Constructors
         public Line(Vector3 _pointA, Vector3 _pointB) {
-            start = _pointA;
-            end = _pointB;
+            p1 = _pointA;
+            p2 = _pointB;
         }
         #endregion
         
         #region Operators
-        public static bool operator == (Line _a, Line _b) { return _a.start == _b.start && _a.end == _b.end; }
+        public static bool operator == (Line _a, Line _b) { return _a.p1 == _b.p1 && _a.p2 == _b.p2; }
 
-        public static bool operator != (Line _a, Line _b) { return !(_a.start == _b.start && _a.end == _b.end); }
+        public static bool operator != (Line _a, Line _b) { return !(_a.p1 == _b.p1 && _a.p2 == _b.p2); }
     
         readonly public override bool Equals(object obj) {
             if (obj == null || obj is not Line) { return false; }
             return (Line)obj == this;
         }
 
-        readonly public override int GetHashCode() { return System.HashCode.Combine(start, end); }
+        readonly public override int GetHashCode() { return System.HashCode.Combine(p1, p2); }
         #endregion
 
         #region Casting
-        public static implicit operator Line2D(Line _line) => new(_line.start, _line.end);
+        public static implicit operator Line2D(Line _line) => new(_line.p1, _line.p2);
         #endregion
 
         #region Line
-        public readonly float GetLength() { return Vector3.Distance(start, end); }
+        public readonly float GetLength() { return Vector3.Distance(p1, p2); }
 
-        public readonly Vector3 GetVector() => end - start;
+        public readonly Vector3 GetVector() => p2 - p1;
         public readonly Vector3 GetDirection() => GetVector().normalized;
 
         public bool IsPositionInBoundingBox(Vector3 _position) {
@@ -46,17 +46,17 @@ namespace MaroonSeal.Maths.Geometry.Shapes {
         #endregion
 
         public void Rotate(Quaternion _rotation) {
-            start = _rotation * start;
-            end = _rotation * end;
+            p1 = _rotation * p1;
+            p2 = _rotation * p2;
         }
 
         public void Translate(Vector3 _translation) {
-            start += _translation;
-            end += _translation;
+            p1 += _translation;
+            p2 += _translation;
         }
 
         #region IInterpolationShape
-        public readonly Vector3 EvaluatePositionAtTime(float _time) { return Vector3.Lerp(start, end, _time); }
+        public readonly Vector3 EvaluatePositionAtTime(float _time) { return Vector3.Lerp(p1, p2, _time); }
         public readonly Vector3 EvaluateTangentAtTime(float _time) { return GetDirection(); }
         #endregion
     }

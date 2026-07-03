@@ -41,8 +41,8 @@ namespace MaroonSeal.Maths.Geometry.Paths {
 
         public override float GetTimeClosestToPosition(Vector3 _position)
         {
-            Vector3 AB = line.end - line.start;
-            Vector3 AV = _position - line.start;
+            Vector3 AB = line.p2 - line.p1;
+            Vector3 AV = _position - line.p1;
             return Vector3.Dot(AV, AB) / Vector3.Dot(AB, AB);
         }
         #endregion
@@ -51,9 +51,9 @@ namespace MaroonSeal.Maths.Geometry.Paths {
         public Line GetLine() => line;
         public void SetLine(Line _line) => line = _line;
 
-        public void SetStartPosition(Vector3 _startPosition) { line.start = _startPosition; }
+        public void SetStartPosition(Vector3 _startPosition) { line.p1 = _startPosition; }
 
-        public void SetEndPosition(Vector3 _endPosition) { line.end = _endPosition; }
+        public void SetEndPosition(Vector3 _endPosition) { line.p2 = _endPosition; }
         #endregion
     }
 }

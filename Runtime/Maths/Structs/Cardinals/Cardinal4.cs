@@ -10,7 +10,7 @@ namespace MaroonSeal.Maths
         public enum Direction { North, East, South, West }
         public Direction direction;
         
-        readonly public int Index => (int)direction;
+        public int Index { readonly get => (int)direction; set => direction = (Direction)value; }
         readonly public float Theta => Index * 90.0f;
 
         #region Constructors
@@ -22,7 +22,9 @@ namespace MaroonSeal.Maths
         #endregion
 
         #region Casting
-        public static explicit operator Cardinal4(Cardinal8 _cardinal8) => new((int)_cardinal8.direction / 2);
+        public static explicit operator Cardinal8(Cardinal4 _cardinal4) => new((int)_cardinal4.direction * 2);
+        public static implicit operator int(Cardinal4 _cardinal) => _cardinal.Index;
+        public static implicit operator float(Cardinal4 _cardinal) => _cardinal.Theta; 
         #endregion
 
         #region Static Constructors
@@ -47,20 +49,16 @@ namespace MaroonSeal.Maths
         #endregion
         
         #region Rotation
-        readonly private int GetRotatedIndex(int _rotateAmount) => (int)Mathf.Repeat(Index + _rotateAmount, DirectionCount);
+        readonly public void Rotate(Direction _rotateAmount) => this.Rotate((int)_rotateAmount);
+        readonly public void Rotate(Cardinal4 _rotateAmount) => Rotate(_rotateAmount.direction); 
 
-        public void Rotate(int _rotateAmount) => direction = (Direction)GetRotatedIndex(_rotateAmount);
-        public void Rotate(Direction _rotateAmount) => Rotate((int)_rotateAmount);
-        public void Rotate(Cardinal4 _rotateAmount) => Rotate(_rotateAmount.direction); 
-
-
-        readonly public Cardinal4 GetRotated(int _index) => new((Direction)GetRotatedIndex(_index));
+        readonly public Cardinal4 GetRotated(int _index) => new((Direction)this.GetRotatedIndex(_index));
         readonly public Cardinal4 GetRotated(Direction _direction) => GetRotated((int)_direction);
         readonly public Cardinal4 GetRotated(Cardinal4 _cardinal) => GetRotated(_cardinal.direction);
 
-        readonly public Cardinal4 Opposite => new((Direction)GetRotatedIndex(DirectionCount/2));
-        readonly public Cardinal4 Clockwise  => new((Direction)GetRotatedIndex(1));
-        readonly public Cardinal4 Anticlockwise => new((Direction)GetRotatedIndex(-1));
+        readonly public Cardinal4 Opposite => new((Direction)this.GetRotatedIndex(DirectionCount/2));
+        readonly public Cardinal4 Clockwise  => new((Direction)this.GetRotatedIndex(1));
+        readonly public Cardinal4 Anticlockwise => new((Direction)this.GetRotatedIndex(-1));
         #endregion
     }
 }
