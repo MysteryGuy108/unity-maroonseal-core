@@ -13,7 +13,7 @@ namespace MaroonSeal.Maths.DataStructures.StateMachines
         where TStateMachine : StateMachine<TState>, new()
     {
         [SerializeField] protected TStateMachine stateMachine;
-        public IState CurrentState => stateMachine.CurrentState;
+        public IState CurrentState => stateMachine.Current;
 
         #region MonoBehaviour
         virtual protected void Awake() => stateMachine = new();
@@ -26,11 +26,9 @@ namespace MaroonSeal.Maths.DataStructures.StateMachines
         protected TCast GetCurrentState<TCast>() => CurrentState is TCast cast ? cast : default;
 
 
-        protected void AddTransition(TState _from, TState _to, IPredicate _condition) => stateMachine.AddEdge(_from, _to, _condition);
+        protected void AddTransition(TState _from, TState _to, IPredicate _condition) => stateMachine.AddTransition(_from, _to, _condition);
 
         protected void AddTransition(TState _from, TState _to, Func<bool> _condition) => AddTransition(_from, _to, new Predicate(_condition));
         #endregion
     }
-
-    abstract public class StateMachineRunnerBase : StateMachineRunnerBase<IState, StateMachine> {}
 }

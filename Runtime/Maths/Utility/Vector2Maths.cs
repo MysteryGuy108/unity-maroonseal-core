@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace MaroonSeal.Maths
 {
-    public struct Vector2Maths
+    static public class Vector2Maths
     {
         static public Vector2 Clamp(Vector2 _value, Vector2 _min, Vector2 _max)
         {

@@ -14,7 +14,6 @@ namespace MaroonSeal.Maths.DataStructures.Graphs
         readonly Dictionary<TNode, Dictionary<TNode, TEdge>> adjacency;
 
         public int NodeCount => adjacency.Count;
-        public int EdgeCount { get; private set; }
 
         public TEdge this[TNode _from, TNode _to]
         {
@@ -43,11 +42,6 @@ namespace MaroonSeal.Maths.DataStructures.Graphs
             }
             return true;
         }
-        public void Clear()
-        {
-            foreach(TNode node in Nodes) { ClearEdges(node); }
-            adjacency.Clear();
-        }
         #endregion
 
         #region Edges
@@ -58,7 +52,6 @@ namespace MaroonSeal.Maths.DataStructures.Graphs
             adjacency[_from][_to] = _edge;
         }
         public void RemoveEdge(TNode _from, TNode _to) => adjacency[_from].Remove(_to);
-        public void ClearEdges(TNode _from) => adjacency[_from].Clear();
         #endregion
 
         #region Contains
@@ -72,27 +65,26 @@ namespace MaroonSeal.Maths.DataStructures.Graphs
         #region Neighbours
         public IReadOnlyDictionary<TNode, TEdge> GetNodeNeighbors(TNode _node)
         {
-            if (adjacency.TryGetValue(_node, out var neighbors))
-            {
-                return neighbors;
-            }
-
+            if (adjacency.TryGetValue(_node, out var neighbors)) { return neighbors; }
             return new Dictionary<TNode, TEdge>();
         }
+        #endregion
+
+        #region Clear
+        public void Clear()
+        {
+            ClearEdges();
+            adjacency.Clear();
+        }
+
+        public void ClearEdges(TNode _from) => adjacency[_from].Clear();
+
+        public void ClearEdges() { foreach(TNode node in Nodes) { ClearEdges(node); } }
         #endregion
 
         #region IEnumerable
         public IEnumerable<TNode> Nodes => adjacency.Keys;
         public IEnumerable<IReadOnlyDictionary<TNode, TEdge>> Edges => adjacency.Values;
-        #endregion
-    
-        #region Conversions
-        public List<TNode> NodesToList()
-        {
-            List<TNode> nodes = new();
-            foreach(TNode node in Nodes) { nodes.Add(node); }
-            return nodes;
-        }
         #endregion
     }
 }

@@ -3,10 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace MaroonSeal.Maths.Numeric {
-    static public class Numerics
+namespace MaroonSeal.Maths {
+    static public class NumericMaths
     {
-        readonly static public float EPSILON = 0.0001f;
+        const float EPSILON = 0.0001f;
 
         #region Newton Raphson Root
         static public float NewtonRaphsonRoot(Func<float, float> _func, Func<float, float> _derivitiveFunc, float _x) {

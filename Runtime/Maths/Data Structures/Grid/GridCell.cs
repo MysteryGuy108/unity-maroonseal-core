@@ -1,20 +1,27 @@
+using System.Collections.ObjectModel;
 using UnityEngine;
 
 namespace MaroonSeal.Maths.DataStructures.Grid
 {
     [System.Serializable]
-    abstract public class CellBase<TValue, TEdge> : ISerializationCallbackReceiver
+    public class GridCell<TValue, TEdge> : ISerializationCallbackReceiver
     {
-        abstract public int EdgeCount { get; }
-        abstract public int NeighbourCount { get; }
+        public int EdgeCount { get; }
 
-        [SerializeField] private TValue value;
         [SerializeField][FixedListView(true, true)] private CompassArray<TEdge> edges;
 
-        #region Constructors
-        public CellBase()
+        [field : SerializeField] public TValue Value {get; set; }
+
+        public TEdge this[int _edgeIndex]
         {
-            edges = new(EdgeCount);
+            get => edges[_edgeIndex];
+            set => edges[_edgeIndex] = value;
+        }
+
+        #region Constructors
+        public GridCell(int _edgeCount) {
+            EdgeCount = _edgeCount;
+            edges = new(_edgeCount); 
         }
         #endregion
 
