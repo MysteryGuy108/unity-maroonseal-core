@@ -10,7 +10,7 @@ namespace MaroonSealEditor.Maths {
     static public class PointTransformHandles
     {
         #region Point Transform Handles
-        static public void Transform(PointTransform _pointTransform, Vector3? _size = null,
+        static public void Transform(Transform3D _pointTransform, Vector3? _size = null,
                                      Color? _xColour = null, Color? _yColour = null, Color? _zColour = null,
                                      bool _negativeXAxis = true, bool _negativeYAxis = true, bool _negativeZAxis = true) {
 
@@ -20,7 +20,7 @@ namespace MaroonSealEditor.Maths {
             Color yAxisColour = _yColour ?? Color.green;
             Color zAxisColour = _zColour ?? Color.blue;
 
-            Quaternion rotation = _pointTransform.Rotation;
+            Quaternion rotation = _pointTransform.rotation;
             
             Color originalColour = Handles.color;
 
@@ -42,20 +42,20 @@ namespace MaroonSealEditor.Maths {
             Handles.color = originalColour;
         }
 
-        static public PointTransform DrawPosition(PointTransform _transform, Quaternion? _rotationOverride = null) {
-            Quaternion rotation = _rotationOverride ?? _transform.Rotation;
+        static public Transform3D DrawPosition(Transform3D _transform, Quaternion? _rotationOverride = null) {
+            Quaternion rotation = _rotationOverride ?? _transform.rotation;
             _transform.position = Handles.PositionHandle(_transform.position, rotation);
             return _transform;
         }
 
-        static public PointTransform DrawRotation(PointTransform _transform, Quaternion? _rotationOverride = null) {
-            Quaternion rotation = _rotationOverride ?? _transform.Rotation;
-            _transform.Rotation = Handles.RotationHandle(rotation, _transform.position);
+        static public Transform3D DrawRotation(Transform3D _transform, Quaternion? _rotationOverride = null) {
+            Quaternion rotation = _rotationOverride ?? _transform.rotation;
+            _transform.rotation = Handles.RotationHandle(rotation, _transform.position);
             return _transform;
         }
 
-        static public PointTransform DrawScale(PointTransform _transform, Quaternion? _rotationOverride = null) {
-            Quaternion rotation = _rotationOverride ?? _transform.Rotation;
+        static public Transform3D DrawScale(Transform3D _transform, Quaternion? _rotationOverride = null) {
+            Quaternion rotation = _rotationOverride ?? _transform.rotation;
             _transform.scale = Handles.ScaleHandle(_transform.scale, _transform.position, rotation);
             return _transform;
         }

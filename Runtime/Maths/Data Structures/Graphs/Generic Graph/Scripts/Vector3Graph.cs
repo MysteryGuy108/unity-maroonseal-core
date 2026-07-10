@@ -19,9 +19,9 @@ namespace MaroonSeal.Maths.DataStructures.Graphs
 
         public void AddTriangle(Triangle _triangle)
         {
-            AddPoints(_triangle.p1, _triangle.p2);
-            AddPoints(_triangle.p2, _triangle.p3);
-            AddPoints(_triangle.p3, _triangle.p1);
+            AddPoints(_triangle.Point1, _triangle.Point2);
+            AddPoints(_triangle.Point2, _triangle.Point3);
+            AddPoints(_triangle.Point3, _triangle.Point1);
         }
     }
 }

@@ -7,7 +7,7 @@ using UnityEditor.UIElements;
 using MaroonSeal.Maths;
 
 namespace MaroonSealEditor.Maths {
-    [CustomPropertyDrawer(typeof(PointTransform2D))]
+    [CustomPropertyDrawer(typeof(Transform2D))]
     public class PointTransform2DPropertyDrawer : PropertyDrawer
     {
         public override VisualElement CreatePropertyGUI(SerializedProperty _property) {
@@ -27,15 +27,15 @@ namespace MaroonSealEditor.Maths {
         }
 
         #region Property Conversions
-        static public PointTransform2D FromProperty(SerializedProperty _property) {
-            return new PointTransform2D() {
+        static public Transform2D FromProperty(SerializedProperty _property) {
+            return new Transform2D() {
                 position = _property.FindPropertyRelative("position").vector2Value,
                 angle = _property.FindPropertyRelative("angle").floatValue,
                 scale = _property.FindPropertyRelative("scale").vector2Value
             };
         }
 
-        static public void SetProperty(SerializedProperty _property, PointTransform2D _pointTransform) {
+        static public void SetProperty(SerializedProperty _property, Transform2D _pointTransform) {
             _property.FindPropertyRelative("position").vector2Value = _pointTransform.position;
             _property.FindPropertyRelative("angle").floatValue = _pointTransform.angle;
             _property.FindPropertyRelative("scale").vector2Value = _pointTransform.scale;

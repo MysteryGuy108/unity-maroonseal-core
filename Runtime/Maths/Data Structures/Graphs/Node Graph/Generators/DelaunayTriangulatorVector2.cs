@@ -21,9 +21,9 @@ namespace MaroonSeal.Maths.DataStructures.NodeGraphs.Generators {
 
             for(int i = 0; i < triangles.Count; i++) {
                 
-                int indexA = graph[triangles[i].p1];
-                int indexB = graph[triangles[i].p2];
-                int indexC = graph[triangles[i].p3];
+                int indexA = graph[triangles[i].Point1];
+                int indexB = graph[triangles[i].Point2];
+                int indexC = graph[triangles[i].Point3];
                 
                 if (indexA < 0 || indexB < 0 || indexC < 0) { continue; }
                 if (indexA == indexB || indexB == indexC || indexC == indexA) { continue; }
@@ -47,7 +47,7 @@ namespace MaroonSeal.Maths.DataStructures.NodeGraphs.Generators {
                 List<Triangle2D> badTriangles =  new();
 
                 foreach(Triangle2D tri in triangles) {
-                    if (tri.GetCircumcircle().IsPositionInRadius(point)) {
+                    if (tri.GetCircumcircle().Contains(point)) {
                         badTriangles.Add(tri);
                     }
                 }
