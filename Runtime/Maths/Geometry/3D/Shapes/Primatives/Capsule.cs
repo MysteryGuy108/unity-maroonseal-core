@@ -1,11 +1,9 @@
-using UnityEngine;
-
-using MaroonSeal.Maths.Geometry.SDFs;
 using System;
+using UnityEngine;
 
 namespace MaroonSeal.Maths.Geometry 
 {
-    public struct Capsule : IShape3D, ISDFShape 
+    public struct Capsule : IShape3D, ISDF3D
     {
         [SerializeField] private Transform3D transform;
         public Transform3D Transform
@@ -43,7 +41,7 @@ namespace MaroonSeal.Maths.Geometry
         #endregion
 
         #region Shape3D
-        public bool Contains(Vector3 _point)
+        public bool ContainsPoint(Vector3 _point)
         {
             throw new NotImplementedException();
         }
@@ -53,15 +51,15 @@ namespace MaroonSeal.Maths.Geometry
         readonly public (Vector3, Vector3) GetFoci()
         {
             float fociDistance = (0.5f * height) - radius;
-            Vector3 p1 = transform.TransformPosition(GetAxis(axis) * fociDistance);
-            Vector3 p2 = transform.TransformPosition(-GetAxis(axis) * fociDistance);
+            Vector3 p1 = transform.TransformPoint(GetAxis(axis) * fociDistance);
+            Vector3 p2 = transform.TransformPoint(-GetAxis(axis) * fociDistance);
             return (p1, p2);
         }
         #endregion
 
         #region ISDFShape
         readonly public float GetSignedDistance(Vector3 _point) {
-            _point = transform.InverseTransformPosition(_point);
+            _point = transform.InverseTransformPoint(_point);
 
             (Vector3, Vector3) foci = GetFoci();
 

@@ -1,9 +1,9 @@
 using UnityEngine;
 
-namespace MaroonSeal
+namespace MaroonSeal.Maths.Geometry
 {
     public interface IGeometry
     {
-    
+        
     }
 }

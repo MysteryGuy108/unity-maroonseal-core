@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace MaroonSeal.Maths.Geometry.Shapes 
+namespace MaroonSeal.Maths.Geometry 
 {
     public interface IPolarShape<TVector> : ICurve<TVector>
     {
@@ -8,6 +8,6 @@ namespace MaroonSeal.Maths.Geometry.Shapes
         public TVector EvaluateTangentAtTheta(float _theta);
     }
 
-    public interface IPolarShape2D : IPolarShape<Vector2> {}
-    public interface IPolarShape3D : IPolarShape<Vector3> {}
+    public interface IPolarShape2D : IPolarShape<Vector2>, ICurve2D {}
+    public interface IPolarShape3D : IPolarShape<Vector3>, ICurve3D {}
 }

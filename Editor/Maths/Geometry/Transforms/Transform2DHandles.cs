@@ -4,10 +4,10 @@ using UnityEngine.UIElements;
 using UnityEditor;
 using UnityEditor.UIElements;
 
-using MaroonSeal.Maths;
+using MaroonSeal.Maths.Geometry;
 
-namespace MaroonSealEditor.Maths {
-    static public class PointTransform2DHandles
+namespace MaroonSealEditor.Maths.Geometry {
+    static public class Transform2DHandles
     {
         
     }

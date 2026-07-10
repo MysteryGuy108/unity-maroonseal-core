@@ -4,9 +4,9 @@ namespace MaroonSeal.Maths.Geometry {
 
     public interface IShape : IGeometry {}
     
-    public interface IShape<TTransform, TVector> : IShape where TTransform : ITransform
+    public interface IShape<TTransform, TVector> : IShape where TTransform : ITransform<TVector>
     {
         public TTransform Transform { get; set; }
-        public bool Contains(TVector _point);
+        public bool ContainsPoint(TVector _point);
     }
 }

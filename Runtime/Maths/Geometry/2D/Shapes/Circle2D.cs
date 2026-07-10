@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
+
 using UnityEngine;
 
 
-namespace MaroonSeal.Maths.Geometry.Shapes {
+namespace MaroonSeal.Maths.Geometry {
     [System.Serializable]
-    public struct Circle2D : IShape2D, IPolarShape2D
+    public struct Circle2D : IShape2D, IPolarShape2D, IEquatable<Circle2D>
     {
         [field : SerializeField] public Transform2D Transform {get; set; }
         [Min(0.0f)]public float radius;
@@ -20,18 +21,20 @@ namespace MaroonSeal.Maths.Geometry.Shapes {
         
         public Circle2D(Vector2 _position, float _radius) : this(new Transform2D(_position), _radius) {}
         public Circle2D(float _radius) : this(Transform2D.Origin, _radius) {}
+       
+        public static Circle2D UnitCircle => new(Vector2.zero, 1.0f);
         #endregion
 
-        #region Operators
-        readonly public bool Equals(Circle2D _other) {
-            return this.Transform == _other.Transform && 
-                this.radius == _other.radius;
-        }
-        public override readonly bool Equals(object obj) => this.Equals((Circle2D)obj);
+        #region IEquatable
+        readonly public bool Equals(Circle2D _other) => this.Transform == _other.Transform && this.radius == _other.radius;
+        public override readonly bool Equals(object obj) => obj != null && obj is Circle2D && ((Circle2D)obj).Equals(this);
 
         public override readonly int GetHashCode() {
             unchecked { return HashCode.Combine(Transform, radius); }
         }
+        #endregion
+
+        #region Operators
         public static bool operator ==(Circle2D _a, Circle2D _b) => _a.Equals(_b);
         public static bool operator !=(Circle2D _a, Circle2D _b) => !_a.Equals(_b);
         #endregion
@@ -40,22 +43,25 @@ namespace MaroonSeal.Maths.Geometry.Shapes {
         public static explicit operator Circle(Circle2D _circle2D) => new(_circle2D.Transform.ToXY(), _circle2D.radius);
         #endregion
 
-        #region Circle2D
-        readonly public bool Contains(Vector2 _position)
-        {
-            return this.Transform.InverseTransformPosition(_position).magnitude <= radius;
-        }
+        #region IShape2D
+        readonly public bool ContainsPoint(Vector2 _position) => this.Transform.InverseTransformPoint(_position).magnitude <= radius;
         #endregion
 
         #region IPolarSpaceShape
-        readonly public Vector2 EvaluatePointAtTheta(float _radians) => PolarMath.GetCartesianPosition(Transform, radius, _radians);
-        readonly public Vector2 EvaluateTangentAtTheta(float _radians) => Transform.TransformDirection(PolarMath.GetCircleTangent(_radians));   
+        readonly public Vector2 EvaluatePointAtTheta(float _radians) => Transform.TransformPoint(Vector2Maths.FromRadians(_radians, radius));
+        readonly public Vector2 EvaluateTangentAtTheta(float _radians) => Transform.TransformDirection(GetTangentAtTheta(_radians));   
 
         readonly public Vector2 EvaluatePointAtTime(float _t) => EvaluatePointAtTheta(_t * Mathf.PI * 2.0f);
         readonly public Vector2 EvaluateTangentAtTime(float _t) => EvaluateTangentAtTheta(_t * Mathf.PI * 2.0f);
         #endregion
 
         #region Static Operations
+        static public Vector2 GetTangentAtTheta(float _radians)
+        {
+            _radians += Mathf.PI*0.5f;
+            return new Vector2(Mathf.Cos(_radians), Mathf.Sin(_radians)); 
+        }
+
         //https://gieseanw.wordpress.com/2012/09/12/finding-external-tangent-points-for-two-circles/
         static public (float, float, float, float) FindTangentThetas(Circle2D _from, Circle2D _to) {
             Vector2 delta = _to.Transform.position - _from.Transform.position;

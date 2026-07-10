@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-using MaroonSeal.Maths.Geometry.Shapes;
+using MaroonSeal.Maths.Geometry;
 
 namespace MaroonSeal.Maths.DataStructures.NodeGraphs.Generators {
     [Obsolete("Use Generic Graph Instead")]
@@ -47,7 +47,7 @@ namespace MaroonSeal.Maths.DataStructures.NodeGraphs.Generators {
                 List<Triangle2D> badTriangles =  new();
 
                 foreach(Triangle2D tri in triangles) {
-                    if (tri.GetCircumcircle().Contains(point)) {
+                    if (tri.GetCircumcircle().ContainsPoint(point)) {
                         badTriangles.Add(tri);
                     }
                 }

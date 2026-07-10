@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace MaroonSeal.Maths.Geometry.Shapes {
+namespace MaroonSeal.Maths.Geometry {
     [System.Serializable]
     public struct Arc : IShape3D, IPolarShape3D
     {
@@ -43,18 +43,21 @@ namespace MaroonSeal.Maths.Geometry.Shapes {
         #endregion
 
         #region IShape3D
-        public readonly bool Contains(Vector3 _position)
+        public readonly bool ContainsPoint(Vector3 _point)
         {
-            throw new NotImplementedException();
+            Vector3 localPoint = Transform.InverseTransformPoint(_point);
+            localPoint.z = 0.0f;
+            float theta = Mathf.Atan2(localPoint.y, localPoint.x) * Mathf.Rad2Deg;
+            return localPoint.magnitude < radius && theta >= Mathf.Min(startDegrees, endDegrees) && theta <= Mathf.Max(startDegrees, endDegrees);
         }
         #endregion
 
         #region IPolarSpaceShape
         readonly public Vector3 EvaluatePointAtTheta(float _theta) =>
-            Transform.TransformPosition(PolarMath.ToCartesian(radius, _theta));
+            Transform.TransformPoint(Vector2Maths.FromRadians(_theta, radius));
 
         readonly public Vector3 EvaluateTangentAtTheta(float _theta) =>
-            Transform.TransformVector(PolarMath.GetCircleTangent(_theta));
+            Transform.TransformVector(Circle2D.GetTangentAtTheta(_theta));
 
         readonly public Vector3 EvaluatePointAtTime(float _time) {
             float lerpTheta = Mathf.Lerp(startDegrees, endDegrees, _time) * Mathf.Deg2Rad;

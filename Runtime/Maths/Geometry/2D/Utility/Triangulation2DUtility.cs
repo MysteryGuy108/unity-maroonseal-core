@@ -33,7 +33,7 @@ namespace MaroonSeal.Maths.Geometry
 
             // Find bad triangles.
             foreach(Triangle2D tri in _triangles) {
-                if (tri.GetCircumcircle().Contains(point)) {
+                if (tri.GetCircumcircle().ContainsPoint(point)) {
                     badTriangles.Add(tri);
                 }
             }

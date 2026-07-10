@@ -8,11 +8,11 @@ namespace MaroonSeal {
             return new Vector3(x ?? _current.x, y ?? _current.y, z ?? _current.z);
         }
 
-        public static Vector2 FlattenXY(this Vector3 _current) { return new(_current.x, _current.y); }
+        public static Vector2 ToXY(this Vector3 _current) { return new(_current.x, _current.y); }
 
-        public static Vector2 FlattenXZ(this Vector3 _current) { return new(_current.x, _current.z); }
+        public static Vector2 ToXZ(this Vector3 _current) { return new(_current.x, _current.z); }
 
-        public static Vector2 FlattenZY(this Vector3 _current) { return new(_current.z, _current.y); }
+        public static Vector2 ToZY(this Vector3 _current) { return new(_current.z, _current.y); }
         #endregion
 
         #region Maths Operators

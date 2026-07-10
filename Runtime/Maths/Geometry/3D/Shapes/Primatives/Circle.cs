@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace MaroonSeal.Maths.Geometry.Shapes {
+namespace MaroonSeal.Maths.Geometry {
     [System.Serializable]
     public struct Circle : IShape3D, IPolarShape3D
     {
@@ -48,19 +48,19 @@ namespace MaroonSeal.Maths.Geometry.Shapes {
         #endregion
 
         #region Circle
-        readonly public bool Contains(Vector3 _point)
+        readonly public bool ContainsPoint(Vector3 _point)
         {
-            Vector3 localPoint = Transform.InverseTransformPosition(_point);
+            Vector3 localPoint = Transform.InverseTransformPoint(_point);
             localPoint.z = 0.0f;
             return localPoint.magnitude <= radius;
         }
         #endregion
 
         #region IPolarSpaceShape
-        readonly public Vector3 EvaluatePointAtTheta(float _radians) => PolarMath.GetCartesianPosition(Transform, radius, _radians);
+        readonly public Vector3 EvaluatePointAtTheta(float _radians) => Transform.TransformPoint(Vector2Maths.FromRadians(_radians, radius));
 
         readonly public Vector3 EvaluateTangentAtTheta(float _radians) {
-            return Transform.TransformDirection(PolarMath.GetCircleTangent(_radians));   
+            return Transform.TransformDirection(Circle2D.GetTangentAtTheta(_radians));   
         }
 
         readonly public Vector3 EvaluatePointAtTime(float _t) => EvaluatePointAtTheta(_t * Mathf.PI * 2.0f);

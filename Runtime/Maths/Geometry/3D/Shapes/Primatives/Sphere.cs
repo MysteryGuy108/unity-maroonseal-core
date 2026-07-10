@@ -1,10 +1,8 @@
 using UnityEngine;
 
-using MaroonSeal.Maths.Geometry.SDFs;
-
-namespace MaroonSeal.Maths.Geometry.Shapes {
+namespace MaroonSeal.Maths.Geometry {
     [System.Serializable]
-    public struct Sphere : IShape3D, ISDFShape
+    public struct Sphere : IShape3D, ISDF3D
     {
         [field : SerializeField] public Transform3D Transform { get; set; }
         [Min(0.0f)]public float radius;
@@ -34,7 +32,7 @@ namespace MaroonSeal.Maths.Geometry.Shapes {
 
         #region Sphere
         readonly public float GetArea() { return 4.0f * Mathf.PI * radius * radius; }
-        readonly public bool Contains(Vector3 _point) { return Vector3.Distance(_point, Transform.position) < radius; }
+        readonly public bool ContainsPoint(Vector3 _point) { return Vector3.Distance(_point, Transform.position) < radius; }
         #endregion
 
         #region ISDFShape

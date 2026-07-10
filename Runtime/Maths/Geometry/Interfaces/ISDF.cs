@@ -1,16 +1,17 @@
 using UnityEngine;
 
-namespace MaroonSeal.Maths.Geometry.SDFs {
+namespace MaroonSeal.Maths.Geometry {
 
-    public static class SDF {
+    public interface ISDF
+    {
         #region Operators
         public static float Union(float _d1, float _d2) { return Mathf.Min(_d1, _d2); }
 
-        public static float Subtraction(float _d1, float _d2) { return Mathf.Max(-_d1, _d2); }
+        public static float Subtract(float _d1, float _d2) { return Mathf.Max(-_d1, _d2); }
 
         public static float Intersection(float _d1, float _d2) { return Mathf.Max(_d1, _d2); }
 
-        public static float Xor(float _d1, float _d2) { return Mathf.Max(Mathf.Min(_d1,_d2),-Mathf.Max(_d1,_d2)); }
+        public static float XOr(float _d1, float _d2) { return Mathf.Max(Mathf.Min(_d1,_d2),-Mathf.Max(_d1,_d2)); }
         #endregion
 
         #region Smooth Operators
@@ -30,4 +31,11 @@ namespace MaroonSeal.Maths.Geometry.SDFs {
         }
         #endregion
     }
+
+    public interface ISDF<TVector> : ISDF {
+        public float GetSignedDistance(TVector _point);
+    }
+
+    public interface ISDF2D : ISDF<Vector2> {}
+    public interface ISDF3D : ISDF<Vector3> {}
 }

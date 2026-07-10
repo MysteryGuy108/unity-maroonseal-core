@@ -1,9 +1,9 @@
 using System;
 using UnityEngine;
-using UnityEngine.UIElements;
 
-namespace MaroonSeal.Maths.Geometry.Shapes {
-    public struct Line2D : ICurve2D
+namespace MaroonSeal.Maths.Geometry {
+    [System.Serializable]
+    public struct Line2D : ICurve2D, IEquatable<Line2D>
     {
         public Vector2 p1;
         public Vector2 p2;
@@ -17,15 +17,16 @@ namespace MaroonSeal.Maths.Geometry.Shapes {
         }
         #endregion
 
-        #region Operators
-        readonly public bool Equals(Line2D _other) {
-            return this.p1 == _other.p1 && this.p2 == _other.p2;
-        }
-        public override readonly bool Equals(object obj) => this.Equals((Line2D)obj);
+        #region IEquatable
+        readonly public bool Equals(Line2D _other) => this.p1 == _other.p1 && this.p2 == _other.p2;
+        readonly public override bool Equals(object obj) => obj != null && obj is Line2D && ((Line2D)obj).Equals(this);
 
         public override readonly int GetHashCode() {
             unchecked { return HashCode.Combine(p1, p2); }
         }
+        #endregion
+
+        #region Operators
         public static bool operator ==(Line2D _a, Line2D _b) => _a.Equals(_b);
         public static bool operator !=(Line2D _a, Line2D _b) => !_a.Equals(_b);
         #endregion
@@ -34,26 +35,11 @@ namespace MaroonSeal.Maths.Geometry.Shapes {
         public static explicit operator Line(Line2D _line) => new(_line.p1, _line.p2);
         #endregion
 
-        #region Shape2D
-        public void Rotate(float _rotation)
-        {
-            Quaternion rotation = Quaternion.AngleAxis(_rotation, Vector3.forward);
-            p1 = rotation * p1;
-            p2 = rotation * p2;
-        }
-
-        public void Translate(Vector2 _translation)
-        {
-            p1 += _translation;
-            p2 += _translation;
-        }
-        #endregion
-
         #region Line2D
         public readonly Vector2 GetVector() => p2 - p1;
         public readonly Vector2 GetDirection() => GetVector().normalized;
         
-        public void FlipDirection() { (p2, p1) = (p1, p2); }
+        public void FlipDirection() => (p2, p1) = (p1, p2);
         #endregion
 
         #region IInterpolationShape

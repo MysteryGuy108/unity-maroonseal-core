@@ -1,5 +1,6 @@
-using MaroonSeal.Maths.Geometry.Shapes;
 using UnityEngine;
+
+using MaroonSeal.Maths.Geometry;
 
 namespace MaroonSeal.Maths.DataStructures.Graphs
 {

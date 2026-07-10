@@ -2,12 +2,10 @@ using System;
 
 using UnityEngine;
 
-using MaroonSeal.Maths.Geometry.SDFs;
-
-namespace MaroonSeal.Maths.Geometry.Shapes {
+namespace MaroonSeal.Maths.Geometry {
 
     [System.Serializable]
-    public struct ConicSection : IShape3D, IPolarShape3D, ISDFShape
+    public struct ConicSection : IShape3D, IPolarShape3D, ISDF3D
     {
         public enum CurveType { Circle, Ellipse, Parabola, Hyperbola }
 
@@ -48,7 +46,7 @@ namespace MaroonSeal.Maths.Geometry.Shapes {
         #endregion
 
         #region IShape3D
-        readonly public bool Contains(Vector3 _point)
+        readonly public bool ContainsPoint(Vector3 _point)
         {
             throw new NotImplementedException();
         }
@@ -59,7 +57,7 @@ namespace MaroonSeal.Maths.Geometry.Shapes {
 
         readonly public (Vector3, Vector3) GetFoci() {
             Vector3 foci2 = GetBetweenFociDistance() * -Vector3.right;
-            return (Transform.position, Transform.TransformPosition(foci2));
+            return (Transform.position, Transform.TransformPoint(foci2));
         }
 
         readonly public CurveType GetCurveType() {
@@ -78,7 +76,7 @@ namespace MaroonSeal.Maths.Geometry.Shapes {
         {
             float radius = GetRadiusAtTheta(_theta);
             Vector3 localPoint = new Vector3(Mathf.Cos(_theta), Mathf.Sin(_theta)) * radius;
-            return Transform.TransformPosition(localPoint);
+            return Transform.TransformPoint(localPoint);
         }
 
         readonly public Vector3 EvaluateTangentAtTheta(float _theta) {
@@ -99,7 +97,7 @@ namespace MaroonSeal.Maths.Geometry.Shapes {
 
         #region ISDFShape
         public float GetSignedDistance(Vector3 _sample) {
-            _sample = Transform.InverseTransformPosition(_sample);
+            _sample = Transform.InverseTransformPoint(_sample);
 
             throw new NotImplementedException();
         }

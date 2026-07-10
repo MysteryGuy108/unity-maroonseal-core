@@ -1,7 +1,8 @@
+using System;
 using UnityEngine;
 
 
-namespace MaroonSeal.Maths.Geometry.Shapes {
+namespace MaroonSeal.Maths.Geometry {
     [System.Serializable]
     public struct CubicBezier : ICurve3D
     {
@@ -11,7 +12,7 @@ namespace MaroonSeal.Maths.Geometry.Shapes {
         public Vector3 anchorB;
 
         #region Constructors
-        public CubicBezier(Vector3 _anchorA, Vector3 _controlA, Vector3 _controlB, Vector3 _anchorB, Transform3D? _transform = null)
+        public CubicBezier(Vector3 _anchorA, Vector3 _controlA, Vector3 _controlB, Vector3 _anchorB)
         {
             anchorA = _anchorA;
             controlA = _controlA;
@@ -41,7 +42,7 @@ namespace MaroonSeal.Maths.Geometry.Shapes {
         readonly public override int GetHashCode() { return System.HashCode.Combine(anchorA, controlA, controlB, anchorB); }
         #endregion
 
-        #region ICubic Bezier
+        #region Cubic Bezier
         public readonly Vector3 EvaluatePointAtTime(float _t)
         {
             float tm = 1.0f - _t;
@@ -63,14 +64,5 @@ namespace MaroonSeal.Maths.Geometry.Shapes {
             return (3.0f * tm2 * (controlA - anchorA)) + (6.0f * tm * _t * (controlB - controlA)) + (3.0f * t2 * (anchorB - controlB));
         }
         #endregion
-
-        static public CubicBezier Lerp(CubicBezier _a, CubicBezier _b, float _t)
-        {
-            return new CubicBezier(
-                Vector3.Lerp(_a.anchorA, _b.anchorA, _t),
-                Vector3.Lerp(_a.controlA, _b.controlA, _t),
-                Vector3.Lerp(_a.controlB, _b.controlB, _t),
-                Vector3.Lerp(_a.anchorA, _b.anchorB, _t));
-        }
     }
 }

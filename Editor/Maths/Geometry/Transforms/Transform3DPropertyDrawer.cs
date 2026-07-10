@@ -6,9 +6,9 @@ using UnityEditor.UIElements;
 
 using MaroonSeal.Maths;
 
-namespace MaroonSealEditor.Maths {
+namespace MaroonSealEditor.Maths.Geometry {
     [CustomPropertyDrawer(typeof(Transform3D))]
-    public class PointTransformPropertyDrawer : PropertyDrawer
+    public class Transform3DPropertyDrawer : PropertyDrawer
     {
         public override VisualElement CreatePropertyGUI(SerializedProperty _property) {
             Foldout root = new() {

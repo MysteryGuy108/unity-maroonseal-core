@@ -7,7 +7,7 @@ namespace MaroonSeal.Maths {
     /// A struct used to represent a transform at a point in 3D space.
     /// </summary>
     [System.Serializable]
-    public struct Transform3D : ITransform, IEquatable<Transform3D> {
+    public struct Transform3D : ITransform<Vector3>, IEquatable<Transform3D> {
         public Vector3 position;
         public Quaternion rotation;
         public Vector3 scale;
@@ -26,15 +26,22 @@ namespace MaroonSeal.Maths {
 
         public Transform3D(Vector3 _position, Vector3 _euler, Vector3? _scale = null) : this(_position, Quaternion.Euler(_euler), _scale) {}
 
-        public Transform3D(Transform _transform) {
+        public Transform3D(Transform _transform, bool _worldSpace = true) {
             if (_transform == null) { 
-                position = Vector3.zero; rotation = Quaternion.identity; scale = Vector3.one; 
-                return; 
+                position = Vector3.zero; rotation = Quaternion.identity; scale = Vector3.one;
             }
-
-            position = _transform.position;
-            rotation = _transform.rotation;
-            scale = _transform.localScale;
+            else if (_worldSpace)
+            {
+                position = _transform.position;
+                rotation = _transform.rotation;
+                scale = _transform.localScale;
+            }
+            else
+            {
+                position = _transform.localPosition;
+                rotation = _transform.localRotation;
+                scale = _transform.localScale;
+            }
         }
 
         public Transform3D(Matrix4x4 _TRS) {
@@ -87,7 +94,7 @@ namespace MaroonSeal.Maths {
         }
         #endregion
 
-        #region Operators
+        #region IEquatable
         readonly public bool Equals(Transform3D _other) {
             return this.position == _other.position && 
                 this.rotation == _other.rotation && 
@@ -96,108 +103,65 @@ namespace MaroonSeal.Maths {
         public override readonly bool Equals(object obj) => this.Equals((Transform3D)obj);
 
         public override readonly int GetHashCode() {
-            unchecked {
-                return HashCode.Combine(position, EulerAngles, scale);
-            }
+            unchecked { return HashCode.Combine(position, rotation, scale); }
         }
+        #endregion
+
+        #region Operators
         public static bool operator ==(Transform3D _a, Transform3D _b) => _a.Equals(_b);
         public static bool operator !=(Transform3D _a, Transform3D _b) => !_a.Equals(_b);
         #endregion
 
         #region Casting and Conversions
-        public static implicit operator Transform2D(Transform3D _transform) => _transform.ConvertToXY();
+        public static implicit operator Transform2D(Transform3D _transform) => _transform.ToXY();
         
-        readonly public Transform2D ConvertToXY() { return new(this.position.FlattenXY(), this.EulerAngles.z, this.scale.FlattenXY()); }
-        readonly public Transform2D ConvertToXZ() { return new(this.position.FlattenXZ(), -this.EulerAngles.y, this.scale.FlattenXZ()); }
+        readonly public Transform2D ToXY() { return new(this.position.ToXY(), this.EulerAngles.z, this.scale.ToXY()); }
+        readonly public Transform2D ToXZ() { return new(this.position.ToXZ(), -this.EulerAngles.y, this.scale.ToXZ()); }
         #endregion
 
         #region Point Transform
-        readonly public Transform3D GetLocalPoint(Transform3D _transform) {
+        readonly public Transform3D GetLocalTransform(Transform3D _transform) {
             Transform3D localisedPoint = new(this.position, this.EulerAngles, this.scale);
 
-            localisedPoint.position = _transform.InverseTransformPosition(localisedPoint.position);
+            localisedPoint.position = _transform.InverseTransformPoint(localisedPoint.position);
             localisedPoint.Forward = _transform.InverseTransformDirection(localisedPoint.Forward);
             localisedPoint.Up = _transform.InverseTransformDirection(localisedPoint.Up);
 
             return localisedPoint;
         }
 
-        readonly public Transform3D GetGlobalPoint(Transform3D _transform) {
+        readonly public Transform3D GetGlobalTransform(Transform3D _transform) {
             Transform3D globalPoint = new(this.position, this.EulerAngles, this.scale);
 
-            globalPoint.position = _transform.TransformPosition(globalPoint.position);
+            globalPoint.position = _transform.TransformPoint(globalPoint.position);
             globalPoint.Forward = _transform.TransformDirection(globalPoint.Forward);
             globalPoint.Up = _transform.TransformDirection(globalPoint.Up);
 
             return globalPoint;
         }
 
-        readonly public Transform3D GetLocalPoint(Transform _transform) => GetLocalPoint(new Transform3D(_transform));
-        readonly public Transform3D GetGlobalPoint(Transform _transform) => GetGlobalPoint(new Transform3D(_transform));
+        readonly public Transform3D GetLocalTransform(Transform _transform) => GetLocalTransform(new Transform3D(_transform));
+        readonly public Transform3D GetGlobalTransform(Transform _transform) => GetGlobalTransform(new Transform3D(_transform));
         #endregion
 
         #region Transformations
-        /// <summary>
-        /// Transforms position from local space to world space.
-        /// </summary>
-        /// <param name="_position">Position in local space</param>
-        /// <returns>Position in world space</returns>
-        readonly public Vector3 TransformPosition(Vector3 _position) => position + rotation * Vector3.Scale(_position, scale);
-
-        /// <summary>
-        /// Transforms direction from local space to world space.
-        /// </summary>
-        /// <param name="_direction">Direction in local space</param>
-        /// <returns>Direction in world space</returns>
+        readonly public Vector3 TransformPoint(Vector3 _point) => position + rotation * Vector3.Scale(_point, scale);
         readonly public Vector3 TransformDirection(Vector3 _direction) => rotation * _direction;
-
-        /// <summary>
-        /// Transforms vector from local space to world space.
-        /// </summary>
-        /// <param name="_vector">Vector in local space</param>
-        /// <returns>Vector in world space</returns>
         readonly public Vector3 TransformVector(Vector3 _vector) => rotation * Vector3.Scale(_vector, scale);
         #endregion
 
         #region Inverse Transformations
-        /// <summary>
-        /// Transforms position from world space to local space.
-        /// </summary>
-        /// <param name="_position">Position in world space</param>
-        /// <returns>Position in local space</returns>
-        readonly public Vector3 InverseTransformPosition(Vector3 _position)
+        readonly public Vector3 InverseTransformPoint(Vector3 _point)
         {
-            _position -= position;
-            _position = Quaternion.Inverse(rotation) * _position;
-
-            return new Vector3(
-                _position.x / scale.x,
-                _position.y / scale.y,
-                _position.z / scale.z);
+            _point = Quaternion.Inverse(rotation) * (_point - position);
+            return new Vector3(_point.x / scale.x, _point.y / scale.y, _point.z / scale.z);
         }
-
-        /// <summary>
-        /// Transforms direction from world space to local space.
-        /// </summary>
-        /// <param name="_direction">Direction in world space</param>
-        /// <returns>Direction in local space</returns>
         readonly public Vector3 InverseTransformDirection(Vector3 _direction) => Quaternion.Inverse(rotation) * _direction;
-        
-        /// <summary>
-        /// Transforms vector from world space to local space.
-        /// </summary>
-        /// <param name="_vector">Vector in world space</param>
-        /// <returns>Vector in local space</returns>
         readonly public Vector3 InverseTransformVector(Vector3 _vector)
         {
             _vector = Quaternion.Inverse(rotation) * _vector;
-
-            return new Vector3(
-                _vector.x / scale.x,
-                _vector.y / scale.y,
-                _vector.z / scale.z);
+            return new Vector3(_vector.x / scale.x, _vector.y / scale.y, _vector.z / scale.z);
         }
-
         #endregion
         
         #region Static

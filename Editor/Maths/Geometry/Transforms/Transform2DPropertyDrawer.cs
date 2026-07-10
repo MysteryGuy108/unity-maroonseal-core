@@ -8,7 +8,7 @@ using MaroonSeal.Maths;
 
 namespace MaroonSealEditor.Maths {
     [CustomPropertyDrawer(typeof(Transform2D))]
-    public class PointTransform2DPropertyDrawer : PropertyDrawer
+    public class Transform2DPropertyDrawer : PropertyDrawer
     {
         public override VisualElement CreatePropertyGUI(SerializedProperty _property) {
             Foldout root = new() {
@@ -20,7 +20,11 @@ namespace MaroonSealEditor.Maths {
             root.AddToClassList("unity-foldout-input");
 
             root.Add(new PropertyField(_property.FindPropertyRelative("position")));
-            root.Add(new PropertyField(_property.FindPropertyRelative("angle")));
+
+            AngleField angleField = new();
+            angleField.BindProperty(_property.FindPropertyRelative("angle"));
+            root.Add(angleField);
+
             root.Add(new PropertyField(_property.FindPropertyRelative("scale")));
 
             return root;
@@ -35,10 +39,10 @@ namespace MaroonSealEditor.Maths {
             };
         }
 
-        static public void SetProperty(SerializedProperty _property, Transform2D _pointTransform) {
-            _property.FindPropertyRelative("position").vector2Value = _pointTransform.position;
-            _property.FindPropertyRelative("angle").floatValue = _pointTransform.angle;
-            _property.FindPropertyRelative("scale").vector2Value = _pointTransform.scale;
+        static public void SetProperty(SerializedProperty _property, Transform2D _transform) {
+            _property.FindPropertyRelative("position").vector2Value = _transform.position;
+            _property.FindPropertyRelative("angle").floatValue = _transform.angle;
+            _property.FindPropertyRelative("scale").vector2Value = _transform.scale;
         }
         #endregion
     }

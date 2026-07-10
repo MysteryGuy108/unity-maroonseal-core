@@ -3,31 +3,29 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-using MaroonSeal.Maths.Geometry.SDFs;
 
-
-namespace MaroonSeal.Maths.Geometry.Shapes {
+namespace MaroonSeal.Maths.Geometry {
     [System.Serializable]
-    public struct Triangle : IShape3D, IPolygon3D, ISDFShape
+    public struct Triangle : IShape3D, IPolygon3D, ISDF3D
     {
         [field : SerializeField] public Transform3D Transform { get; set; }
 
         [SerializeField] private Vector3 p1;
         public Vector3 Point1 {
-            readonly get => Transform.TransformPosition(p1);
-            set => p1 = Transform.InverseTransformPosition(value);
+            readonly get => Transform.TransformPoint(p1);
+            set => p1 = Transform.InverseTransformPoint(value);
         }
 
         [SerializeField] private Vector3 p2;
         public Vector3 Point2 {
-            readonly get => Transform.TransformPosition(p2);
-            set => p2 = Transform.InverseTransformPosition(value);
+            readonly get => Transform.TransformPoint(p2);
+            set => p2 = Transform.InverseTransformPoint(value);
         }
 
         [SerializeField] private Vector3 p3;
         public Vector2 Point3 {
-            readonly get => Transform.TransformPosition(p3);
-            set => p3 = Transform.InverseTransformPosition(value);
+            readonly get => Transform.TransformPoint(p3);
+            set => p3 = Transform.InverseTransformPoint(value);
         }
 
 
@@ -95,7 +93,7 @@ namespace MaroonSeal.Maths.Geometry.Shapes {
         #endregion
 
         #region IShape3D
-        readonly public bool Contains(Vector3 _point)
+        readonly public bool ContainsPoint(Vector3 _point)
         {
             throw new NotImplementedException();
         }

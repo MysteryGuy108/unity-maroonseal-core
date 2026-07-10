@@ -6,7 +6,7 @@ namespace MaroonSeal.Maths {
     /// A struct used to represent a transform at a point in 2D space.
     /// </summary>
     [System.Serializable]
-    public struct Transform2D : ITransform
+    public struct Transform2D : ITransform<Vector2>
     {
         public Vector2 position;
         public float angle;
@@ -36,11 +36,7 @@ namespace MaroonSeal.Maths {
             scale = _scale ?? Vector2.one;
         }
 
-        public Transform2D(Vector2 _position, Quaternion _rotation, Vector2? _scale = null) {
-            position = _position;
-            angle = _rotation.eulerAngles.z;
-            scale = _scale ?? Vector2.one;
-        }
+        public Transform2D(Vector2 _position, Quaternion _rotation, Vector2? _scale = null) : this(_position, _rotation.eulerAngles.z, _scale) {}
 
         public Transform2D(Transform _transform, bool _worldSpace = true) {
             position = _worldSpace ? _transform.position : _transform.localPosition;
@@ -103,23 +99,15 @@ namespace MaroonSeal.Maths {
         #endregion
 
         #region Transformations
-        readonly public Vector2 TransformPosition(Vector2 _position) => ToWorldMatrix.MultiplyPoint(_position.ToXY());
-        readonly public Vector2 InverseTransformPosition(Vector2 _position) => ToLocalMatrix.MultiplyPoint(_position.ToXY());
-        readonly public Vector2 TransformVector(Vector2 _vector) => ToWorldMatrix.MultiplyVector(_vector.ToXY());
-        readonly public Vector2 InverseTransformVector(Vector2 _vector) => ToLocalMatrix.MultiplyVector(_vector.ToXY());
-        readonly public Vector2 TransformDirection(Vector2 _direction) => TransformVector(_direction.ToXY()).normalized;
-        readonly public Vector2 InverseTransformDirection(Vector2 _direction) => InverseTransformVector(_direction.ToXY()).normalized;
+        readonly public Vector2 TransformPoint(Vector2 _point) => ToWorldMatrix.MultiplyPoint(_point);
+        readonly public Vector2 TransformDirection(Vector2 _direction) => TransformVector(_direction).normalized;
+        readonly public Vector2 TransformVector(Vector2 _vector) => ToWorldMatrix.MultiplyVector(_vector);
         #endregion
 
-        #region IPointTransform
-        readonly public Vector3 TransformPosition(Vector3 _position) => TransformPosition((Vector2)_position);
-        readonly public Vector3 InverseTransformPosition(Vector3 _position) => TransformPosition((Vector2)_position);
-        
-        readonly public Vector3 TransformVector(Vector3 _vector) => TransformPosition((Vector2)_vector);
-        readonly public Vector3 InverseTransformVector(Vector3 _vector) => TransformPosition((Vector2)_vector);
-
-        readonly public Vector3 TransformDirection(Vector3 _direction) => TransformPosition((Vector2)_direction);
-        readonly public Vector3 InverseTransformDirection(Vector3 _direction) => TransformPosition((Vector2)_direction);
+        #region Inverse Transformations
+        readonly public Vector2 InverseTransformPoint(Vector2 _point) => ToLocalMatrix.MultiplyPoint(_point);
+        readonly public Vector2 InverseTransformDirection(Vector2 _direction) => InverseTransformVector(_direction).normalized;
+        readonly public Vector2 InverseTransformVector(Vector2 _vector) => ToLocalMatrix.MultiplyVector(_vector);
         #endregion
     }
 }

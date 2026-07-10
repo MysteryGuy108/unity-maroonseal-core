@@ -6,8 +6,8 @@ using UnityEditor.UIElements;
 
 using MaroonSeal.Maths;
 
-namespace MaroonSealEditor.Maths {
-    static public class PointTransformHandles
+namespace MaroonSealEditor.Maths.Geometry {
+    static public class Transform3DHandles
     {
         #region Point Transform Handles
         static public void Transform(Transform3D _pointTransform, Vector3? _size = null,

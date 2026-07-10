@@ -3,31 +3,29 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-using MaroonSeal.Maths.Geometry.SDFs;
-
-namespace MaroonSeal.Maths.Geometry.Shapes {
+namespace MaroonSeal.Maths.Geometry {
     [System.Serializable]
-    public struct Triangle2D : IPolygon2D, ISDFShape
+    public struct Triangle2D : IPolygon2D, ISDF2D
     {
         [field : SerializeField] public Transform2D Transform { get; set; }
         public readonly int VertexCount => 3;
 
         [SerializeField] private Vector2 p1;
         public Vector2 Point1 {
-            readonly get => Transform.TransformPosition(p1);
-            set => p1 = Transform.InverseTransformPosition(value);
+            readonly get => Transform.TransformPoint(p1);
+            set => p1 = Transform.InverseTransformPoint(value);
         }
 
         [SerializeField] private Vector2 p2;
         public Vector2 Point2 {
-            readonly get => Transform.TransformPosition(p2);
-            set => p2 = Transform.InverseTransformPosition(value);
+            readonly get => Transform.TransformPoint(p2);
+            set => p2 = Transform.InverseTransformPoint(value);
         }
 
         [SerializeField] private Vector2 p3;
         public Vector2 Point3 {
-            readonly get => Transform.TransformPosition(p3);
-            set => p3 = Transform.InverseTransformPosition(value);
+            readonly get => Transform.TransformPoint(p3);
+            set => p3 = Transform.InverseTransformPoint(value);
         }
 
         #region Constructors
@@ -67,7 +65,7 @@ namespace MaroonSeal.Maths.Geometry.Shapes {
             float ux = ((p1.x * p1.x + p1.y * p1.y) * (p2.y - p3.y) + (p2.x * p2.x + p2.y * p2.y) * (p3.y - p1.y) + (p3.x * p3.x + p3.y * p3.y) * (p1.y - p2.y)) / d;
             float uy = ((p1.x * p1.x + p1.y * p1.y) * (p3.x - p2.x) + (p2.x * p2.x + p2.y * p2.y) * (p1.x - p3.x) + (p3.x * p3.x + p3.y * p3.y) * (p2.x - p1.x)) / d;
 
-            Vector2 circumCentre = Transform.TransformPosition(new Vector2(ux, uy));
+            Vector2 circumCentre = Transform.TransformPoint(new Vector2(ux, uy));
             float circumRadius = Vector2.Distance(p1, circumCentre);
 
             return new Circle2D(circumCentre, circumRadius);
@@ -75,9 +73,9 @@ namespace MaroonSeal.Maths.Geometry.Shapes {
         #endregion
 
         #region IShape
-        readonly public bool Contains(Vector2 _point)
+        readonly public bool ContainsPoint(Vector2 _point)
         {
-            Vector2 p = Transform.InverseTransformPosition(_point);
+            Vector2 p = Transform.InverseTransformPoint(_point);
             float denominator = (p2.y - p3.y) * (p1.x - p3.x) + (p3.x - p2.x) * (p1.y - p3.y);
             if (denominator == 0.0f) { return false; }
 
@@ -105,8 +103,8 @@ namespace MaroonSeal.Maths.Geometry.Shapes {
         #endregion
 
         #region ISDFShape
-        readonly public float GetSignedDistance(Vector3 _position) {
-            Vector2 p = _position;
+        readonly public float GetSignedDistance(Vector2 _point) {
+            Vector2 p = _point;
             Vector2 e0 = p2-p1, e1 = p3-p2, e2 = p1-p3;
             Vector2 v0 = p - p1, v1 = p -p2, v2 = p-p3;
 

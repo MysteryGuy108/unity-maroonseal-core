@@ -19,5 +19,8 @@ namespace MaroonSeal.Maths
                 Mathf.Repeat(_a.y, _b.y)
             );
         }
+
+        static public Vector2 FromRadians(float _radians, float _radius) => new Vector2(Mathf.Cos(_radians), Mathf.Sin(_radians)) * _radius;
+        static public Vector2 FromDegrees(float _degrees, float _radius) => FromRadians(_degrees * Mathf.Deg2Rad, _radius);
     }
 }

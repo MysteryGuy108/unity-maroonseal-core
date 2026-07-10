@@ -1,9 +1,7 @@
 using UnityEngine;
 
-using MaroonSeal.Maths.Geometry.SDFs;
-
 namespace MaroonSeal.Maths.Geometry {
-    public struct Box : IShape3D, ISDFShape 
+    public struct Box : IShape3D, ISDF3D
     {
         [SerializeField] private Transform3D transform;
         public Transform3D Transform
@@ -45,7 +43,7 @@ namespace MaroonSeal.Maths.Geometry {
         #endregion
 
         #region Casting
-        public static implicit operator Box2D(Box _box) => new(_box.transform, _box.dimensions);
+        public static implicit operator Rectangle2D(Box _box) => new(_box.transform, _box.dimensions);
         #endregion
 
         #region Shape3D
@@ -60,9 +58,9 @@ namespace MaroonSeal.Maths.Geometry {
         #endregion
 
         #region Box
-        readonly public bool Contains(Vector3 _point)
+        readonly public bool ContainsPoint(Vector3 _point)
         {
-            _point = transform.InverseTransformPosition(_point);
+            _point = transform.InverseTransformPoint(_point);
             Vector3 halfSize = dimensions * 0.5f;
 
             return _point.x >= -halfSize.x && _point.x <= halfSize.x &&
@@ -73,7 +71,7 @@ namespace MaroonSeal.Maths.Geometry {
 
         #region ISDFShape
         readonly public float GetSignedDistance(Vector3 _point) {
-            _point = transform.InverseTransformPosition(_point);
+            _point = transform.InverseTransformPoint(_point);
             Vector3 q = _point.Abs() - dimensions;
             return q.Max(0.0f).magnitude + Mathf.Min(Mathf.Max(q.x, Mathf.Max(q.y, q.z)), 0.0f);
         }
