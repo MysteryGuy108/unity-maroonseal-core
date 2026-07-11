@@ -21,7 +21,7 @@ namespace MaroonSealEditor.Maths.Geometry {
             root.AddToClassList("unity-foldout-input");
 
             root.Add(new PropertyField(_property.FindPropertyRelative("position")));
-            QuaternionEulerField rotationField = new("Rotation");
+            EulerAngleField rotationField = new("Rotation");
             rotationField.BindProperty(_property.FindPropertyRelative("rotation"));
             root.Add(rotationField);
 

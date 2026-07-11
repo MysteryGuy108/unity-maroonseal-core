@@ -33,6 +33,17 @@ namespace MaroonSeal.Maths.Geometry {
             p1 = _p1; p2 = _p2; p3 = _p3;
             Transform = _transform ?? Transform2D.Origin;
         }
+
+        public Triangle2D(float _sideLength, Transform2D? _transform = null)
+        {
+            float r = _sideLength / Mathf.Sqrt(3.0f);
+
+            p1 = Vector2Maths.FromDegrees(90.0f, r);
+            p2 = Vector2Maths.FromDegrees(210.0f, r);
+            p3 = Vector2Maths.FromDegrees(330.0f, r);
+
+            Transform = _transform ?? Transform2D.Origin;
+        }
         #endregion
 
         #region Operators
@@ -65,10 +76,10 @@ namespace MaroonSeal.Maths.Geometry {
             float ux = ((p1.x * p1.x + p1.y * p1.y) * (p2.y - p3.y) + (p2.x * p2.x + p2.y * p2.y) * (p3.y - p1.y) + (p3.x * p3.x + p3.y * p3.y) * (p1.y - p2.y)) / d;
             float uy = ((p1.x * p1.x + p1.y * p1.y) * (p3.x - p2.x) + (p2.x * p2.x + p2.y * p2.y) * (p1.x - p3.x) + (p3.x * p3.x + p3.y * p3.y) * (p2.x - p1.x)) / d;
 
-            Vector2 circumCentre = Transform.TransformPoint(new Vector2(ux, uy));
+            Vector2 circumCentre = new(ux, uy);
             float circumRadius = Vector2.Distance(p1, circumCentre);
 
-            return new Circle2D(circumCentre, circumRadius);
+            return new Circle2D(Transform.TransformPoint(circumCentre), circumRadius);
         }
         #endregion
 

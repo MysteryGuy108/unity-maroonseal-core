@@ -3,15 +3,15 @@ using UnityEngine;
 
 namespace MaroonSeal.Maths.DataStructures.Grid
 {
-    public class RectCellTopology : IGridTopology
+    public struct RectGridTopology : IGridTopology
     {
         readonly static Vector2Int[] edgeCoordinates = new Vector2Int[4] 
         {
             Vector2Int.up, Vector2Int.right, -Vector2Int.up, -Vector2Int.right
         };
 
-        public int EdgeCount => 4;
+        public readonly int EdgeCount => 4;
 
-        public Vector2Int GetNeighbourCoordinateOffset(Vector2Int _coord, int _edgeIndex) => edgeCoordinates[_edgeIndex];
+        public readonly Vector2Int GetNeighbourCoordinateOffset(Vector2Int _coord, int _edgeIndex) => edgeCoordinates[_edgeIndex];
     }
 }

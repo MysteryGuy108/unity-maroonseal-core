@@ -23,7 +23,7 @@ namespace MaroonSeal.Maths.Geometry {
             Transform = _transform;
             dimensions = _dimensions;
         }
-
+        
         public Rectangle2D(Vector2 _cornerA, Vector2 _cornerB) {
             Transform = new((_cornerA + _cornerB) / 2.0f);
             dimensions = (_cornerB - _cornerA).Abs();

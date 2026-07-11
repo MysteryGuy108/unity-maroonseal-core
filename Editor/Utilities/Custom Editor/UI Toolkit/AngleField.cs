@@ -24,7 +24,7 @@ namespace MaroonSealEditor
             FloatField yInput = angleField.Q<FloatField>("unity-y-input");
 
             xInput.label = "θ";
-            xInput.style.flexGrow = 0.48f;
+            xInput.style.flexGrow = 0.49125f;
             yInput.style.display = DisplayStyle.None;
 
             angleField.RegisterValueChangedCallback(evt => value = evt.newValue.x);

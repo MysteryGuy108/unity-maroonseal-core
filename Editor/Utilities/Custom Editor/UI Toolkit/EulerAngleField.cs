@@ -6,14 +6,14 @@ using UnityEditor.UIElements;
 
 namespace MaroonSealEditor
 {
-    public class QuaternionEulerField : BaseField<Quaternion>
+    public class EulerAngleField : BaseField<Quaternion>
     {
         private readonly Vector3Field eulerField;
 
         private Vector3 _cachedEuler;
         private bool _hasCachedEuler;
         
-        public QuaternionEulerField(string label = "Rotation") : base(label, new Vector3Field(label))
+        public EulerAngleField(string label = "Rotation") : base(label, new Vector3Field(label))
         {
             eulerField = this.Q<Vector3Field>(className: inputUssClassName);
             eulerField.AddToClassList("unity-base-field__aligned");

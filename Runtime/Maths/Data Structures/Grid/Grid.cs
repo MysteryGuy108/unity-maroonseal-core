@@ -11,13 +11,14 @@ namespace MaroonSeal.Maths.DataStructures.Grid
     /// </summary>
     /// <typeparam name="TValue"></typeparam>
     /// <typeparam name="TEdge"></typeparam>
-    public class Grid<TValue, TEdge>
+    abstract public class Grid<TValue, TEdge, TTopology, TGeometry> where TTopology : IGridTopology, new() where TGeometry : IGridGeometry, new()
     {
         readonly Cell<TValue, TEdge>[,] cells;
         public Vector2Int Size { get; }
         
-        public IGridTopology Topology { get; }
-        public IGridGeometry Geometry { get; }
+        [SerializeField]
+        public TTopology Topology;// { get; }
+        public TGeometry Geometry;// { get; }
 
         public TValue this[int _x, int _y]
         {
@@ -34,22 +35,29 @@ namespace MaroonSeal.Maths.DataStructures.Grid
         public bool IsInBounds(Vector2Int _coord) => _coord.x >= 0 && _coord.x < Size.x && _coord.y >= 0 && _coord.y < Size.y;
 
         #region Constructor/Destructor
-        public Grid(Vector2Int _size, IGridTopology _topology, IGridGeometry _geometry) {
-            
+        public Grid(Vector2Int _size, TTopology _topology, TGeometry _geometry) {
+            _size.x = Mathf.Max(0, _size.x); 
+            _size.y = Mathf.Max(0, _size.y); 
+
             Size = _size;
-            cells = new Cell<TValue, TEdge>[_size.x, _size.y];
 
             Topology = _topology;
             Geometry = _geometry;
 
-            for(int y = 0; y < _size.y; y++)
+            cells = new Cell<TValue, TEdge>[Size.x, Size.y];
+            
+            for(int y = 0; y < Size.y; y++)
             {
-                for(int x = 0; x < _size.x; x++)
+                for(int x = 0; x < Size.x; x++)
                 {
                     cells[x,y] = new(Topology.EdgeCount);
                 }
             }
         }
+
+        public Grid(Vector2Int _size) : this(_size, new(), new()) {}
+
+        public Grid() : this(Vector2Int.zero, new(), new()) {}
 
         ~Grid() {}
         #endregion

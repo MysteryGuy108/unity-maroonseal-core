@@ -7,10 +7,17 @@ namespace MaroonSeal.Maths.Geometry
     public struct Hexagon2D : IPolygon2D, ISDF2D
     {
         [field : SerializeField] public Transform2D Transform {get; set; }
-        [SerializeField][Min(0.0f)] private float radius;
+        [Min(0.0f)] public float radius;
         readonly public int VertexCount => 6;
 
         public readonly Vector2 this[int _index] => Transform.TransformPoint(Vector2Maths.FromDegrees(60.0f * _index, radius));
+
+        #region Constructors
+        public Hexagon2D(Transform2D _transform, float _radius) {
+            Transform = _transform;
+            radius = _radius;
+        }
+        #endregion
 
         #region IShape2D
         public readonly bool ContainsPoint(Vector2 _point) => GetSignedDistance(_point) <= 0.0f;

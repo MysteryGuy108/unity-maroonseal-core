@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace MaroonSeal.Maths
 {
-    static public class Vector3Maths
+    public struct Vector3Maths
     {
         static public Vector3 Clamp(Vector3 _value, Vector3 _min, Vector3 _max)
         {
@@ -19,6 +19,24 @@ namespace MaroonSeal.Maths
                 Mathf.Repeat(_a.x, _b.x),
                 Mathf.Repeat(_a.y, _b.y),
                 Mathf.Repeat(_a.z, _b.z)
+            );
+        }
+
+        static public Vector3 Abs(Vector3 _v)
+        {
+            return new(
+                Mathf.Abs(_v.x),
+                Mathf.Abs(_v.y),
+                Mathf.Abs(_v.z)
+            );
+        }
+
+        static public Vector3Int RoundToInt(Vector3 _v)
+        {
+            return new(
+                Mathf.RoundToInt(_v.x),
+                Mathf.RoundToInt(_v.y),
+                Mathf.RoundToInt(_v.z)
             );
         }
     }
