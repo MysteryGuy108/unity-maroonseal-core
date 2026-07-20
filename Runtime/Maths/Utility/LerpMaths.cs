@@ -1,7 +1,7 @@
 using UnityEngine;
 
 namespace MaroonSeal.Maths {
-    public static class LerpMaths {
+    public struct LerpMaths {
 
         #region Lerp
         static public float Time(float _a, float _b, float _t) => Mathf.Lerp(_a, _b, _t);

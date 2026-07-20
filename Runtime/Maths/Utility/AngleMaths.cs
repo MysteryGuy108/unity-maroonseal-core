@@ -1,7 +1,7 @@
 using UnityEngine;
 
 namespace MaroonSeal.Maths {
-    static public class AngleMaths
+    public struct AngleMaths
     {
         static public float ModPI(float _theta) {
             _theta = Mathf.Repeat(_theta, 2.0f * Mathf.PI);

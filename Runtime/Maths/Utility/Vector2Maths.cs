@@ -4,6 +4,13 @@ namespace MaroonSeal.Maths
 {
     public struct Vector2Maths
     {
+        #region Operations
+        static public Vector2 Max(Vector2 _a, Vector2 _b) => 
+            new(Mathf.Max(_a.x, _b.x), Mathf.Max(_a.y, _b.y));
+
+        static public Vector2 Min(Vector2 _a, Vector2 _b) => 
+            new(Mathf.Min(_a.x, _b.x), Mathf.Min(_a.y, _b.y));
+
         static public Vector2 Clamp(Vector2 _value, Vector2 _min, Vector2 _max) => 
             new(Mathf.Clamp(_value.x, _min.x, _max.x), Mathf.Clamp(_value.y, _min.y, _max.y));
 
@@ -18,7 +25,8 @@ namespace MaroonSeal.Maths
 
         static public Vector2Int FloorToInt(Vector2 _value) => 
             new (Mathf.FloorToInt(_value.x), Mathf.FloorToInt(_value.y));
-
+        #endregion
+        
         static public Vector2 FromRadians(float _radians, float _radius) => new Vector2(Mathf.Cos(_radians), Mathf.Sin(_radians)) * _radius;
         static public Vector2 FromDegrees(float _degrees, float _radius) => FromRadians(_degrees * Mathf.Deg2Rad, _radius);
     }

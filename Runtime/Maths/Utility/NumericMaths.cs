@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace MaroonSeal.Maths {
-    static public class NumericMaths
+    public struct NumericMaths
     {
         const float EPSILON = 0.0001f;
 

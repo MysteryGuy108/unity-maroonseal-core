@@ -5,7 +5,7 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-using MaroonSeal.Maths.DataStructures.NodeGraphs;
+using MaroonSeal.DataStructures.NodeGraphs;
 
 namespace MaroonSealTesting.DataStructures.NodeGraphs
 {
