@@ -15,6 +15,7 @@ namespace MaroonSeal.DataStructures.Grid
     {
         readonly Cell<TValue, TEdge>[,] cells;
         public Vector2Int Size { get; }
+        
         [SerializeField]
         public TTopology Topology;// { get; }
         public TGeometry Geometry;// { get; }
@@ -62,24 +63,24 @@ namespace MaroonSeal.DataStructures.Grid
         #endregion
 
         #region Edges
-        public TEdge GetEdge(Vector2Int _coord, int _edgeIndex) {
-            return cells[_coord.x, _coord.y][_edgeIndex];
+        public TEdge GetEdge(Vector2Int _cell, int _edgeIndex) {
+            return cells[_cell.x, _cell.y][_edgeIndex];
         }
 
-        public IEnumerable<TEdge> GetCellEdges(Vector2Int _coord) {
-            for(int i = 0; i < Topology.EdgeCount; i++) { yield return GetEdge(_coord, i); }
+        public IEnumerable<TEdge> GetCellEdges(Vector2Int _cell) {
+            for(int i = 0; i < Topology.EdgeCount; i++) { yield return GetEdge(_cell, i); }
         }
 
-        public void SetEdge(Vector2Int _coord, int _edgeIndex, TEdge _edge) {
-            cells[_coord.x, _coord.y][_edgeIndex] = _edge;
+        public void SetEdge(Vector2Int _cell, int _edgeIndex, TEdge _edge) {
+            cells[_cell.x, _cell.y][_edgeIndex] = _edge;
         }
         #endregion
 
         #region Neighbour
-        public KeyValuePair<Vector2Int, TValue> GetNeighbour(Vector2Int _coord, int _index) {
-            Vector2Int neighbourCoord = _coord + Topology.GetNeighbour(_coord, _index);
-            if (!IsInBounds(neighbourCoord)) { return new(_coord, default); }
-            return new(neighbourCoord, this[_coord]);
+        public KeyValuePair<Vector2Int, TValue> GetNeighbour(Vector2Int _cell, int _index) {
+            Vector2Int neighbourCoord = _cell + Topology.GetNeighbour(_cell, _index);
+            if (!IsInBounds(neighbourCoord)) { return new(_cell, default); }
+            return new(neighbourCoord, this[_cell]);
         }
 
         public IEnumerable<KeyValuePair<Vector2Int, TValue>> GetNeighbours(Vector2Int _coord) {

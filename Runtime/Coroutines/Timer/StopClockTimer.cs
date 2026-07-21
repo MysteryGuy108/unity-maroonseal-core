@@ -7,7 +7,7 @@ namespace MaroonSeal.Routines
 {
     public class StopClockTimer : ITimer
     {
-        [SerializeField][EditorReadOnly] private float elapsedTime;
+        [SerializeField][InspectorReadOnly] private float elapsedTime;
         private bool isStopped;
 
         public event Action OnStart;

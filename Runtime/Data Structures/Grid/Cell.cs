@@ -8,7 +8,7 @@ namespace MaroonSeal.DataStructures.Grid
     {
         public int EdgeCount { get; }
 
-        [SerializeField][FixedListView(true, true)] private CompassArray<TEdge> edges;
+        [SerializeField][InspectorListView(true, true)] private CompassArray<TEdge> edges;
 
         [field : SerializeField] public TValue Value {get; set; }
 
