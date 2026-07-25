@@ -62,7 +62,7 @@ namespace MaroonSeal.DataStructures.LUTs
                     lookup.Clear(); 
                     lookup = fallback;
                     SyncListFromDictionary();
-                    Debug.LogError("Lookup Table dictionary cannot have two keys with the same value of " + item.Key.ToString() + ".");
+                    Debug.LogError("Lookup table dictionary cannot have two keys with the same value of " + item.Key.ToString() + ".");
                     return;
                 }
 

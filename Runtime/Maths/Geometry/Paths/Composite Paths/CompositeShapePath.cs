@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-using MaroonSeal.Maths.Geometry.Paths.LUTs;
+using MaroonSeal.DataStructures.LUTs;
 
 namespace MaroonSeal.Maths.Geometry.Paths {
 
@@ -15,8 +15,8 @@ namespace MaroonSeal.Maths.Geometry.Paths {
         protected List<TPathSegment> segments;
         public int SegmentCount => segments == null ? 0 : segments.Count;
 
-        [SerializeField] protected PathFloatLUT distanceLUT = new();
-        override public float Length => distanceLUT == null ? 0.0f : distanceLUT[^1];
+        [SerializeField] protected FloatLookupTable distanceLUT = new();
+        override public float Length => distanceLUT == null ? 0.0f : distanceLUT[^1].Value;
 
         public override bool IsLoop => false;
 
@@ -70,11 +70,14 @@ namespace MaroonSeal.Maths.Geometry.Paths {
             distanceLUT ??= new();
             distanceLUT.Clear();
             
-            if(segments == null) { distanceLUT.AddValue(0.0f); return; }
-            if(segments.Count <= 0) { distanceLUT.AddValue(0.0f); return; }
+            if(segments == null) { distanceLUT.Add(0.0f, 0.0f); return; }
+            if(segments.Count <= 0) { distanceLUT.Add(0.0f, 0.0f); return; }
 
-            foreach(TPathSegment segment in segments) { 
-                distanceLUT.AddValue(segment.Length); 
+            float segmentTime = 1.0f / segments.Count;
+            for(int i = 0; i < segments.Count; i++)
+            {
+                float key = i * segmentTime;
+                distanceLUT.Add(key, segments[i].Length);
             }
         }
 
@@ -96,7 +99,7 @@ namespace MaroonSeal.Maths.Geometry.Paths {
         }
 
         public int GetSegmentIndexAtDistance(float _distance, out float _localDistance) {
-            int index = GetSegmentIndexAtTime(distanceLUT.EvaulateTimeAtValue(_distance), out float localTime);
+            int index = GetSegmentIndexAtTime(distanceLUT.EvaluateValue(_distance), out float localTime);
             if (index < 0) { _localDistance = 0.0f; return -1; }
 
             _localDistance = (GetDistanceAtSegmentIndex(index+1) - GetDistanceAtSegmentIndex(index)) * localTime;
@@ -106,8 +109,8 @@ namespace MaroonSeal.Maths.Geometry.Paths {
         public TPathSegment GetSegmentAtTime(float _time, out float _localTime) => GetSegmentAtIndex(GetSegmentIndexAtTime(_time, out _localTime));
         public TPathSegment GetSegmentAtDistance(float _distance, out float _localDistance) => GetSegmentAtIndex(GetSegmentIndexAtDistance(_distance, out _localDistance));
 
-        public float GetTimeAtSegmentIndex(int _index) => distanceLUT.GetTimeAtIndex(_index);
-        public float GetDistanceAtSegmentIndex(int _index) => distanceLUT.GetValueAtIndex(_index);
+        public float GetTimeAtSegmentIndex(int _index) => distanceLUT[_index].Key;
+        public float GetDistanceAtSegmentIndex(int _index) => distanceLUT[_index].Value;
         #endregion
     }
 

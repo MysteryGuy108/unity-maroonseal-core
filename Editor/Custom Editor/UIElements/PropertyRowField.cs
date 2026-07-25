@@ -4,10 +4,9 @@ using UnityEngine.UIElements;
 using UnityEditor;
 using UnityEditor.UIElements;
 
-namespace MaroonSealEditor {
+namespace MaroonSealEditor.UIElements {
     public class PropertyRowField : VisualElement
     {
-
         public VisualElement propertyAField;
         public VisualElement propertyBField;
 

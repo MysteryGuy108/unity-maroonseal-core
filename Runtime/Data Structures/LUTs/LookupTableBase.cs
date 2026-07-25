@@ -18,21 +18,12 @@ namespace MaroonSeal.DataStructures.LUTs {
 
         public virtual IEnumerable<TKey> Keys
         {
-            get
-            {
-                foreach(LUTItem<TKey, TValue> item in items) { yield return item.Key; }
-            }
+            get { foreach(LUTItem<TKey, TValue> item in items) { yield return item.Key; } }
         }
 
         public virtual IEnumerable<TValue> Values
         {
-            get
-            {
-                foreach(LUTItem<TKey, TValue> item in items)
-                {
-                    yield return item.Value;
-                }
-            }
+            get { foreach(LUTItem<TKey, TValue> item in items) { yield return item.Value; } }
         }
 
         public virtual void Add(LUTItem<TKey, TValue> _item) => items.Add(new LUTItem<TKey, TValue>(_item));

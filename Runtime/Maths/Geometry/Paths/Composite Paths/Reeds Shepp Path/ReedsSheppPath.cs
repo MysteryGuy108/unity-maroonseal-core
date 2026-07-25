@@ -129,7 +129,7 @@ namespace MaroonSeal.Maths.Geometry.Paths.ReedsShepp {
         }
 
         public RSManoeuvre GetManoeuvreAtDistance(float _distance) => 
-            GetManoeuvreAtTime(distanceLUT.EvaulateTimeAtValue(_distance));
+            GetManoeuvreAtTime(distanceLUT.EvaluateValue(_distance));
         #endregion
 
         #region Manoeuvre Paths

@@ -1,3 +1,6 @@
+using System.Collections;
+using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -5,6 +8,9 @@ using UnityEditor;
 using UnityEditor.UIElements;
 
 using MaroonSeal.DataStructures;
+
+using MaroonSealEditor.UIElements;
+
 
 namespace MaroonSealEditor.DataStructures.LUTs {
 
@@ -17,22 +23,31 @@ namespace MaroonSealEditor.DataStructures.LUTs {
             SerializedProperty keyProperty = _property.FindPropertyRelative("key");
             SerializedProperty valueProperty = _property.FindPropertyRelative("value");
 
+            VisualElement keyField;
+
             if (valueProperty.propertyType == SerializedPropertyType.Generic)
             {
-                root = new();
+                PropertyFieldFoldout propertyFoldout = new(keyProperty, "");
+                
+                foreach(SerializedProperty child in GetImmediateChildren(valueProperty))
+                {
+                    propertyFoldout.Add(new PropertyField(child));
+                }
+
+                keyField = propertyFoldout;
+                root = propertyFoldout;
             }
             else
             {
                 PropertyRowField propertiesField = new(keyProperty, valueProperty, "  Key", "Value");
-
-                propertiesField.RegisterCallbackOnce<GeometryChangedEvent>((cntx) =>
-                {
-                    ApplyDelayedInput(propertiesField.propertyAField);
-                    ApplyDelayedInput(propertiesField.propertyBField);
-                });
-
+                keyField = propertiesField.propertyAField;
                 root = propertiesField;
             }
+
+            root.RegisterCallbackOnce<GeometryChangedEvent>((cntx) =>
+            {
+                ApplyDelayedInput(keyField);
+            });
 
             return root;
         }
@@ -45,6 +60,18 @@ namespace MaroonSealEditor.DataStructures.LUTs {
             _root.Query<FloatField>().ForEach(f => f.isDelayed = true);
             _root.Query<LongField>().ForEach(f => f.isDelayed = true);
             _root.Query<DoubleField>().ForEach(f => f.isDelayed = true);
+        }
+
+        static IEnumerable<SerializedProperty> GetImmediateChildren(SerializedProperty _parent)
+        {
+            var enumerator = _parent.GetEnumerator();
+            int depth = _parent.depth;
+
+            while (enumerator.MoveNext()) {
+                if (enumerator.Current is not SerializedProperty child) { continue; }
+                if (child == null || child.depth > depth + 1) { continue; }
+                yield return child;
+            }
         }
     }
 }
