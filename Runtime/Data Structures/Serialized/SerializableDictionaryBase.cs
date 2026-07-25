@@ -29,7 +29,7 @@ namespace MaroonSeal.DataStructures {
             RefreshItemList();
         }
 
-        public void Add(KeyValuePair<TKey, TValue> item) { Add(item.Key, item.Value); }
+        public void Add(KeyValuePair<TKey, TValue> item) => Add(item.Key, item.Value);
 
         public void AddRange(List<KeyValuePair<TKey, TValue>> _list) {
             foreach(KeyValuePair<TKey, TValue> item in _list) {

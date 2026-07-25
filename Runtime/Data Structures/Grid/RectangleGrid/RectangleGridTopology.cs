@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-namespace MaroonSeal.DataStructures.Grid
+namespace MaroonSeal.DataStructures.Grids
 {
     public class RectangleGridTopology : GridTopology
     {

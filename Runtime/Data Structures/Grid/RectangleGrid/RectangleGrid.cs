@@ -2,7 +2,7 @@ using UnityEngine;
 
 using MaroonSeal.Maths.Geometry;
 
-namespace MaroonSeal.DataStructures.Grid
+namespace MaroonSeal.DataStructures.Grids
 {
     [System.Serializable]
     public class RectangleGrid<TValue, TEdge> : Grid<TValue, TEdge, RectangleGridTopology, Rectangle2DGridGeometry>

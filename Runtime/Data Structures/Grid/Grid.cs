@@ -3,33 +3,47 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using MaroonSeal.Maths.Geometry;
+using MaroonSeal.DataStructures.Graphs;
 
-namespace MaroonSeal.DataStructures.Grid
+namespace MaroonSeal.DataStructures.Grids
 {
     /// <summary>
     /// A generic grid data structure used to store data in each cell and in the edges between the cells
     /// </summary>
     /// <typeparam name="TValue"></typeparam>
     /// <typeparam name="TEdge"></typeparam>
-    abstract public class Grid<TValue, TEdge, TTopology, TGeometry> : IGrid<TValue, TEdge> where TTopology : GridTopology, new() where TGeometry : IGridGeometry2D, new()
+    abstract public class Grid<TValue, TEdge, TTopology, TGeometry> : IGrid<TValue, TEdge> 
+        where TTopology : GridTopology, new() 
+        where TGeometry : IGridGeometry2D, new()
     {
-        readonly Cell<TValue, TEdge>[,] cells;
         public Vector2Int Size { get; }
-        
-        [SerializeField]
-        public TTopology Topology;// { get; }
-        public TGeometry Geometry;// { get; }
 
-        public TValue this[int _x, int _y]
+        readonly Dictionary<Vector2Int, Cell> cells;
+
+        private class Cell
         {
-            get => cells[_x, _y].Value;
-            set => cells[_x, _y].Value = value;
+            private readonly TEdge[] edges;
+            public TValue Value { get; set; }
+
+            public TEdge this[int _edge] {
+                get => edges[_edge];
+                set => edges[_edge] = value;
+            }
+
+            #region Constructors
+            public Cell(int _edgeCount) {
+                edges = new TEdge[_edgeCount]; 
+            }
+            #endregion
         }
 
-        public TValue this[Vector2Int _coord]
+        public TTopology topology;
+        public TGeometry geometry;
+
+        public TValue this[Vector2Int _cell]
         {
-            get => this[_coord.x, _coord.y];
-            set => this[_coord.x, _coord.y] = value;
+            get => cells[_cell].Value;
+            set => cells[_cell].Value = value;
         }
 
         public bool IsInBounds(Vector2Int _coord) => _coord.x >= 0 && _coord.x < Size.x && _coord.y >= 0 && _coord.y < Size.y;
@@ -41,16 +55,16 @@ namespace MaroonSeal.DataStructures.Grid
 
             Size = _size;
 
-            Topology = _topology;
-            Geometry = _geometry;
+            topology = _topology;
+            geometry = _geometry;
 
-            cells = new Cell<TValue, TEdge>[Size.x, Size.y];
+            cells = new Dictionary<Vector2Int, Cell>();
             
             for(int y = 0; y < Size.y; y++)
             {
                 for(int x = 0; x < Size.x; x++)
                 {
-                    cells[x,y] = new(Topology.EdgeCount);
+                    cells[new(x,y)] = new(topology.EdgeCount);
                 }
             }
         }
@@ -63,30 +77,26 @@ namespace MaroonSeal.DataStructures.Grid
         #endregion
 
         #region Edges
-        public TEdge GetEdge(Vector2Int _cell, int _edgeIndex) {
-            return cells[_cell.x, _cell.y][_edgeIndex];
+        public TEdge GetEdge(Vector2Int _cell, int _edgeIndex) => cells[_cell][_edgeIndex];
+        public IEnumerable<TEdge> GetEdges(Vector2Int _cell) {
+            for(int i = 0; i < topology.EdgeCount; i++) { yield return GetEdge(_cell, i); }
         }
 
-        public IEnumerable<TEdge> GetCellEdges(Vector2Int _cell) {
-            for(int i = 0; i < Topology.EdgeCount; i++) { yield return GetEdge(_cell, i); }
-        }
-
-        public void SetEdge(Vector2Int _cell, int _edgeIndex, TEdge _edge) {
-            cells[_cell.x, _cell.y][_edgeIndex] = _edge;
-        }
+        public void SetEdge(Vector2Int _cell, int _edgeIndex, TEdge _edge) => cells[_cell][_edgeIndex] = _edge;
         #endregion
 
         #region Neighbour
-        public KeyValuePair<Vector2Int, TValue> GetNeighbour(Vector2Int _cell, int _index) {
-            Vector2Int neighbourCoord = _cell + Topology.GetNeighbour(_cell, _index);
-            if (!IsInBounds(neighbourCoord)) { return new(_cell, default); }
-            return new(neighbourCoord, this[_cell]);
+        public TValue GetNeighbour(Vector2Int _cell, int _index, out Vector2Int _neighbour) {
+            _neighbour = _cell + topology.GetNeighbour(_cell, _index);
+            if (!IsInBounds(_neighbour)) { return default; }
+            return this[_cell];
         }
 
-        public IEnumerable<KeyValuePair<Vector2Int, TValue>> GetNeighbours(Vector2Int _coord) {
-            for(int i = 0; i < Topology.EdgeCount; i++) {
-                KeyValuePair<Vector2Int, TValue> neighbour = GetNeighbour(_coord, i);
-                if (neighbour.Key == _coord) { continue; }
+        public TValue GetNeighbour(Vector2Int _cell, int _index) => GetNeighbour(_cell, _index, out Vector2Int neighbour);
+
+        public IEnumerable<TValue> GetNeighbours(Vector2Int _cell) {
+            for(int i = 0; i < topology.EdgeCount; i++) {
+                TValue neighbour = GetNeighbour(_cell, i);
                 yield return neighbour; 
             }
         }

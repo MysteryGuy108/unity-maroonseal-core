@@ -1,9 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
 
-namespace MaroonSeal.DataStructures.Grid
+namespace MaroonSeal.DataStructures.Grids
 {
     public abstract class GridTopology
     {
@@ -25,8 +26,10 @@ namespace MaroonSeal.DataStructures.Grid
         public abstract Vector2Int RotateAntiClockwise(Vector2Int _cell);
 
         public Vector2Int Rotate(Vector2Int _cell, int _amount) {
+            Func<Vector2Int, Vector2Int> rotationFunc = _amount > 0 ? RotateClockwise : RotateAntiClockwise;
+            
             for(int i = 0; i < Mathf.Abs(_amount); i++) {
-                _cell = _amount > 0 ? RotateClockwise(_cell) : RotateAntiClockwise(_cell);
+                _cell = rotationFunc.Invoke(_cell);
             }
             return _cell;
         }

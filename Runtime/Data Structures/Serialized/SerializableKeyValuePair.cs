@@ -8,33 +8,27 @@ namespace MaroonSeal.DataStructures {
     [System.Serializable]
     public struct SerializableKeyValuePair<TKey, TValue> {
 
-        [SerializeField] private bool keyIsReadonly;
-        [SerializeField] private bool valueIsReadonly;
         [SerializeField] private TKey key;
         readonly public TKey Key { get { return key; } }
         [SerializeField] private TValue value;
         readonly public TValue Value { get { return value; } }
 
-        public SerializableKeyValuePair(TKey _key, TValue _value, bool _keyIsReadonly = false, bool _valueIsReadonly = false) { 
+        #region Constructors
+        public SerializableKeyValuePair(TKey _key, TValue _value) { 
             key = _key; 
             value = _value; 
-            keyIsReadonly = _keyIsReadonly; 
-            valueIsReadonly = _valueIsReadonly; 
         }
         
-        public SerializableKeyValuePair((TKey, TValue) _pair, bool _keyIsReadonly = false, bool _valueIsReadonly = false) { 
+        public SerializableKeyValuePair((TKey, TValue) _pair) { 
             key = _pair.Item1; 
-            value = _pair.Item2;  
-            keyIsReadonly = _keyIsReadonly; 
-            valueIsReadonly = _valueIsReadonly;  
+            value = _pair.Item2; 
         }
 
-        public SerializableKeyValuePair(KeyValuePair<TKey, TValue> _pair, bool _keyIsReadonly = false, bool _valueIsReadonly = false) { 
+        public SerializableKeyValuePair(KeyValuePair<TKey, TValue> _pair) { 
             key = _pair.Key; 
-            value = _pair.Value; 
-            keyIsReadonly = _keyIsReadonly; 
-            valueIsReadonly = _valueIsReadonly; 
+            value = _pair.Value;
         }
+        #endregion
 
         public static explicit operator KeyValuePair<TKey, TValue>(SerializableKeyValuePair<TKey, TValue> _other) {
             return new(_other.Key, _other.Value);

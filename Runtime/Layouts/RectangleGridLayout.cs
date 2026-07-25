@@ -1,6 +1,6 @@
 using UnityEngine;
 
-using MaroonSeal.DataStructures.Grid;
+using MaroonSeal.DataStructures.Grids;
 
 using MaroonSeal.Maths;
 using MaroonSeal.Maths.Geometry;
@@ -24,8 +24,8 @@ namespace MaroonSeal.Layouts
             grid ??= new(gridSize, cellSize);
             if (grid.Size != gridSize) { grid = new(gridSize, cellSize); }
 
-            grid.Geometry.CellSize = cellSize;
-            cursorCell = grid.Geometry.WorldToCell(testCursor);
+            grid.geometry.CellSize = cellSize;
+            cursorCell = grid.geometry.WorldToCell(testCursor);
         }
 
         private void OnDrawGizmosSelected()
@@ -39,13 +39,13 @@ namespace MaroonSeal.Layouts
                     Vector2Int cell = new(x, y);
                     if (cell == cursorCell) { continue; }
                     
-                    GeometryGizmos2D.DrawPolygon((IPolygon2D)grid.Geometry.GetCellShape(cell));
+                    GeometryGizmos2D.DrawPolygon((IPolygon2D)grid.geometry.GetCellShape(cell));
                 }
             }
 
             Gizmos.color = Color.red;
             Gizmos.DrawSphere(testCursor, 0.03125f);
-            GeometryGizmos2D.DrawPolygon((IPolygon2D)grid.Geometry.GetCellShape(cursorCell));
+            GeometryGizmos2D.DrawPolygon((IPolygon2D)grid.geometry.GetCellShape(cursorCell));
         }
     }
 }

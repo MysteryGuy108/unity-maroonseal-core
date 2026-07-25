@@ -22,16 +22,19 @@ namespace MaroonSeal.DataStructures.Graphs
         }
 
         #region Constructor/Destructor
-        public Graph() { adjacency = new(); }
+        public Graph() => adjacency = new();
 
         ~Graph() => Clear();
         #endregion
 
         #region Nodes
+        public IEnumerable<TNode> Nodes => adjacency.Keys;
+
         public void AddNode(TNode _node) {
             if (adjacency.ContainsKey(_node)) { return; }
             adjacency.Add(_node, new());
         }
+        
         public bool RemoveNode(TNode _node)
         {
             if (!adjacency.Remove(_node)) { return false; }
@@ -51,7 +54,28 @@ namespace MaroonSeal.DataStructures.Graphs
             AddNode(_to);
             adjacency[_from][_to] = _edge;
         }
+        public void AddEdge(GraphEdge<TNode, TEdge> _edge) => AddEdge(_edge.From, _edge.To, _edge.Value);
+
         public void RemoveEdge(TNode _from, TNode _to) => adjacency[_from].Remove(_to);
+
+        public IEnumerable<GraphEdge<TNode, TEdge>> GetEdges(TNode _node)
+        {
+            adjacency.TryGetValue(_node, out Dictionary<TNode, TEdge> neighbours);
+            if (neighbours == null) { yield break; }
+            foreach(KeyValuePair<TNode, TEdge> neighbour in neighbours)
+            {
+                yield return new(_node, neighbour.Key, neighbour.Value);
+            }
+        }
+
+        public IEnumerable<GraphEdge<TNode, TEdge>> GetAllEdges()
+        {
+            foreach(TNode node in Nodes) {
+                foreach(GraphEdge<TNode, TEdge> edge in GetEdges(node)) {
+                    yield return edge;
+                }
+            }
+        }
         #endregion
 
         #region Contains
@@ -59,14 +83,6 @@ namespace MaroonSeal.DataStructures.Graphs
         public bool ContainsEdge(TNode _from, TNode _to) {
             if (!adjacency.TryGetValue(_from, out Dictionary<TNode, TEdge> neighbors)) { return false; }
             return neighbors.ContainsKey(_to);
-        }
-        #endregion
-
-        #region Neighbours
-        public IReadOnlyDictionary<TNode, TEdge> GetNodeNeighbors(TNode _node)
-        {
-            if (adjacency.TryGetValue(_node, out var neighbors)) { return neighbors; }
-            return new Dictionary<TNode, TEdge>();
         }
         #endregion
 
@@ -80,11 +96,6 @@ namespace MaroonSeal.DataStructures.Graphs
         public void ClearEdges(TNode _from) => adjacency[_from].Clear();
 
         public void ClearEdges() { foreach(TNode node in Nodes) { ClearEdges(node); } }
-        #endregion
-
-        #region IEnumerable
-        public IEnumerable<TNode> Nodes => adjacency.Keys;
-        public IEnumerable<IReadOnlyDictionary<TNode, TEdge>> Edges => adjacency.Values;
         #endregion
     }
 }

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace MaroonSeal.DataStructures.Grid
+namespace MaroonSeal.DataStructures.Grids
 {
     public class TriangleGridTopology : GridTopology
     {

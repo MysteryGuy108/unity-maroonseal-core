@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -6,7 +7,7 @@ using UnityEditor;
 using UnityEditor.UIElements;
 
 using MaroonSeal.DataStructures;
-using System.Collections.Generic;
+
 
 namespace MaroonSealEditor.DataStructures
 {

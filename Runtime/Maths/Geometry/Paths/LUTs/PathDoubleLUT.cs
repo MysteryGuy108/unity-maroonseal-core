@@ -7,7 +7,6 @@ using UnityEngine;
 namespace MaroonSeal.Maths.Geometry.Paths.LUTs
 {
     [System.Serializable]
-
     public class PathDoubleLUT : PathLUT<double>
     {
         #region LUT

@@ -1,9 +1,9 @@
 using System;
 using UnityEngine;
 
-namespace MaroonSeal.Maths {
+namespace MaroonSeal.Maths.Algorithms {
 
-    static public class SearchingAlgorithms
+    static public class SearchAlgorithms
     {
         #region Binary Searching
         static public (int, int) BinarySearch(float _value, int _count, Func<int, float> _lookup) {

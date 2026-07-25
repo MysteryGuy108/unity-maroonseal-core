@@ -27,9 +27,9 @@ namespace MaroonSeal.StateMachines
         #region State Machine
         virtual public void Update()
         {
-            KeyValuePair<TState, IPredicate> transition = EvaluateTransitions();
+            GraphEdge<TState, IPredicate> transition = EvaluateTransitions();
 
-            if (transition.Key != null) { SetState(transition.Key); }
+            if (transition.To != null) { SetState(transition.To); }
 
             current?.Update();
         }
@@ -53,10 +53,11 @@ namespace MaroonSeal.StateMachines
         #endregion
 
         #region Transitions
-        KeyValuePair<TState, IPredicate> EvaluateTransitions()
+        GraphEdge<TState, IPredicate> EvaluateTransitions()
         {
-            foreach(KeyValuePair<TState, IPredicate> transition in graph.GetNodeNeighbors(current))
+            foreach(GraphEdge<TState, IPredicate> transition in graph.GetEdges(current))
             {
+                if (transition.To == null) { continue; }
                 if (transition.Value.Execute()) { return transition; }
             }
 

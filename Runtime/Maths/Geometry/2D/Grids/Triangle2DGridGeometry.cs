@@ -1,6 +1,6 @@
 using UnityEngine;
 
-using MaroonSeal.DataStructures.Grid;
+using MaroonSeal.DataStructures.Grids;
 
 namespace MaroonSeal.Maths.Geometry
 {
