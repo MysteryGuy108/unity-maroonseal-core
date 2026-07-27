@@ -39,7 +39,7 @@ namespace MaroonSealEditor.DataStructures.LUTs {
             }
             else
             {
-                PropertyRowField propertiesField = new(keyProperty, valueProperty, "  Key", "Value");
+                PropertyRowField propertiesField = new(keyProperty, valueProperty, "", "");
                 keyField = propertiesField.propertyAField;
                 root = propertiesField;
             }

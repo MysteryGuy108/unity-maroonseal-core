@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace MaroonSeal.UIElements
+namespace MaroonSeal.UI.UIElements
 {
     public class InspectorField : BaseField<object>
     {   

@@ -4,7 +4,7 @@ using UnityEngine.UIElements;
 using UnityEditor;
 using UnityEditor.UIElements;
 
-namespace MaroonSeal.UIElements
+namespace MaroonSeal.UI.UIElements
 {
     public class AngleField : BaseField<float>
     {
