@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 using UnityEditor;
 using UnityEditor.UIElements;
 
-using MaroonSeal.DataStructures;
+using MaroonSeal.DataStructures.LUTs;
 
 using MaroonSealEditor.UIElements;
 

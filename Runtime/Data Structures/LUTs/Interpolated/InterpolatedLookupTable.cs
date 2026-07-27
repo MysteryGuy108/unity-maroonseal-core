@@ -6,39 +6,53 @@ using MaroonSeal.Maths.Algorithms;
 namespace MaroonSeal.DataStructures.LUTs
 {
     abstract public class InterpolatedLookupTable<TValue> : FloatLookupTable<TValue>
-    {
-        public TValue Evaluate(float _time) => EvaluateKey(items[^1].Key * _time);
+    {   
+        #region Lerp Evaluations
+        public TValue EvaluateKeyTime(float _time) => EvaluateKey(Mathf.Lerp(items[0].Key, items[^1].Key, _time));
 
-        public TValue EvaluateKey(float _time) => EvaluateKey(_time, (cntx) => items[cntx].Key, (cntx) => items[cntx].Value);
+        public TValue EvaluateKey(float _key) =>
+            LerpEvaluate(_key, (i)=>this[i].Key, (i)=>this[i].Value, InterpolateValue);
 
-        protected TValue EvaluateKey(float _time, Func<int, float> _keyIndex, Func<int, TValue> _valueIndex)
+        protected TReturn LerpEvaluate<TReturn>(float _search,
+            Func<int, float> _indexToSearch, 
+            Func<int, TReturn> _indexToReturn, 
+            Func<TReturn, TReturn, float, TReturn> _returnLerp)
         {
-            EnsureSorted();
+            (int, int) segment = SearchIndices(_search, _indexToSearch, CompareKeys);
 
-            if (items.Count == 0) { throw new InvalidOperationException("Interpolated table has no points."); }
-            if (items.Count == 1) { return _valueIndex.Invoke(0); }
+            float lowerKey = _indexToSearch(segment.Item1);
+            float upperKey = _indexToSearch(segment.Item2);
 
-            (int, int) segment = SearchAlgorithms.BinarySearch(_time, items.Count, _keyIndex);
+            float lerpTime = Mathf.InverseLerp(lowerKey, upperKey, _search);
 
-            float lowerKey = _keyIndex.Invoke(segment.Item1);
-            float upperKey = _keyIndex.Invoke(segment.Item2);
+            TReturn lowerValue = _indexToReturn(segment.Item1);
+            TReturn upperValue = _indexToReturn(segment.Item2);
 
-            float lerpTime = Mathf.InverseLerp(lowerKey, upperKey, _time);
-
-            TValue lowerValue = _valueIndex.Invoke(segment.Item1);
-            TValue upperValue = _valueIndex.Invoke(segment.Item2);
-
-            return InterpolateValue(lowerValue, upperValue, lerpTime);
+            return _returnLerp(lowerValue, upperValue, lerpTime);
         }
 
+        #endregion
+
         protected abstract TValue InterpolateValue(TValue _from, TValue _to, float _t);
+
+
     }
 
     [System.Serializable]
     public class FloatLookupTable : InterpolatedLookupTable<float>
     {
-        public float EvaluateInverse(float _time) => EvaluateKey(items[^1].Value * _time);
-        public float EvaluateValue(float _value) => EvaluateKey(_value, (cntx) => items[cntx].Value, (cntx) => items[cntx].Key);
+        #region Evaluating Values
+        public (float, float) EvaluateValueNeighbours(float _value) {
+            (int, int) indices = SearchIndices(_value, (i) => this[i].Value, (a, b) => a.CompareTo(b));
+            return (this[indices.Item1].Key, this[indices.Item2].Key);
+        }
+        public float EvaluateValueFloor(float _value) => EvaluateValueNeighbours(_value).Item1;
+        public float EvaluateValueCeiling(float _value) => EvaluateValueNeighbours(_value).Item2;
+
+        public float EvaluateValueTime(float _time) => EvaluateValue(Mathf.Lerp(items[0].Value, items[^1].Value, _time));
+        public float EvaluateValue(float _value) => 
+            LerpEvaluate(_value, (i)=>this[i].Value, (i)=>this[i].Key, InterpolateValue);
+        #endregion
 
         protected override float InterpolateValue(float _from, float _to, float _t) => Mathf.Lerp(_from, _to, _t);
     }
@@ -46,9 +60,6 @@ namespace MaroonSeal.DataStructures.LUTs
     [System.Serializable]
     public class DoubleLookupTable : InterpolatedLookupTable<double>
     {
-        public double EvaluateInverse(float _time) => EvaluateKey((float)items[^1].Value * _time);
-        public double EvaluateValue(float _value) => EvaluateKey(_value, (cntx) => (float)items[cntx].Value, (cntx) => items[cntx].Key);
-
         protected override double InterpolateValue(double _from, double _to, float _t) => _from + (_to - _from) * _t;
     }
 

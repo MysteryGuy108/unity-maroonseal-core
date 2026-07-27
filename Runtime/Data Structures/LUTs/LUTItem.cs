@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace MaroonSeal.DataStructures
+namespace MaroonSeal.DataStructures.LUTs
 {
     [System.Serializable]
     public struct LUTItem<TKey, TValue> : IEquatable<LUTItem<TKey, TValue>>
