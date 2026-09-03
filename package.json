@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "displayName": "Maroon Seal Core",
   "description": "A small collection of code libraries for use with Maroon Seal packages.",
-  "unity": "2022.3",
-  "unityRelease": "20f1",
+  "unity": "6000.6",
+  "unityRelease": "0f1",
   "documentationUrl": "https://example.com/",
   "changelogUrl": "https://example.com/changelog.html",
   "licensesUrl": "https://example.com/licensing.html",
@@ -18,8 +18,8 @@
   ],
   "author": {
     "name": "MaroonSeal",
-    "email": "rory@maroonseal.com",
-    "url": "https://www.maroonseal.com"
+    "url": "https://www.maroonseal.com",
+    "email": "rory@maroonseal.com"
   },
   "dependencies": {
     "com.unity.inputsystem": "1.14.2"
