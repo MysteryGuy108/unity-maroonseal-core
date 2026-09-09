@@ -7,7 +7,6 @@ namespace MaroonSeal.Utilities.Serialization {
     [AttributeUsage(AttributeTargets.Field)]
     public class PolymorphicReferenceAttribute : PropertyAttribute
     {
-        public PolymorphicReferenceAttribute() {
-        }
+        public PolymorphicReferenceAttribute() {}
     }
 }

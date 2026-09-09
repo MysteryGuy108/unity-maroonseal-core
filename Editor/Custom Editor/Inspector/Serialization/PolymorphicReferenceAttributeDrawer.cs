@@ -4,64 +4,48 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
+using UnityEngine.UIElements;
+
 using UnityEditor;
 
 using MaroonSeal.Utilities.Serialization;
 
+using MaroonSealEditor.UIElements;
+
 namespace MaroonSealEditor.Utilities.Serialization {
 
+    /// <summary>
+    /// BUGGY! Can sometimes cause recursive drawing behaviour in the Inspector!
+    /// </summary>
     [CustomPropertyDrawer(typeof(PolymorphicReferenceAttribute))]
     public class PolymorphicReferenceAttributeDrawer : PropertyDrawer
     {
-        SerializedProperty activeProperty;
+        private static readonly HashSet<string> activeProperties = new();
 
-        public override void OnGUI(Rect _position, SerializedProperty _property, GUIContent _label) {
+        public override VisualElement CreatePropertyGUI(SerializedProperty _property)
+        {
+            // Guard to stop recursive drawing.
+            string guardKey = GetGuardKey(_property);
+            activeProperties.Add(guardKey);
 
-            if (_property.propertyType != SerializedPropertyType.ManagedReference) {
-                Debug.LogError("PolymorphicReference must be called on a Managed Reference type");
-                return;
-            }
+            PolymorphicReferenceField referenceField = new(_property);
 
-            PolymorphicReferenceAttribute polymorphicReference = attribute as PolymorphicReferenceAttribute;
-            int currentIndent = EditorGUI.indentLevel;
-            EditorGUI.indentLevel = 0;
-            EditorGUI.BeginProperty(_position, _label, _property);
-
-            Rect headerPosition = _position;
-            headerPosition.width -= 15.0f; headerPosition.height = 18.0f; 
-            headerPosition.x += 15.0f;
-
-            headerPosition = EditorGUI.PrefixLabel(headerPosition, _label);
-            
-
-            string title = "Select Class";
-
-            if (_property.managedReferenceValue != null) {
-                if (!_property.managedReferenceValue.GetType().IsAbstract) { title = _property.managedReferenceValue.GetType().Name; }
-            }
-           
-            if (EditorGUI.DropdownButton(headerPosition, new GUIContent(title), FocusType.Keyboard)) {
-                activeProperty = _property;
-
-                ClassSelectionGenericMenu selectionMenu = new(fieldInfo.FieldType, _property.managedReferenceValue?.GetType(), ClickHandler);
-                selectionMenu.ShowAsContext();
-            }
-            
-            EditorGUI.PropertyField(_position, _property, GUIContent.none, true);
-
-            EditorGUI.EndProperty();
-            EditorGUI.indentLevel = currentIndent;
+            referenceField.RegisterCallback<DetachFromPanelEvent>(_ => activeProperties.Remove(guardKey));
+            return referenceField;
         }
 
-        public override float GetPropertyHeight(SerializedProperty _property, GUIContent _label) {
-            return EditorGUI.GetPropertyHeight(_property);
-        }
+        #region Recursive Guard
+        /// <summary>
+        /// True if a PolymorphicReferenceField is already drawing this exact
+        /// property. Consulted by PolymorphicReferenceAttributeDrawer to avoid
+        /// recursing into itself when this field's own RebuildField creates a
+        /// PropertyField for the same [SerializeReference] property.
+        /// </summary>
+        public static bool IsBeingDrawn(SerializedProperty property) =>
+            activeProperties.Contains(GetGuardKey(property));
 
-        private void ClickHandler(object _returnType) {
-            Type newType = (Type)_returnType;
-            activeProperty.managedReferenceValue = FormatterServices.GetUninitializedObject(newType);
-            activeProperty.serializedObject.ApplyModifiedProperties();
-            activeProperty = null;
-        }
+        private static string GetGuardKey(SerializedProperty property) =>
+            $"{property.serializedObject.targetObject.GetEntityId()}:{property.propertyPath}";
+        #endregion
     }
 }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace MaroonSeal.Maths {
-    public struct NumericMaths
+    static public class NumericMaths
     {
         const float EPSILON = 0.0001f;
 
@@ -32,5 +32,24 @@ namespace MaroonSeal.Maths {
         }
         #endregion
 
+        static public float FindLocalMinimum(float _minT, float _maxT, Func<float, float> _timeWeightFunction)
+        {
+            float min = _minT;
+            float max = _maxT;
+            float mid;
+        
+            do {
+                mid = (max + min) / 2.0f;
+
+                float minWeight = _timeWeightFunction(mid-EPSILON);
+                float maxWeight = _timeWeightFunction(mid+EPSILON);
+
+                if (minWeight < maxWeight) { max = mid; }
+                else{ min = mid; }
+
+            } while (max - min > EPSILON);
+
+            return mid;
+        }
     }
 }

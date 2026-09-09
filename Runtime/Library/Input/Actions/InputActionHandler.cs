@@ -38,6 +38,7 @@ namespace MaroonSeal.Inputs
         }
     }
 
+    [System.Serializable]
     abstract public class InputActionHandlerBase : IInputActionHandler
     {
         [SerializeField] private InputActionAsset inputAsset;

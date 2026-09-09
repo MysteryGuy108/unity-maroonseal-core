@@ -50,18 +50,6 @@ namespace MaroonSeal.DataStructures.LUTs
             items.Sort((a, b) => CompareKeys(a.Key, b.Key));
             isDirty = false;
         }
-
-        protected bool CheckSorted()
-        {
-            bool isSorted = true;
-            for(int i = 0; i < Count-1; i++)
-            {
-                if (CompareKeys(items[i].Key, items[i+1].Key) <= 0) { continue; }
-                isSorted = false;
-                break;
-            }
-            return isSorted;
-        }
         #endregion
 
         #region Evaluating

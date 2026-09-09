@@ -48,5 +48,11 @@ namespace MaroonSeal.Maths {
         /// <returns>Vector in local space</returns>
         public TVector InverseTransformVector(TVector _vector);
         #endregion
+
+        #region Vector Math
+        public float SqrDistanceTo(TVector _vector);
+        public float DistanceTo(TVector _vector) => Mathf.Sqrt(SqrDistanceTo(_vector));
+        public TVector DirectionTo(TVector _direction);
+        #endregion
     }
 }

@@ -164,6 +164,11 @@ namespace MaroonSeal.Maths {
         }
         #endregion
         
+        #region Vector3
+        public readonly float SqrDistanceTo(Vector3 _point) => Vector3.SqrMagnitude(_point - position);
+        public readonly Vector3 DirectionTo(Vector3 _point) => _point - position;
+        #endregion
+
         #region Static
         static public Transform3D Lerp(Transform3D _a, Transform3D _b, float _t) {
             return new Transform3D(

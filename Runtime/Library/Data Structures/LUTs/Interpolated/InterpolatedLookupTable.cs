@@ -34,8 +34,6 @@ namespace MaroonSeal.DataStructures.LUTs
         #endregion
 
         protected abstract TValue InterpolateValue(TValue _from, TValue _to, float _t);
-
-
     }
 
     [System.Serializable]

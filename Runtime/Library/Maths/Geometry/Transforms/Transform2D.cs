@@ -109,5 +109,10 @@ namespace MaroonSeal.Maths {
         readonly public Vector2 InverseTransformDirection(Vector2 _direction) => InverseTransformVector(_direction).normalized;
         readonly public Vector2 InverseTransformVector(Vector2 _vector) => ToLocalMatrix.MultiplyVector(_vector);
         #endregion
+
+        #region Vector2
+        public readonly float SqrDistanceTo(Vector2 _point) => Vector2.SqrMagnitude(_point - position);
+        public readonly Vector2 DirectionTo(Vector2 _point) => _point - position;
+        #endregion
     }
 }
