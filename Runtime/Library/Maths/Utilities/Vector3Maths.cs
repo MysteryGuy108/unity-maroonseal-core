@@ -20,5 +20,8 @@ namespace MaroonSeal.Maths
 
         static public Vector3Int RoundToInt(Vector3 _v) => 
             new(Mathf.RoundToInt(_v.x), Mathf.RoundToInt(_v.y), Mathf.RoundToInt(_v.z));
+
+        public static Vector3 Multiply(Vector3 _a, Vector3 _b) => new(_a.x * _b.x, _a.y * _b.y, _a.z * _b.z);
+        public static Vector3 Divide(Vector3 _a, Vector3 _b) => new(_a.x / _b.x, _a.y / _b.y, _a.z / _b.z);
     }
 }

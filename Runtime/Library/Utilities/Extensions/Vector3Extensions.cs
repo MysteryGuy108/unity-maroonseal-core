@@ -54,6 +54,7 @@ namespace MaroonSeal {
         public static Vector2 Clamp(this Vector3 _current, float _min, float _max) {
             return _current.Clamp(Vector3.one * _min, Vector3.one * _max);
         }
+    
         #endregion
     }
 }

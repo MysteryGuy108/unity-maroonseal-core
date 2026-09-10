@@ -1,15 +1,11 @@
 using System;
+using System.Collections.Generic;
 
 using UnityEngine;
 using UnityEngine.UIElements;
 
 using UnityEditor;
 using UnityEditor.UIElements;
-
-using MaroonSeal.Maths.Geometry.Paths;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-
 
 namespace MaroonSealEditor.UIElements {
     public class PolymorphicReferenceField : VisualElement
@@ -93,8 +89,9 @@ namespace MaroonSealEditor.UIElements {
                         var capturedType = type;
 
                         // Getting menu path display name
-                        if (typeDisplayNames.TryGetValue(capturedType, out string menuPath)) { menuPath = name; }
-                        else { menuPath = GetInheritancePath(type, propertyType); }
+                        if (!typeDisplayNames.TryGetValue(capturedType, out string menuPath)) { 
+                            menuPath = GetInheritancePath(type, propertyType); 
+                        }
 
                         // Adding menu item
                         menu.AddItem(new GUIContent(menuPath), capturedType == SelectedType,

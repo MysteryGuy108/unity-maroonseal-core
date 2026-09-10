@@ -7,7 +7,7 @@ using UnityEngine;
 namespace MaroonSeal.Maths.Geometry.Paths 
 {
     [System.Serializable]
-    abstract public class CompositePathBase<TVector, TTransform, TSegment> : PathBase<TVector, TTransform> 
+    abstract public class CompositePathBase<TVector, TTransform, TSegment> : PathBase<TVector, TTransform>, ISegmentPath
         where TTransform : ITransform<TVector>
         where TSegment : IPath<TVector, TTransform>
     {
@@ -15,9 +15,9 @@ namespace MaroonSeal.Maths.Geometry.Paths
         public override float Length => distanceTable.TotalLength;
 
         [SerializeField] protected List<TSegment> segments = new();
-        public int SegmentCount => segments == null ? 0 : segments.Count;
+        public int SegmentCount => segments.Count;
 
-        [SerializeField] CumulativeDistanceTable distanceTable = new();
+        [SerializeField][HideInInspector] CumulativeDistanceTable distanceTable = new();
 
         #region PathBase
         sealed public override TTransform EvaluateTime(float _time) {

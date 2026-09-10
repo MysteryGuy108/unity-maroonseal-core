@@ -25,6 +25,9 @@ namespace MaroonSeal.Maths
 
         static public Vector2Int FloorToInt(Vector2 _value) => 
             new (Mathf.FloorToInt(_value.x), Mathf.FloorToInt(_value.y));
+
+        public static Vector2 Multiply(Vector2 _a, Vector2 _b) => new(_a.x * _b.x, _a.y * _b.y);
+        public static Vector2 Divide(Vector2 _a, Vector2 _b) => new(_a.x / _b.x, _a.y / _b.y);
         #endregion
         
         static public Vector2 FromRadians(float _radians, float _radius) => new Vector2(Mathf.Cos(_radians), Mathf.Sin(_radians)) * _radius;
