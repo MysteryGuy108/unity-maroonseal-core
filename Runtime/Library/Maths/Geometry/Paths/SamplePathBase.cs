@@ -11,7 +11,7 @@ namespace MaroonSeal.Maths.Geometry.Paths
     {
         public sealed override float Length => Resolution == 0 ? 0.0f : sampleTable.TotalLength;
 
-        [SerializeField][Min(2)] private int resolution;
+        [SerializeField][Min(2)] private int resolution = 16;
         public int Resolution => resolution;
         [SerializeField][HideInInspector] CumulativeDistanceTable sampleTable;
 
@@ -21,7 +21,7 @@ namespace MaroonSeal.Maths.Geometry.Paths
             sampleTable = new();
         }
 
-        public SamplePathBase() : this(2) {}
+        public SamplePathBase() : this(16) {}
         #endregion
 
         #region PathBase
@@ -38,6 +38,10 @@ namespace MaroonSeal.Maths.Geometry.Paths
         }
 
         public override float ClosestTimeToPoint(TVector _point) => NumericMaths.FindLocalMinimum(0.0f, 1.0f, (cntx) => EvaluateTime(cntx).SqrDistanceTo(_point));
+        
+        protected override void OnEnsureClean() => sampleTable.RebuildSamples(resolution, DistanceBetweenSamples);
+
+        override public void Clear() => sampleTable.Clear();
         #endregion
 
         protected float DistanceBetweenSamples(int _s0, int _s1)
@@ -45,17 +49,10 @@ namespace MaroonSeal.Maths.Geometry.Paths
             float t0 = sampleTable.TimeAt(_s0);
             float t1 = sampleTable.TimeAt(_s1);
 
-            TTransform p0 = EvaluateTime(t0);
-            TTransform p1 = EvaluateTime(t1);
-
-            return DistanceBetweenPathPoints(p0, p1);
+            return DistanceBetweenPathPoints(EvaluateTime(t0), EvaluateTime(t1));
         }
 
         abstract protected float DistanceBetweenPathPoints(TTransform _p0, TTransform _p1);
-
-        protected override void OnEnsureClean() => sampleTable.Rebuild(resolution, i => DistanceBetweenSamples(i, i+1));
-
-        override public void Clear() => sampleTable.Clear();
     }
 
     [System.Serializable]

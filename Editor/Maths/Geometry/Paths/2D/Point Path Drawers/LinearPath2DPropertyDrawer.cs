@@ -7,9 +7,8 @@ using UnityEditor.UIElements;
 using MaroonSeal.Maths.Geometry.Paths;
 
 namespace MaroonSealEditor.Maths.Geometry.Paths {
-
-    [CustomPropertyDrawer(typeof(LinearPath), true)]
-    sealed public class LinearPathPropertyDrawer : PointPathBasePropertyDrawer
+    [CustomPropertyDrawer(typeof(LinearPath2D), true)]
+    sealed public class LinearPath2DPropertyDrawer : PointPathBasePropertyDrawer
     {
         public override VisualElement CreatePropertyGUI(SerializedProperty _property) {
             VisualElement root = base.CreatePropertyGUI(_property);

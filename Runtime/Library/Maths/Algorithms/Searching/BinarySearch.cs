@@ -21,11 +21,10 @@ namespace MaroonSeal.Maths.Algorithms {
             int midComparison = _compare(_value, _lookup(mid));
             int nextComparison = _compare(_value, _lookup(mid+1));
 
-            if (midComparison >= 0 && nextComparison < 0) { return (mid, mid+1); }
-            else if (midComparison < 0) { return Search(_value, _low, mid, _lookup, _compare); }
-            else if (nextComparison >= 0) { return Search(_value, mid+1, _high, _lookup, _compare); }
-
-            return (-1, -1);
+            if (midComparison == 0) return (mid, mid);
+            else if (midComparison < 0) return Search(_value, _low, mid, _lookup, _compare);
+            else if (nextComparison < 0) return (mid, mid + 1); 
+            else return Search(_value, mid + 1, _high, _lookup, _compare);
         }
 
         static public (int, int) Search(float _value, int _max, Func<int, float> _lookup) =>
@@ -33,9 +32,6 @@ namespace MaroonSeal.Maths.Algorithms {
 
         static public (int, int) Search(int _value, int _max, Func<int, int> _lookup) =>
             Search(_value, _max, _lookup, (a, b) => a.CompareTo(b));
-
-
         #endregion
     }
-
 }

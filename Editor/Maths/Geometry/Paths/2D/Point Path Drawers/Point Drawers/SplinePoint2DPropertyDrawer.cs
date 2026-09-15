@@ -8,9 +8,9 @@ using MaroonSeal.Maths.Geometry;
 using MaroonSeal.Maths.Geometry.Paths;
 
 
-namespace MaroonSealEditor.GeometryPaths {
-    [CustomPropertyDrawer(typeof(SplinePoint), true)]
-    sealed public class SplinePointPropertyDrawer : PropertyDrawer
+namespace MaroonSealEditor.Maths.Geometry.Paths {
+    [CustomPropertyDrawer(typeof(SplinePoint2D), true)]
+    sealed public class SplinePoint2DPropertyDrawer : PropertyDrawer
     {
         #region UI Toolkit
         public override VisualElement CreatePropertyGUI(SerializedProperty _property) {
@@ -22,23 +22,18 @@ namespace MaroonSealEditor.GeometryPaths {
                 bindingPath = _property.propertyPath
             };
             
-            // Position Field
-            PropertyField positionField = new(_property.FindPropertyRelative("position"));
-            positionField.AddToClassList("unity-base-field__aligned");
-            foldout.Add(positionField);
-
-            // Roll Field
-            PropertyField rollField = new(_property.FindPropertyRelative("roll"));
-            rollField.AddToClassList("unity-base-field__aligned");
-            foldout.Add(rollField);
+            // Anchor Field
+            PropertyField anchorField = new(_property.FindPropertyRelative("anchor"));
+            anchorField.AddToClassList(BaseField<Vector2>.alignedFieldUssClassName);
+            foldout.Add(anchorField);
 
             // Size Field
             PropertyField sizeField = new(_property.FindPropertyRelative("size"));
-            sizeField.AddToClassList("unity-base-field__aligned");
+            sizeField.AddToClassList(BaseField<float>.alignedFieldUssClassName);
             foldout.Add(sizeField);
 
-            bool hasPrevious = _property.FindPropertyRelative("hasPrevious").boolValue;
-            bool hasNext = _property.FindPropertyRelative("hasNext").boolValue;
+            bool hasTangentIn = _property.FindPropertyRelative("hasTangentIn").boolValue;
+            bool hasTangentOut = _property.FindPropertyRelative("hasTangentOut").boolValue;
 
             // Tangent Mode Field
             PropertyField tangentModeField = new(_property.FindPropertyRelative("tangentMode"));
@@ -46,14 +41,14 @@ namespace MaroonSealEditor.GeometryPaths {
 
             // TangentIn Field
             SerializedProperty tangentInProperty = _property.FindPropertyRelative("tangentIn");
-            Vector3Field tangentInField = new(){ label = "Tangent In" };
-            tangentInField.AddToClassList("unity-base-field__aligned");
+            Vector2Field tangentInField = new(){ label = "Tangent In" };
+            tangentInField.AddToClassList(BaseField<Vector2>.alignedFieldUssClassName);
             tangentInField.BindProperty(tangentInProperty);
 
             // TangentOut Field
             SerializedProperty tangentOutProperty = _property.FindPropertyRelative("tangentOut");
-            Vector3Field tangentOutField = new(){ label = "Tangent Out" };
-            tangentOutField.AddToClassList("unity-base-field__aligned");
+            Vector2Field tangentOutField = new(){ label = "Tangent Out" };
+            tangentOutField.AddToClassList(BaseField<Vector2>.alignedFieldUssClassName);
             tangentOutField.BindProperty(tangentOutProperty);
 
             // Callbacks
@@ -74,26 +69,26 @@ namespace MaroonSealEditor.GeometryPaths {
 
             #region GUI Refresh
             void RefreshPropertyGUI(SerializedProperty _splinePointProperty) {
-                tangentInField.enabledSelf = _property.FindPropertyRelative("hasPrevious").boolValue;
-                tangentOutField.enabledSelf = _property.FindPropertyRelative("hasNext").boolValue;
+                tangentInField.enabledSelf = _property.FindPropertyRelative("hasTangentIn").boolValue;
+                tangentOutField.enabledSelf = _property.FindPropertyRelative("hasTangentOut").boolValue;
             }
 
             void RefreshTangentMode(SerializedPropertyChangeEvent _changeEvent) =>
                 ConstrainTangentProperties(_property, tangentOutField, tangentInField);
 
-            void RefreshTangentIn(ChangeEvent<Vector3> _changeEvent) {
+            void RefreshTangentIn(ChangeEvent<Vector2> _changeEvent) {
                 if (_changeEvent.newValue == _changeEvent.previousValue) { return; }
                 ConstrainTangentProperties(_property, tangentOutField, tangentInField);
             }
 
-            void RefreshTangentOut(ChangeEvent<Vector3> _changeEvent) {
+            void RefreshTangentOut(ChangeEvent<Vector2> _changeEvent) {
                 if (_changeEvent.newValue == _changeEvent.previousValue) { return; }
                 ConstrainTangentProperties(_property, tangentInField, tangentOutField);
             }
             #endregion
         }
 
-        private void ConstrainTangentProperties(SerializedProperty _splinePointProperty, Vector3Field _current, Vector3Field _target) {
+        private void ConstrainTangentProperties(SerializedProperty _splinePointProperty, Vector2Field _current, Vector2Field _target) {
             SerializedProperty controlModeProperty = _splinePointProperty.FindPropertyRelative("tangentMode");
             SplinePoint.TangentMode tangentMode = (SplinePoint.TangentMode)controlModeProperty.enumValueIndex;
 

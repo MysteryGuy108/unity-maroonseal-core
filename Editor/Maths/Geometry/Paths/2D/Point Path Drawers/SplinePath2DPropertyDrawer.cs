@@ -6,13 +6,15 @@ using UnityEditor.UIElements;
 
 using MaroonSeal.Maths.Geometry.Paths;
 
+
 namespace MaroonSealEditor.Maths.Geometry.Paths {
 
-    [CustomPropertyDrawer(typeof(LinearPath), true)]
-    sealed public class LinearPathPropertyDrawer : PointPathBasePropertyDrawer
+    [CustomPropertyDrawer(typeof(SplinePath), true)]
+    public class SplinePath2DPropertyDrawer : PointPathBasePropertyDrawer
     {
         public override VisualElement CreatePropertyGUI(SerializedProperty _property) {
             VisualElement root = base.CreatePropertyGUI(_property);
+            root.Add(new PropertyField(_property.FindPropertyRelative("segmentResolution")));
             return root;
         }
     }

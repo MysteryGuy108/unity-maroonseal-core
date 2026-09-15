@@ -7,8 +7,8 @@ namespace MaroonSeal.Maths.Geometry.Paths {
 
     [System.Serializable]
     public struct SplinePoint {
-        [SerializeField] private Vector3 position;
-        public Vector3 Position { readonly get => position; set => position = value; }
+        [SerializeField] private Vector3 anchor;
+        public Vector3 Anchor { readonly get => anchor; set => anchor = value; }
 
         [Range(-180.0f, 180.0f)][SerializeField] private float roll;
         public float Roll { readonly get => roll; set => roll = value; }
@@ -24,26 +24,26 @@ namespace MaroonSeal.Maths.Geometry.Paths {
             readonly get => tangentIn; 
             set => tangentIn = ConstrainTangent(value, tangentOut); 
         }
-        readonly public Vector3 ControlIn => position + tangentIn;
+        readonly public Vector3 ControlIn => anchor + tangentIn;
 
         [SerializeField] Vector3 tangentOut;
         public Vector3 TangentOut {
             readonly get => tangentOut; 
             set => tangentOut = ConstrainTangent(value, tangentIn); 
         } 
-        readonly public Vector3 ControlOut => position + tangentOut; 
+        readonly public Vector3 ControlOut => anchor + tangentOut; 
 
-        public bool hasPrevious;
-        public bool hasNext;
+        [HideInInspector] public bool hasTangentIn;
+        [HideInInspector] public bool hasTangentOut;
 
         #region Constructors
         public SplinePoint(Vector3 _position, Vector3 _tangentOut, Vector3 _tangentIn, float _roll = 0.0f, Vector2? _size = null, TangentMode _mode = TangentMode.Corner) {
-            position = _position;
+            anchor = _position;
             roll = _roll;
             size = _size ?? Vector2.zero;
             
             tangentMode = _mode; tangentIn = _tangentIn; tangentOut =_tangentOut;
-            hasPrevious = false; hasNext = false;
+            hasTangentIn = false; hasTangentOut = false;
 
             tangentOut = ConstrainTangent(tangentOut, tangentIn);
         }
@@ -71,7 +71,7 @@ namespace MaroonSeal.Maths.Geometry.Paths {
         #region Constructors
         public SplinePath(List<SplinePoint> _points, int _segmentResolution = 2) : base(_points) { segmentResolution = Mathf.Max(2, _segmentResolution); }
         public SplinePath(int _segmentResolution = 2) : base() { segmentResolution = Mathf.Max(2, _segmentResolution); }
-        public SplinePath() : this(2) {}
+        public SplinePath() : this(16) {}
         #endregion
 
         #region Spline Path
@@ -80,21 +80,21 @@ namespace MaroonSeal.Maths.Geometry.Paths {
 
         #region Point Path
         protected override SplinePoint ResetPoint(SplinePoint _point) {
-            _point.hasPrevious = false;
-            _point.hasNext = false;
+            _point.hasTangentIn = false;
+            _point.hasTangentOut = false;
             return _point;
         }
 
         protected override void ApplyPointNeighbour(SplinePoint _start, SplinePoint _end, out SplinePoint _newStart, out SplinePoint _newEnd) {
-            _start.hasNext = true;
-            _end.hasPrevious = true;
+            _start.hasTangentOut = true;
+            _end.hasTangentIn = true;
             
             _newStart = _start;
             _newEnd = _end;
         }
 
         protected override void ApplyPointsToSegment(BezierPath _segment, SplinePoint _start, SplinePoint _end) {
-            _segment.SetBezierPoints(_start.Position, _start.ControlOut, _end.ControlIn, _end.Position, _start.Roll, _end.Roll);
+            _segment.SetBezierPoints(_start.Anchor, _start.ControlOut, _end.ControlIn, _end.Anchor, _start.Roll, _end.Roll);
         }
         #endregion
 

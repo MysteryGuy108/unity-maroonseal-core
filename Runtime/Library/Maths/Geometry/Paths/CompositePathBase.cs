@@ -23,24 +23,24 @@ namespace MaroonSeal.Maths.Geometry.Paths
         sealed public override TTransform EvaluateTime(float _time) {
             if (SegmentCount == 0) { return default; }
             EnsureClean();
-            TSegment segment = GetSegmentAtTime(_time, out float blend);
-            return segment.EvaluateTime(blend);
+            TSegment segment = GetSegmentAtTime(_time, out float segmentTime);
+            return segment.EvaluateTime(segmentTime);
         }
 
         public sealed override float TimeToDistance(float _time)
         {
             if (SegmentCount == 0) { return 0.0f; }
             EnsureClean();
-            TSegment segment = GetSegmentAtTime(_time, out float _blend);
-            return segment.TimeToDistance(_blend);
+            int index = GetIndexAtTime(_time, out float segmentTime);
+            return distanceTable.DistanceAt(index) + GetSegment(index).TimeToDistance(segmentTime);
         }
 
         public sealed override float DistanceToTime(float _distance)
         {
             if (SegmentCount == 0) { return 0.0f; }
             EnsureClean();
-            TSegment segment = GetSegmentAtDistance(_distance, out float _blend);
-            return segment.DistanceToTime(_blend);
+            int index = GetIndexAtDistance(_distance, out float segmentDistance);
+            return (index + GetSegment(index).DistanceToTime(segmentDistance)) / SegmentCount;
         }
 
         public sealed override float ClosestTimeToPoint(TVector _point)
@@ -69,25 +69,27 @@ namespace MaroonSeal.Maths.Geometry.Paths
             return (closestIndex + closestLocalTime) * timePerSegment;
         }
 
-        protected override void OnEnsureClean() => distanceTable.Rebuild(SegmentCount, i => GetSegment(i).Length);
+        protected override void OnEnsureClean() => distanceTable.RebuildSegments(SegmentCount, i => GetSegment(i).Length);
 
         public override void Clear() => distanceTable.Clear();
         #endregion
 
         #region Indices
-        protected int GetIndexAtTime(float _time, out float _blend)
+        protected int GetIndexAtTime(float _time, out float _segmentTime)
         {
             EnsureClean();
-            int index = (int)Mathf.Max(0, Mathf.Clamp(_time * this.SegmentCount, 0, this.SegmentCount-1));
-            _blend = Mathf.Clamp01(_time * this.SegmentCount - index);
+            _time = Mathf.Clamp01(_time);
+            float scaledTime = _time * this.SegmentCount;
+            int index = Mathf.Clamp((int)scaledTime, 0, this.SegmentCount - 1);
+            _segmentTime = scaledTime - index;
             return index;
         }
 
-        protected int GetIndexAtDistance(float _distance, out float _blend)
+        protected int GetIndexAtDistance(float _distance, out float _segmentDistance)
         {
             EnsureClean();
             int index = GetIndexAtTime(distanceTable.EvaluateDistance(_distance), out float time);
-            _blend = _distance - distanceTable.DistanceAt(index);
+            _segmentDistance = _distance - distanceTable.DistanceAt(index);
             return index;
         }
         #endregion

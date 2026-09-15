@@ -7,53 +7,42 @@ namespace MaroonSeal.Maths.Geometry.Paths {
 
     [System.Serializable]
     public struct SplinePoint2D {
-        [SerializeField] private Vector2 position;
-        public Vector2 Position { readonly get => position; set => position = value; }
+        [SerializeField] private Vector2 anchor;
+        public Vector2 Anchor { readonly get => anchor; set => anchor = value; }
 
         [SerializeField] private float size;
         public float Size { readonly get => size; set => size = value; }
 
-        public enum TangentMode { Mirror, Weighted, Corner }
         [Space]
-        [SerializeField] private TangentMode tangentMode;
+        [SerializeField] private SplinePoint.TangentMode tangentMode;
         [SerializeField] private Vector2 tangentIn;
         public Vector2 TangentIn {
             readonly get => tangentIn; 
-            set => tangentIn = ConstrainTangent(value, tangentOut); 
+            set => tangentIn = SplinePoint.ConstrainTangent(tangentMode, value, tangentOut); 
         }
-        readonly public Vector2 ControlIn => position + tangentIn;
+        readonly public Vector2 ControlIn => anchor + tangentIn;
 
         [SerializeField] Vector2 tangentOut;
         public Vector2 TangentOut {
             readonly get => tangentOut; 
-            set => tangentOut = ConstrainTangent(value, tangentIn); 
+            set => tangentOut = SplinePoint.ConstrainTangent(tangentMode, value, tangentIn); 
         } 
-        readonly public Vector2 ControlOut => position + tangentOut; 
+        readonly public Vector2 ControlOut => anchor + tangentOut; 
 
-        public bool hasPrevious;
-        public bool hasNext;
+        [HideInInspector] public bool hasTangentIn;
+        [HideInInspector] public bool hasTangentOut;
 
         #region Constructors
-        public SplinePoint2D(Vector3 _position, Vector3 _tangentOut, Vector3 _tangentIn, float _roll = 0.0f, float? _size = null, TangentMode _mode = TangentMode.Corner) {
-            position = _position;
+        public SplinePoint2D(Vector3 _anchor, Vector3 _tangentOut, Vector3 _tangentIn, float? _size = null, SplinePoint.TangentMode _mode = SplinePoint.TangentMode.Corner) {
+            anchor = _anchor;
             size = _size ?? 0.0f;
             
             tangentMode = _mode; tangentIn = _tangentIn; tangentOut =_tangentOut;
-            hasPrevious = false; hasNext = false;
+            hasTangentIn = false; hasTangentOut = false;
 
-            tangentOut = ConstrainTangent(tangentOut, tangentIn);
+            tangentOut = SplinePoint.ConstrainTangent(_mode, tangentOut, tangentIn);
         }
         #endregion
-
-        readonly private Vector3 ConstrainTangent(Vector3 _current, Vector3 _target) {
-            return ConstrainTangent(tangentMode, _current, _target);
-        }
-
-        static public Vector3 ConstrainTangent(TangentMode _mode, Vector3 _current, Vector3 _target) {
-            if (_mode == TangentMode.Weighted) { return -_target.normalized * _current.magnitude; }
-            if (_mode == TangentMode.Mirror) { return -_target; }
-            return _current;
-        }
     }
     
     /// <summary>
@@ -67,7 +56,7 @@ namespace MaroonSeal.Maths.Geometry.Paths {
         #region Constructors
         public SplinePath2D(List<SplinePoint2D> _points, int _segmentResolution = 2) : base(_points) { segmentResolution = Mathf.Max(2, _segmentResolution); }
         public SplinePath2D(int _segmentResolution = 2) : base() { segmentResolution = Mathf.Max(2, _segmentResolution); }
-        public SplinePath2D() : this(2) {}
+        public SplinePath2D() : this(16) {}
         #endregion
 
         #region Spline Path
@@ -76,21 +65,21 @@ namespace MaroonSeal.Maths.Geometry.Paths {
 
         #region Point Path
         protected override SplinePoint2D ResetPoint(SplinePoint2D _point) {
-            _point.hasPrevious = false;
-            _point.hasNext = false;
+            _point.hasTangentIn = false;
+            _point.hasTangentOut = false;
             return _point;
         }
 
         protected override void ApplyPointNeighbour(SplinePoint2D _start, SplinePoint2D _end, out SplinePoint2D _newStart, out SplinePoint2D _newEnd) {
-            _start.hasNext = true;
-            _end.hasPrevious = true;
+            _start.hasTangentOut = true;
+            _end.hasTangentIn = true;
             
             _newStart = _start;
             _newEnd = _end;
         }
 
         protected override void ApplyPointsToSegment(BezierPath2D _segment, SplinePoint2D _start, SplinePoint2D _end) {
-            _segment.SetBezierPoints(_start.Position, _start.ControlOut, _end.ControlIn, _end.Position);
+            _segment.SetBezierPoints(_start.Anchor, _start.ControlOut, _end.ControlIn, _end.Anchor);
         }
         #endregion
 
