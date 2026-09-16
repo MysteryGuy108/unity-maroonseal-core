@@ -50,7 +50,7 @@ namespace MaroonSealEditor.UIElements {
             foldout.Add(fieldContainer);
 
             // Getting the type of the property through reflection.
-            Type propertyType = GetFieldType(_property);
+            
 
             button.clicked += OnButtonClicked;
 
@@ -66,6 +66,7 @@ namespace MaroonSealEditor.UIElements {
             void OnButtonClicked()
             {
                 serializedObject.Update();
+                Type propertyType = GetFieldType(_property);
 
                 var menu = new GenericMenu();
                 menu.AddItem(new GUIContent("None"), SelectedType == null,
@@ -79,7 +80,7 @@ namespace MaroonSealEditor.UIElements {
                         bool ignore = false;
 
                         foreach(var ignoreType in ignoreTypes) {
-                            ignore = type.IsSubclassOf(ignoreType) || type == ignoreType;
+                            ignore = type.IsSubclassOf(ignoreType) || type == ignoreType || type.IsNestedPrivate;
                             if (ignore) { break; }
                         }
 
@@ -128,7 +129,7 @@ namespace MaroonSealEditor.UIElements {
         }
 
         private string GetButtonLabelText(SerializedProperty _property) =>
-            _property.managedReferenceValue != null ? ObjectNames.NicifyVariableName(_property.managedReferenceValue.GetType().Name) : "Select Type";
+            CheckFieldTypeValid(_property.managedReferenceValue.GetType()) ? ObjectNames.NicifyVariableName(_property.managedReferenceValue.GetType().Name) : "Select Type";
         #endregion
 
         #region Type Field
@@ -147,7 +148,7 @@ namespace MaroonSealEditor.UIElements {
         private void RebuildField(VisualElement _container, SerializedProperty _property)
         {
             _container.Clear();
-            if (_property.managedReferenceValue == null) return;
+            if (!CheckFieldTypeValid(_property.managedReferenceValue.GetType())) return;
 
             PropertyField propertyField = new(_property);
             propertyField.Bind(_property.serializedObject);
@@ -176,6 +177,8 @@ namespace MaroonSealEditor.UIElements {
                 // Deliberately left registered — see comment above.
             }
         }
+
+        #region Statics
         private static Type GetFieldType(SerializedProperty _property)
         {
             string typenameString = _property.managedReferenceFieldTypename;
@@ -226,6 +229,10 @@ namespace MaroonSealEditor.UIElements {
             int backtickIndex = name.IndexOf('`');
             return ObjectNames.NicifyVariableName(backtickIndex >= 0 ? name[..backtickIndex] : name);
         }
+        
+        private static bool CheckFieldTypeValid(Type _type) =>
+            _type != null && !_type.IsNestedPrivate;
+        #endregion
         #endregion
     }
 }
