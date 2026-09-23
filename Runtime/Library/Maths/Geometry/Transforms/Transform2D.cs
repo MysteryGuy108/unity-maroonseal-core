@@ -99,7 +99,7 @@ namespace MaroonSeal.Maths {
         #endregion
 
         #region Transformations
-        readonly public Vector2 TransformPoint(Vector2 _point) => ToWorldMatrix.MultiplyPoint(_point);
+        readonly public Vector2 TransformPoint(Vector2 _point) => (Vector2)(Quaternion.AngleAxis(angle, Vector3.forward) * Vector2.Scale(_point, scale)) + position;
         readonly public Vector2 TransformDirection(Vector2 _direction) => TransformVector(_direction).normalized;
         readonly public Vector2 TransformVector(Vector2 _vector) => ToWorldMatrix.MultiplyVector(_vector);
         #endregion
@@ -113,6 +113,13 @@ namespace MaroonSeal.Maths {
         #region Vector2
         public readonly float SqrDistanceTo(Vector2 _point) => Vector2.SqrMagnitude(_point - position);
         public readonly Vector2 DirectionTo(Vector2 _point) => _point - position;
+        #endregion
+
+        #region Static Functions
+        static public bool ApproximatelyEqual(Transform2D _a, Transform2D _b)
+            => Vector2Maths.ApproximatelyEqual(_a.position, _b.position) &&
+                Mathf.Approximately(_a.angle, _b.angle) &&
+                Vector2Maths.ApproximatelyEqual(_a.scale, _b.scale);
         #endregion
     }
 }

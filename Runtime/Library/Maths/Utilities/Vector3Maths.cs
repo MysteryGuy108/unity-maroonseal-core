@@ -23,5 +23,8 @@ namespace MaroonSeal.Maths
 
         public static Vector3 Multiply(Vector3 _a, Vector3 _b) => new(_a.x * _b.x, _a.y * _b.y, _a.z * _b.z);
         public static Vector3 Divide(Vector3 _a, Vector3 _b) => new(_a.x / _b.x, _a.y / _b.y, _a.z / _b.z);
+
+        static public bool ApproximatelyEqual(Vector3 _a, Vector3 _b) 
+            => Mathf.Approximately(_a.x, _b.x) && Mathf.Approximately(_a.y, _b.y) && Mathf.Approximately(_a.z, _b.z);
     }
 }

@@ -32,5 +32,9 @@ namespace MaroonSeal.Maths
         
         static public Vector2 FromRadians(float _radians, float _radius) => new Vector2(Mathf.Cos(_radians), Mathf.Sin(_radians)) * _radius;
         static public Vector2 FromDegrees(float _degrees, float _radius) => FromRadians(_degrees * Mathf.Deg2Rad, _radius);
+
+        static public bool ApproximatelyEqual(Vector2 _a, Vector2 _b) 
+            => Mathf.Approximately(_a.x, _b.x) && Mathf.Approximately(_a.y, _b.y);
+
     }
 }

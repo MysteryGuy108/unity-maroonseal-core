@@ -7,7 +7,7 @@ namespace MaroonSeal.Maths {
     /// A struct used to represent a transform at a point in 3D space.
     /// </summary>
     [System.Serializable]
-    public struct Transform3D : ITransform<Vector3>, IEquatable<Transform3D> {
+    public struct Transform3D : ITransform<Vector3>, IEquatable<Transform3D>, ISerializationCallbackReceiver {
         public Vector3 position;
         public Quaternion rotation;
         public Vector3 scale;
@@ -145,7 +145,7 @@ namespace MaroonSeal.Maths {
         #endregion
 
         #region Transformations
-        readonly public Vector3 TransformPoint(Vector3 _point) => position + rotation * Vector3.Scale(_point, scale);
+        readonly public Vector3 TransformPoint(Vector3 _point) => rotation * Vector3.Scale(_point, scale) + position;
         readonly public Vector3 TransformDirection(Vector3 _direction) => rotation * _direction;
         readonly public Vector3 TransformVector(Vector3 _vector) => rotation * Vector3.Scale(_vector, scale);
         #endregion
@@ -176,6 +176,29 @@ namespace MaroonSeal.Maths {
                 Quaternion.Lerp(_a.rotation, _b.rotation, _t),
                 Vector3.Lerp(_a.scale, _b.scale, _t)
             );
+        }
+
+        static public bool ApproximatelyEqual(Transform3D _a, Transform3D _b)
+            => Vector2Maths.ApproximatelyEqual(_a.position, _b.position) &&
+                QuaternionMaths.ApproximatelyEqual(_a.rotation, _b.rotation) &&
+                Vector2Maths.ApproximatelyEqual(_a.scale, _b.scale);
+
+        #endregion
+
+        #region ISerializationCallbackReceiver
+        public void OnBeforeSerialize() {}
+
+        // Unity's serializer can create/populate a Transform3D without ever going
+        // through one of the constructors above (e.g. when growing an array/list
+        // of these in the Inspector, or during scene/prefab deserialization).
+        // Because Transform3D is a struct, that means "rotation" can come back as
+        // the raw default (0,0,0,0), which is not a valid rotation and will make
+        // Matrix4x4.TRS (and anything else that consumes this quaternion) throw.
+        // Repair it here rather than at every call site.
+        public void OnAfterDeserialize() {
+            if (rotation.x == 0f && rotation.y == 0f && rotation.z == 0f && rotation.w == 0f) {
+                rotation = Quaternion.identity;
+            }
         }
         #endregion
     }

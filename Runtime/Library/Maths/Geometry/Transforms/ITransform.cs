@@ -3,7 +3,6 @@ using UnityEngine;
 namespace MaroonSeal.Maths {
     public interface ITransform<TVector>
     {
-        
         #region Transformations
         /// <summary>
         /// Transforms point from local space to world space.

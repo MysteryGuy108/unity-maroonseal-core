@@ -3,6 +3,7 @@ using UnityEngine.UIElements;
 
 using UnityEditor;
 using UnityEditor.UIElements;
+using MaroonSeal.Maths;
 
 namespace MaroonSeal.UI.UIElements
 {

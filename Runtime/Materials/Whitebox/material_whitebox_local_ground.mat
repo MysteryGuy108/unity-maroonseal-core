@@ -60,8 +60,11 @@ Material:
     - _Metallic: 0
     - _QueueControl: 0
     - _QueueOffset: 0
+    - _Rotation: 0
     - _Smoothness: 0
     - _Tiling: 1
+    - _USEVERTEXCOLOUR: 0
+    - _USEWORLDSPACE: 0
     m_Colors:
     - _Tint: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []

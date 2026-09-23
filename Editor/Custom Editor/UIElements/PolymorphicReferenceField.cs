@@ -14,16 +14,8 @@ namespace MaroonSealEditor.UIElements {
         private readonly string propertyPath;
 
         private readonly List<Type> ignoreTypes;
-        private readonly Dictionary<Type, string> typeDisplayNames;
 
-        public Type SelectedType
-        {
-            get
-            {
-                SerializedProperty property = serializedObject.FindProperty(propertyPath);
-                return property?.managedReferenceValue?.GetType();
-            }
-        }
+        public Type SelectedType => GetPropertyType(serializedObject.FindProperty(propertyPath));
 
         public event Action<Type> SelectedTypeChanged;
 
@@ -35,101 +27,54 @@ namespace MaroonSealEditor.UIElements {
 
             ignoreTypes = _ignoreTypes == null ? new() : new(_ignoreTypes);
             ignoreTypes.Add(typeof(UnityEngine.Object));
-            
-            typeDisplayNames = new();
 
             // Building foldout.
             Foldout foldout = new() { text = _property.displayName };
             this.Add(foldout);
 
             // Building header and container for type field.
-            VisualElement header = BuildHeader(out Button button);
+            DropdownField dropdown = BuildDropdown();
             VisualElement fieldContainer = new();
             
-            foldout.Add(header);
+            foldout.Add(dropdown);
             foldout.Add(fieldContainer);
-
-            // Getting the type of the property through reflection.
-            
-
-            button.clicked += OnButtonClicked;
+            dropdown.RegisterCallback<ClickEvent>((cntx) => OnButtonClicked());
 
             this.TrackPropertyValue(_property, Refresh);
             Refresh(_property);
 
-            void Refresh(SerializedProperty currentProperty)
+            void Refresh(SerializedProperty changedProperty)
             {
-                button.text = GetButtonLabelText(currentProperty);
-                RebuildField(fieldContainer, currentProperty);
+                RebuildField(fieldContainer, changedProperty);
+                RefreshDropdownLabel(dropdown, SelectedType);
             }
 
             void OnButtonClicked()
             {
                 serializedObject.Update();
-                Type propertyType = GetFieldType(_property);
-
-                var menu = new GenericMenu();
-                menu.AddItem(new GUIContent("None"), SelectedType == null,
-                    () => AssignType(serializedObject, propertyPath, null));
-
-                if (propertyType != null)
-                {
-                    foreach (var type in TypeCache.GetTypesDerivedFrom(propertyType))
-                    {   
-                        // Checking if type is to be ignored.
-                        bool ignore = false;
-
-                        foreach(var ignoreType in ignoreTypes) {
-                            ignore = type.IsSubclassOf(ignoreType) || type == ignoreType || type.IsNestedPrivate;
-                            if (ignore) { break; }
-                        }
-
-                        if (ignore) continue;
-
-                        if (type.IsAbstract || type.ContainsGenericParameters) continue;
-                        var capturedType = type;
-
-                        // Getting menu path display name
-                        if (!typeDisplayNames.TryGetValue(capturedType, out string menuPath)) { 
-                            menuPath = GetInheritancePath(type, propertyType); 
-                        }
-
-                        // Adding menu item
-                        menu.AddItem(new GUIContent(menuPath), capturedType == SelectedType,
-                            () => AssignType(serializedObject, propertyPath, capturedType));
-                    }
-                }
-                menu.ShowAsContext();
+                // Getting type through reflection.
+                Type propertyType = PolymorphicGenericMenuBuilder.GetFieldType(_property);
+                PolymorphicGenericMenuBuilder.Build(propertyType, SelectedType, (cntx) => AssignType(serializedObject, propertyPath, cntx), ignoreTypes);
             }
         }
         #endregion
 
         #region Header Building
-        private VisualElement BuildHeader(out Button _button)
+        private DropdownField BuildDropdown()
         {
-            VisualElement headerContainer = new();
-            headerContainer.AddToClassList(BaseField<string>.ussClassName); // "unity-base-field"
-            headerContainer.AddToClassList(BaseField<string>.alignedFieldUssClassName); // "unity-base-field__aligned"
-            headerContainer.style.flexDirection = FlexDirection.Row;
+            DropdownField dropdownButton = new("Type");
+            dropdownButton.AddToClassList(DropdownField.alignedFieldUssClassName); // "unity-base-field__input"
+            dropdownButton.AddToClassList(DropdownField.ussClassName + "__inspector-field"); // "unity-base-field__inspector-field"
 
-            Label headerLabel = new("Type");
-            headerLabel.AddToClassList(BaseField<string>.labelUssClassName); // "unity-base-field__label"
-
-            _button = new() {};
-            _button.AddToClassList(BaseField<string>.inputUssClassName); // "unity-base-field__input"
-            _button.style.flexGrow = 1.0f;
-
-            _button.style.marginRight = 0.0f;
-            //_button.style.marginLeft = 102.0f;
-
-            headerContainer.Add(headerLabel);
-            headerContainer.Add(_button);
-
-            return headerContainer;
+            return dropdownButton;
         }
-
-        private string GetButtonLabelText(SerializedProperty _property) =>
-            CheckFieldTypeValid(_property.managedReferenceValue.GetType()) ? ObjectNames.NicifyVariableName(_property.managedReferenceValue.GetType().Name) : "Select Type";
+        
+        private static void RefreshDropdownLabel(DropdownField _dropdown, Type _propertyType)
+        {
+            string labelText = _propertyType != null ? ObjectNames.NicifyVariableName(_propertyType.Name) : "Select Type";
+            TextElement textElement = _dropdown.Q<TextElement>(className: DropdownField.textUssClassName);
+            if (textElement != null) textElement.text = labelText;
+        }
         #endregion
 
         #region Type Field
@@ -148,7 +93,7 @@ namespace MaroonSealEditor.UIElements {
         private void RebuildField(VisualElement _container, SerializedProperty _property)
         {
             _container.Clear();
-            if (!CheckFieldTypeValid(_property.managedReferenceValue.GetType())) return;
+            if (SelectedType == null) return;
 
             PropertyField propertyField = new(_property);
             propertyField.Bind(_property.serializedObject);
@@ -159,13 +104,7 @@ namespace MaroonSealEditor.UIElements {
             void HideInnerFoldout(GeometryChangedEvent _evt)
             {
                 Foldout innerFoldout = propertyField.Q<Foldout>();
-                if (innerFoldout == null) return; // not built yet — wait for the next layout pass
-
-                // Force it open and hide the toggle row, rather than removing
-                // and reparenting content. PropertyField can rebuild its own
-                // subtree after the initial construction (e.g. on rebind), and
-                // structural edits here don't survive that; style changes do,
-                // since we just reapply them on the next GeometryChangedEvent.
+                if (innerFoldout == null) return;
                 innerFoldout.value = true;
 
                 VisualElement toggle = innerFoldout.Q(className: Foldout.toggleUssClassName);
@@ -173,66 +112,17 @@ namespace MaroonSealEditor.UIElements {
 
                 VisualElement fieldContent = innerFoldout.Q(className: Foldout.contentUssClassName);
                 if (fieldContent != null) fieldContent.style.marginLeft = 0f;
-
-                // Deliberately left registered — see comment above.
             }
         }
 
-        #region Statics
-        private static Type GetFieldType(SerializedProperty _property)
+        private static Type GetPropertyType(SerializedProperty _property)
         {
-            string typenameString = _property.managedReferenceFieldTypename;
-            if (string.IsNullOrEmpty(typenameString)) return null;
-
-            // Format is "AssemblyName Namespace.ClassName"
-            int splitIndex = typenameString.IndexOf(' ');
-            if (splitIndex < 0) return null;
-
-            string assemblyName = typenameString[..splitIndex];
-            string className = typenameString[(splitIndex + 1)..];
-
-            var assembly = System.Reflection.Assembly.Load(assemblyName);
-            return assembly?.GetType(className);
-        }
-        
-        private static string GetInheritancePath(Type type, Type rootType)
-        {
-            var chain = new List<string>();
-            Type current = type;
-
-            if (rootType.IsInterface)
-            {
-                // Interfaces never appear in BaseType, so walk up while the
-                // current class still implements rootType, and stop once it doesn't.
-                while (current != null && rootType.IsAssignableFrom(current))
-                {
-                    chain.Add(GetCleanTypeName(current));
-                    current = current.BaseType;
-                }
-            }
-            else
-            {
-                while (current != null && current != rootType)
-                {
-                    chain.Add(GetCleanTypeName(current));
-                    current = current.BaseType;
-                }
-            }
-
-            chain.Reverse();
-            return string.Join("/", chain);
+            Type selectedType = _property?.managedReferenceValue?.GetType();
+            return CheckFieldTypeValid(selectedType) ? selectedType : null;
         }
 
-        private static string GetCleanTypeName(Type type)
-        {
-            string name = type.Name;
-            int backtickIndex = name.IndexOf('`');
-            return ObjectNames.NicifyVariableName(backtickIndex >= 0 ? name[..backtickIndex] : name);
-        }
-        
-        private static bool CheckFieldTypeValid(Type _type) =>
-            _type != null && !_type.IsNestedPrivate;
-        #endregion
+        private static bool CheckFieldTypeValid(Type _type) 
+            => _type != null && !_type.IsNestedPrivate;
         #endregion
     }
 }

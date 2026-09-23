@@ -16,7 +16,7 @@ namespace MaroonSeal.Maths
             Vector3 axis = direction.normalized;
 
             // Grab the imaginary vector part of the quaternion (X, Y, Z)
-            Vector3 quaternionVector = new Vector3(rotation.x, rotation.y, rotation.z);
+            Vector3 quaternionVector = new(rotation.x, rotation.y, rotation.z);
 
             // Project the quaternion's vector component onto our target axis
             Vector3 twistedAxis = Vector3.Project(quaternionVector, axis);
@@ -37,6 +37,18 @@ namespace MaroonSeal.Maths
 
             // Clamp the angle to a standard -180 to 180 degree range
             return Mathf.DeltaAngle(0, angle);
+        }
+
+        static public bool ApproximatelyEqual(Quaternion _a, Quaternion _b) 
+            => Mathf.Approximately(_a.x, _b.x) && 
+                Mathf.Approximately(_a.y, _b.y) && 
+                Mathf.Approximately(_a.z, _b.z) && 
+                Mathf.Approximately(_a.w, _b.w); 
+
+        static public Quaternion GetNormalised(Quaternion _q)
+        {
+            float f = 1f / Mathf.Sqrt(_q.x * _q.x + _q.y * _q.y + _q.z * _q.z + _q.w * _q.w);
+            return new Quaternion(_q.x*f, _q.y*f, _q.z*f, _q.w*f);
         }
     }
 }
