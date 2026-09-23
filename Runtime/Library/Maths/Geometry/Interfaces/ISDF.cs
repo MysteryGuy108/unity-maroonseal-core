@@ -35,7 +35,4 @@ namespace MaroonSeal.Maths.Geometry {
     public interface ISDF<TVector> : ISDF {
         public float GetSignedDistance(TVector _point);
     }
-
-    public interface ISDF2D : ISDF<Vector2> {}
-    public interface ISDF3D : ISDF<Vector3> {}
 }

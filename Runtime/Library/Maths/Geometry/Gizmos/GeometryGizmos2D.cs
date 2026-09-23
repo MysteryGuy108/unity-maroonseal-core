@@ -11,7 +11,7 @@ namespace MaroonSeal.Maths.Geometry {
             Gizmos.DrawSphere(_line.p2, _pointRadii);
         }
 
-        public static void DrawCurve(ICurve2D _curve, int _segments = 24, float _endPointRadii = 0.03125f)
+        public static void DrawCurve(ICurve<Vector2> _curve, int _segments = 24, float _endPointRadii = 0.03125f)
         {
             float timeIncrement = 1.0f / _segments;
 
@@ -20,20 +20,20 @@ namespace MaroonSeal.Maths.Geometry {
                 float t1 = timeIncrement * i;
                 float t2 = timeIncrement * (i+1);
 
-                Gizmos.DrawLine(_curve.EvaluatePointAtTime(t1), _curve.EvaluatePointAtTime(t2));
+                Gizmos.DrawLine(_curve.EvaluatePositionAtTime(t1), _curve.EvaluatePositionAtTime(t2));
             }
 
             if (_endPointRadii <= 0.0f) { return; }
-            Gizmos.DrawSphere(_curve.EvaluatePointAtTime(0.0f), _endPointRadii);
-            Gizmos.DrawSphere(_curve.EvaluatePointAtTime(1.0f), _endPointRadii);
+            Gizmos.DrawSphere(_curve.EvaluatePositionAtTime(0.0f), _endPointRadii);
+            Gizmos.DrawSphere(_curve.EvaluatePositionAtTime(1.0f), _endPointRadii);
         }
 
         public static void DrawCurve(Circle2D _circle, int _segments = 24, float _endPointRadii = 0f) => 
-            DrawCurve((ICurve2D)_circle, _segments, _endPointRadii);
+            DrawCurve((ICurve<Vector2>)_circle, _segments, _endPointRadii);
 
         public static void DrawCurve(CubicBezier2D _bezier, int _segments = 24, float _endPointRadii = 0.03125f)
         {
-            DrawCurve((ICurve2D)_bezier, _segments, _endPointRadii);
+            DrawCurve((ICurve<Vector2>)_bezier, _segments, _endPointRadii);
 
             if (_endPointRadii <= 0.0f) { return; }
             Gizmos.DrawLine(_bezier.anchorA, _bezier.controlA);
@@ -45,7 +45,7 @@ namespace MaroonSeal.Maths.Geometry {
         #endregion
 
         #region IShape2D
-        public static void DrawPolygon(IPolygon2D _polygon, float _pointRadii = 0.03125f)
+        public static void DrawPolygon(IPolygon<Vector2, Transform2D, Line2D> _polygon, float _pointRadii = 0.03125f)
         {
             foreach(Line2D edge in _polygon.GetEdges()) {
                 DrawLine(edge, 0.0f);

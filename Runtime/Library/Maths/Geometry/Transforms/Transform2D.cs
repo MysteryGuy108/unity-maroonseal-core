@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace MaroonSeal.Maths {
+namespace MaroonSeal.Maths.Geometry {
     /// <summary>
     /// A struct used to represent a transform at a point in 2D space.
     /// </summary>
@@ -71,6 +71,16 @@ namespace MaroonSeal.Maths {
         #endregion
 
         #region ITransform
+        public Vector2 Position { readonly get => position; set => position = value; }
+
+        public void SetHeading(Vector2 _direction, bool _flip = false, float _roll = 0f)
+        {
+            // 2D has one rotational DOF, already fully spent on heading — roll is a no-op here.
+            Right = _flip ? -_direction : _direction;
+        }
+        #endregion
+
+        #region Matrices
         public readonly Matrix4x4 ToWorldMatrix { 
             get {
                 Matrix4x4 transformMatrix = Matrix4x4.identity;

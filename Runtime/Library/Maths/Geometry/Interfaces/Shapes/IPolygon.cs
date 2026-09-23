@@ -6,14 +6,11 @@ using UnityEngine;
 
 namespace MaroonSeal.Maths.Geometry {
 
-    public interface IPolygon<TVertices, TEdge> : IShape where TEdge : ICurve<TVertices>
+    public interface IPolygon<TVertices, TTransform, TEdge> : IShape<TVertices, TTransform> where TEdge : ICurve<TVertices>
+        where TTransform : ITransform<TVertices>
     {
         public int VertexCount { get; }
         public IEnumerable<TVertices> GetVertices();
         public IEnumerable<TEdge> GetEdges();
     }
-
-    public interface IPolygon2D : IPolygon<Vector2, Line2D>, IShape2D {}
-
-    public interface IPolygon3D : IPolygon<Vector3, Line>, IShape3D {}
 }

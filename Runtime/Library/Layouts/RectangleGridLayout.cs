@@ -39,13 +39,13 @@ namespace MaroonSeal.Layouts
                     Vector2Int cell = new(x, y);
                     if (cell == cursorCell) { continue; }
                     
-                    GeometryGizmos2D.DrawPolygon((IPolygon2D)grid.geometry.GetCellShape(cell));
+                    GeometryGizmos2D.DrawPolygon((IPolygon<Vector2, Transform2D, Line2D>)grid.geometry.GetCellShape(cell));
                 }
             }
 
             Gizmos.color = Color.red;
             Gizmos.DrawSphere(testCursor, 0.03125f);
-            GeometryGizmos2D.DrawPolygon((IPolygon2D)grid.geometry.GetCellShape(cursorCell));
+            GeometryGizmos2D.DrawPolygon((IPolygon<Vector2, Transform2D, Line2D>)grid.geometry.GetCellShape(cursorCell));
         }
     }
 }

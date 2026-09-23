@@ -1,5 +1,6 @@
 using UnityEngine;
 
+using MaroonSeal.Maths;
 using MaroonSeal.Maths.Geometry;
 
 namespace MaroonSeal.Layouts
@@ -25,7 +26,7 @@ namespace MaroonSeal.Layouts
             {
                 for(int x = 0; x < size.x; x++)
                 {
-                    GeometryGizmos2D.DrawPolygon(geometry.GetCellShape<IPolygon2D>(new(x, y)));
+                    GeometryGizmos2D.DrawPolygon(geometry.GetCellShape<IPolygon<Vector2, Transform2D, Line2D>>(new(x, y)));
                 }
             }
 

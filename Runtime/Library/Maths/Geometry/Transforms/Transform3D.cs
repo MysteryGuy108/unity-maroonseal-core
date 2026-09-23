@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using UnityEngine;
 
-namespace MaroonSeal.Maths {
+namespace MaroonSeal.Maths.Geometry {
     /// <summary>
     /// A struct used to represent a transform at a point in 3D space.
     /// </summary>
@@ -11,11 +11,6 @@ namespace MaroonSeal.Maths {
         public Vector3 position;
         public Quaternion rotation;
         public Vector3 scale;
-
-        #region Matrices
-        public readonly Matrix4x4 Matrix => Matrix4x4.TRS(position, rotation, scale);
-        public readonly Matrix4x4 InverseMatrix => Matrix.inverse;
-        #endregion
 
         #region Constructors
         public Transform3D(Vector3 _position, Quaternion? _rotation = null, Vector3? _scale = null) {
@@ -94,17 +89,9 @@ namespace MaroonSeal.Maths {
         }
         #endregion
 
-        #region IEquatable
-        readonly public bool Equals(Transform3D _other) {
-            return this.position == _other.position && 
-                this.rotation == _other.rotation && 
-                this.scale == _other.scale;
-        }
-        public override readonly bool Equals(object obj) => this.Equals((Transform3D)obj);
-
-        public override readonly int GetHashCode() {
-            unchecked { return HashCode.Combine(position, rotation, scale); }
-        }
+        #region Matrices
+        public readonly Matrix4x4 Matrix => Matrix4x4.TRS(position, rotation, scale);
+        public readonly Matrix4x4 InverseMatrix => Matrix.inverse;
         #endregion
 
         #region Operators
@@ -119,7 +106,27 @@ namespace MaroonSeal.Maths {
         readonly public Transform2D ToXZ() { return new(this.position.ToXZ(), -this.EulerAngles.y, this.scale.ToXZ()); }
         #endregion
 
-        #region Point Transform
+        #region Transformations
+        readonly public Vector3 TransformPoint(Vector3 _point) => rotation * Vector3.Scale(_point, scale) + position;
+        readonly public Vector3 TransformDirection(Vector3 _direction) => rotation * _direction;
+        readonly public Vector3 TransformVector(Vector3 _vector) => rotation * Vector3.Scale(_vector, scale);
+        #endregion
+
+        #region Inverse Transformations
+        readonly public Vector3 InverseTransformPoint(Vector3 _point)
+        {
+            _point = Quaternion.Inverse(rotation) * (_point - position);
+            return new Vector3(_point.x / scale.x, _point.y / scale.y, _point.z / scale.z);
+        }
+        readonly public Vector3 InverseTransformDirection(Vector3 _direction) => Quaternion.Inverse(rotation) * _direction;
+        readonly public Vector3 InverseTransformVector(Vector3 _vector)
+        {
+            _vector = Quaternion.Inverse(rotation) * _vector;
+            return new Vector3(_vector.x / scale.x, _vector.y / scale.y, _vector.z / scale.z);
+        }
+        #endregion
+        
+        #region Transforms
         readonly public Transform3D GetLocalTransform(Transform3D _transform) {
             Transform3D localisedPoint = new(this.position, this.EulerAngles, this.scale);
 
@@ -144,26 +151,6 @@ namespace MaroonSeal.Maths {
         readonly public Transform3D GetGlobalTransform(Transform _transform) => GetGlobalTransform(new Transform3D(_transform));
         #endregion
 
-        #region Transformations
-        readonly public Vector3 TransformPoint(Vector3 _point) => rotation * Vector3.Scale(_point, scale) + position;
-        readonly public Vector3 TransformDirection(Vector3 _direction) => rotation * _direction;
-        readonly public Vector3 TransformVector(Vector3 _vector) => rotation * Vector3.Scale(_vector, scale);
-        #endregion
-
-        #region Inverse Transformations
-        readonly public Vector3 InverseTransformPoint(Vector3 _point)
-        {
-            _point = Quaternion.Inverse(rotation) * (_point - position);
-            return new Vector3(_point.x / scale.x, _point.y / scale.y, _point.z / scale.z);
-        }
-        readonly public Vector3 InverseTransformDirection(Vector3 _direction) => Quaternion.Inverse(rotation) * _direction;
-        readonly public Vector3 InverseTransformVector(Vector3 _vector)
-        {
-            _vector = Quaternion.Inverse(rotation) * _vector;
-            return new Vector3(_vector.x / scale.x, _vector.y / scale.y, _vector.z / scale.z);
-        }
-        #endregion
-        
         #region Vector3
         public readonly float SqrDistanceTo(Vector3 _point) => Vector3.SqrMagnitude(_point - position);
         public readonly Vector3 DirectionTo(Vector3 _point) => _point - position;
@@ -185,16 +172,33 @@ namespace MaroonSeal.Maths {
 
         #endregion
 
+        #region ITransform<>
+        public Vector3 Position { readonly get => position; set => position = value; }
+
+        public void SetHeading(Vector3 _direction, bool _flip = false, float _roll = 0f)
+        {
+            Vector3 fwd = _flip ? -_direction : _direction;
+            fwd = (fwd == Vector3.zero ? Vector3.forward : fwd).normalized;
+            rotation = Quaternion.AngleAxis(_roll, fwd) * Quaternion.LookRotation(fwd, Vector3.up);
+        }
+        #endregion
+
+        #region IEquatable
+        readonly public bool Equals(Transform3D _other) {
+            return this.position == _other.position && 
+                this.rotation == _other.rotation && 
+                this.scale == _other.scale;
+        }
+        public override readonly bool Equals(object obj) => this.Equals((Transform3D)obj);
+
+        public override readonly int GetHashCode() {
+            unchecked { return HashCode.Combine(position, rotation, scale); }
+        }
+        #endregion
+
         #region ISerializationCallbackReceiver
         public void OnBeforeSerialize() {}
 
-        // Unity's serializer can create/populate a Transform3D without ever going
-        // through one of the constructors above (e.g. when growing an array/list
-        // of these in the Inspector, or during scene/prefab deserialization).
-        // Because Transform3D is a struct, that means "rotation" can come back as
-        // the raw default (0,0,0,0), which is not a valid rotation and will make
-        // Matrix4x4.TRS (and anything else that consumes this quaternion) throw.
-        // Repair it here rather than at every call site.
         public void OnAfterDeserialize() {
             if (rotation.x == 0f && rotation.y == 0f && rotation.z == 0f && rotation.w == 0f) {
                 rotation = Quaternion.identity;

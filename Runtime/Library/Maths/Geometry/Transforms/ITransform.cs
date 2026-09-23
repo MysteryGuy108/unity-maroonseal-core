@@ -1,8 +1,11 @@
 using UnityEngine;
 
-namespace MaroonSeal.Maths {
+namespace MaroonSeal.Maths.Geometry {
     public interface ITransform<TVector>
     {
+        public TVector Position { get; set; }
+        public void SetHeading(TVector _direction, bool _flip = false, float _roll = 0f);
+
         #region Transformations
         /// <summary>
         /// Transforms point from local space to world space.
