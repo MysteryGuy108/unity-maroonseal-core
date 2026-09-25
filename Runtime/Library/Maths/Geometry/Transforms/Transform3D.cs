@@ -48,6 +48,19 @@ namespace MaroonSeal.Maths.Geometry {
         static public Transform3D Origin { get => new(Vector3.zero); }
         #endregion
 
+        #region ITransform<>
+        public Vector3 Position { readonly get => position; set => position = value; }
+        public Vector3 Scale { readonly get => scale; set => scale = value; }
+
+        public void SetHeading(Vector3 _direction, bool _flip = false, float _roll = 0f)
+        {
+            Vector3 fwd = _flip ? -_direction : _direction;
+            fwd = (fwd == Vector3.zero ? Vector3.forward : fwd).normalized;
+            rotation = Quaternion.AngleAxis(_roll, fwd) * Quaternion.LookRotation(fwd, Vector3.up);
+        }
+        #endregion
+
+
         #region Orientation
         public Vector3 EulerAngles { 
             readonly get => rotation.eulerAngles;
@@ -172,16 +185,6 @@ namespace MaroonSeal.Maths.Geometry {
 
         #endregion
 
-        #region ITransform<>
-        public Vector3 Position { readonly get => position; set => position = value; }
-
-        public void SetHeading(Vector3 _direction, bool _flip = false, float _roll = 0f)
-        {
-            Vector3 fwd = _flip ? -_direction : _direction;
-            fwd = (fwd == Vector3.zero ? Vector3.forward : fwd).normalized;
-            rotation = Quaternion.AngleAxis(_roll, fwd) * Quaternion.LookRotation(fwd, Vector3.up);
-        }
-        #endregion
 
         #region IEquatable
         readonly public bool Equals(Transform3D _other) {

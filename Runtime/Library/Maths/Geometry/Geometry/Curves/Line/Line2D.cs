@@ -5,6 +5,8 @@ namespace MaroonSeal.Maths.Geometry {
     [System.Serializable]
     public struct Line2D : ILine<Vector2>, IEquatable<Line2D>
     {
+        readonly public bool IsLoop => false;
+        
         public Vector2 p1;
         public Vector2 p2;
 
@@ -43,9 +45,16 @@ namespace MaroonSeal.Maths.Geometry {
         public void FlipDirection() => (p2, p1) = (p1, p2);
         #endregion
 
-        #region ILine<>
+        #region ICurve
         public readonly Vector2 EvaluatePositionAtTime(float _t) => Vector2.Lerp(p1, p2, _t);
         public readonly Vector2 EvaluateTangentAtTime(float _t) => GetDirection();
+        
+        public readonly float ClosestTimeToPosition(Vector2 _position)
+        {
+            Vector2 AB = p2 - p1;
+            Vector2 AV = _position - p1;
+            return Vector2.Dot(AV, AB) / Vector2.Dot(AB, AB);
+        }
         #endregion
     }
 }

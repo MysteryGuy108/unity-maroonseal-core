@@ -13,7 +13,7 @@ namespace MaroonSealEditor.UIElements {
         private readonly SerializedObject serializedObject;
         private readonly string propertyPath;
 
-        private readonly List<Type> ignoreTypes;
+        private readonly HashSet<Type> ignoreTypes;
 
         public Type SelectedType => GetPropertyType(serializedObject.FindProperty(propertyPath));
 
@@ -26,6 +26,7 @@ namespace MaroonSealEditor.UIElements {
             serializedObject = _property.serializedObject;
 
             ignoreTypes = _ignoreTypes == null ? new() : new(_ignoreTypes);
+            ignoreTypes.Add(null);
             ignoreTypes.Add(typeof(UnityEngine.Object));
 
             // Building foldout.
@@ -53,8 +54,8 @@ namespace MaroonSealEditor.UIElements {
             {
                 serializedObject.Update();
                 // Getting type through reflection.
-                Type propertyType = PolymorphicGenericMenuBuilder.GetFieldType(_property);
-                PolymorphicGenericMenuBuilder.Build(propertyType, SelectedType, (cntx) => AssignType(serializedObject, propertyPath, cntx), ignoreTypes);
+                Type propertyType = PolymorphicReferenceMenu.GetFieldType(_property);
+                PolymorphicReferenceMenu.Build(propertyType, SelectedType, (cntx) => AssignType(serializedObject, propertyPath, cntx), ignoreTypes);
             }
         }
         #endregion
@@ -69,9 +70,13 @@ namespace MaroonSealEditor.UIElements {
             return dropdownButton;
         }
         
-        private static void RefreshDropdownLabel(DropdownField _dropdown, Type _propertyType)
+        private void RefreshDropdownLabel(DropdownField _dropdown, Type _propertyType)
         {
-            string labelText = _propertyType != null ? ObjectNames.NicifyVariableName(_propertyType.Name) : "Select Type";
+            string labelText;
+
+            if (ignoreTypes.Contains(_propertyType)) labelText = "Select Type";
+            else labelText = ObjectNames.NicifyVariableName(_propertyType.Name); 
+
             TextElement textElement = _dropdown.Q<TextElement>(className: DropdownField.textUssClassName);
             if (textElement != null) textElement.text = labelText;
         }
@@ -93,7 +98,7 @@ namespace MaroonSealEditor.UIElements {
         private void RebuildField(VisualElement _container, SerializedProperty _property)
         {
             _container.Clear();
-            if (SelectedType == null) return;
+            if (ignoreTypes.Contains(SelectedType)) return; 
 
             PropertyField propertyField = new(_property);
             propertyField.Bind(_property.serializedObject);

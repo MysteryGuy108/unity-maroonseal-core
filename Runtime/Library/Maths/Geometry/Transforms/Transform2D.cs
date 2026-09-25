@@ -72,6 +72,8 @@ namespace MaroonSeal.Maths.Geometry {
 
         #region ITransform
         public Vector2 Position { readonly get => position; set => position = value; }
+        public Vector2 Scale { readonly get => scale; set => scale = value; }
+        
 
         public void SetHeading(Vector2 _direction, bool _flip = false, float _roll = 0f)
         {

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace MaroonSeal.Maths.Geometry {
@@ -57,6 +58,8 @@ namespace MaroonSeal.Maths.Geometry {
         #endregion
 
         #region IPolarSpaceShape
+        readonly public bool IsLoop => true;
+        
         readonly public Vector3 EvaluatePointAtTheta(float _radians) => Transform.TransformPoint(Vector2Maths.FromRadians(_radians, radius));
 
         readonly public Vector3 EvaluateTangentAtTheta(float _radians) {
@@ -66,6 +69,13 @@ namespace MaroonSeal.Maths.Geometry {
         readonly public Vector3 EvaluatePositionAtTime(float _t) => EvaluatePointAtTheta(_t * Mathf.PI * 2.0f);
 
         readonly public Vector3 EvaluateTangentAtTime(float _t) => EvaluateTangentAtTheta(_t * Mathf.PI * 2.0f);
+        
+        readonly public float ClosestTimeToPosition(Vector3 _position)
+        {
+            Vector2 projectedPosition = this.Transform.InverseTransformPoint(_position);
+            float theta = Mathf.Atan2(projectedPosition.y, projectedPosition.x);
+            return Mathf.InverseLerp(0.0f, Mathf.PI * 2.0f, theta);
+        }
         #endregion
     }
 }

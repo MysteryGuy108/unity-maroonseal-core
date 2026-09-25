@@ -48,11 +48,20 @@ namespace MaroonSeal.Maths.Geometry {
         #endregion
 
         #region IPolarSpaceShape
+        readonly public bool IsLoop => true;
+        
         readonly public Vector2 EvaluatePointAtTheta(float _radians) => Transform.TransformPoint(Vector2Maths.FromRadians(_radians, radius));
         readonly public Vector2 EvaluateTangentAtTheta(float _radians) => Transform.TransformDirection(GetTangentAtTheta(_radians));   
 
         readonly public Vector2 EvaluatePositionAtTime(float _t) => EvaluatePointAtTheta(_t * Mathf.PI * 2.0f);
         readonly public Vector2 EvaluateTangentAtTime(float _t) => EvaluateTangentAtTheta(_t * Mathf.PI * 2.0f);
+        
+        readonly public float ClosestTimeToPosition(Vector2 _position)
+        {
+            Vector2 projectedPosition = this.Transform.InverseTransformPoint(_position);
+            float theta = Mathf.Atan2(projectedPosition.y, projectedPosition.x);
+            return Mathf.InverseLerp(0.0f, Mathf.PI * 2.0f, theta);
+        }
         #endregion
 
         #region Static Operations

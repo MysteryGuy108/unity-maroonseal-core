@@ -52,6 +52,8 @@ namespace MaroonSeal.Maths.Geometry
         #endregion
 
         #region IPolarSpaceShape
+        readonly public bool IsLoop => Mathf.Repeat(startDegrees, 360.0f) == Mathf.Repeat(endDegrees, 360.0f);
+        
         readonly public Vector2 EvaluatePointAtTheta(float _theta) =>
             Transform.TransformPoint(Vector2Maths.FromRadians(_theta, radius));
 
@@ -66,6 +68,34 @@ namespace MaroonSeal.Maths.Geometry
         readonly public Vector2 EvaluateTangentAtTime(float _time) {
             float lerpTheta = Mathf.Lerp(startDegrees, endDegrees, _time) * Mathf.Deg2Rad;
             return EvaluateTangentAtTheta(lerpTheta);
+        }
+
+        readonly public float ClosestTimeToPosition(Vector2 _position)
+        {
+            Vector2 projectedPosition = this.Transform.InverseTransformPoint(_position);
+            PolarVector2 polar = new(projectedPosition);
+
+            float rangeMin = Mathf.Min(this.startDegrees, this.endDegrees);
+            float rangeMax = Mathf.Max(this.startDegrees, this.endDegrees);
+            float rangeSpan = rangeMax - rangeMin;
+
+            // Bring the point's angle into the [rangeMin, rangeMin + 360) window so it's
+            // directly comparable to the arc's (possibly reversed) angular span.
+            float shifted = rangeMin + Mathf.Repeat(polar.Degrees - rangeMin, 360.0f);
+
+            float clampedDegrees;
+            if (shifted <= rangeMax) {
+                // Point's angle falls within the arc's span - it's already the closest angle.
+                clampedDegrees = shifted;
+            } else {
+                // Point falls in the gap outside the arc. Snap to whichever end of the
+                // arc is angularly nearer by bisecting the gap.
+                float gapMidpoint = rangeMax + (360.0f - rangeSpan) * 0.5f;
+                clampedDegrees = (shifted < gapMidpoint) ? rangeMax : rangeMin;
+            }
+
+            // InverseLerp works correctly whether startDegrees < endDegrees or not.
+            return Mathf.InverseLerp(this.startDegrees, this.endDegrees, clampedDegrees);
         }
         #endregion
     }

@@ -6,6 +6,8 @@ namespace MaroonSeal.Maths.Geometry {
     [System.Serializable]
     public struct CubicBezier : ICubicBezier<Vector3>
     {
+        readonly public bool IsLoop => anchorA == anchorB;
+
         public Vector3 anchorA;
         public Vector3 controlA;
         public Vector3 controlB;
@@ -50,7 +52,7 @@ namespace MaroonSeal.Maths.Geometry {
         readonly public override int GetHashCode() { return System.HashCode.Combine(anchorA, controlA, controlB, anchorB); }
         #endregion
 
-        #region Cubic Bezier
+        #region ICurve
         public readonly Vector3 EvaluatePositionAtTime(float _t)
         {
             float tm = 1.0f - _t;
@@ -71,6 +73,12 @@ namespace MaroonSeal.Maths.Geometry {
 
             return (3.0f * tm2 * (controlA - anchorA)) + (6.0f * tm * _t * (controlB - controlA)) + (3.0f * t2 * (anchorB - controlB));
         }
+
+        readonly public float ClosestTimeToPosition(Vector3 _position)
+            => (this as IParametricCurve<Vector3>).ClosestTimeToPosition(_position);
+
+        readonly public float GetDistanceToPointAtTime(float _time, Vector3 _position)
+            => Vector3.SqrMagnitude(this.EvaluatePositionAtTime(_time) - _position);
         #endregion
     }
 }

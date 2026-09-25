@@ -4,6 +4,7 @@ namespace MaroonSeal.Maths.Geometry {
     public interface ITransform<TVector>
     {
         public TVector Position { get; set; }
+        public TVector Scale { get; set; }
         public void SetHeading(TVector _direction, bool _flip = false, float _roll = 0f);
 
         #region Transformations
@@ -56,6 +57,9 @@ namespace MaroonSeal.Maths.Geometry {
         public float SqrDistanceTo(TVector _vector);
         public float DistanceTo(TVector _vector) => Mathf.Sqrt(SqrDistanceTo(_vector));
         public TVector DirectionTo(TVector _direction);
+
+        public float SqrDistanceTo(ITransform<TVector> _transform) => SqrDistanceTo(_transform.Position);
+        public float DistanceTo(ITransform<TVector> _transform) => Mathf.Sqrt(SqrDistanceTo(_transform));
         #endregion
     }
 }

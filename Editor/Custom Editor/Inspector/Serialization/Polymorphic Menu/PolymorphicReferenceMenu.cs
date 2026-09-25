@@ -11,9 +11,9 @@ using MaroonSeal.Utilities.Serialization;
 
 namespace MaroonSealEditor.UIElements {
 
-    public static class PolymorphicGenericMenuBuilder
+    public static class PolymorphicReferenceMenu
     {
-        public static void Build(Type _targetType, Type _selectedType, Action<Type> _setType, List<Type> _ignoreTypes)
+        public static void Build(Type _targetType, Type _selectedType, Action<Type> _setType, HashSet<Type> _ignoreTypes)
         {
             var menu = new GenericMenu();
             menu.AddItem(new GUIContent("None"), _selectedType == null, () => _setType.Invoke(null));
@@ -27,8 +27,8 @@ namespace MaroonSealEditor.UIElements {
                 if (type.IsAbstract || type.ContainsGenericParameters || type.IsNestedPrivate) continue;
                 Type capturedType = type;
 
-                PolymorphicMenuElementAttribute menuElement = (PolymorphicMenuElementAttribute)Attribute.GetCustomAttribute(capturedType,
-                    typeof(PolymorphicMenuElementAttribute));
+                PolymorphicReferenceMenuItemAttribute menuElement = (PolymorphicReferenceMenuItemAttribute)Attribute.GetCustomAttribute(capturedType,
+                    typeof(PolymorphicReferenceMenuItemAttribute));
                 
                 string menuPath;
                 if (menuElement != null)
@@ -93,11 +93,12 @@ namespace MaroonSealEditor.UIElements {
             return string.Join("/", chain);
         }
 
-        private static bool CheckIgnore(Type _type, List<Type> _ignoreTypes)
+        private static bool CheckIgnore(Type _type, HashSet<Type> _ignoreTypes)
         {
+            if (_type == null) return true;
             foreach(var ignoreType in _ignoreTypes) {
-                bool ignore = _type.IsSubclassOf(ignoreType) || _type == ignoreType;
-                if (ignore) { return true; }
+                if (ignoreType == null) continue; 
+                if (_type.IsSubclassOf(ignoreType) || _type == ignoreType) return true; 
             }
 
             return false;

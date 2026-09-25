@@ -6,6 +6,8 @@ namespace MaroonSeal.Maths.Geometry
     [System.Serializable]
     public struct CubicBezier2D : ICubicBezier<Vector2>, IEquatable<CubicBezier2D>
     {
+        readonly public bool IsLoop => anchorA == anchorB;
+        
         public Vector2 anchorA;
         public Vector2 controlA;
         public Vector2 controlB;
@@ -68,6 +70,12 @@ namespace MaroonSeal.Maths.Geometry
 
             return (3.0f * tm2 * (controlA - anchorA)) + (6.0f * tm * _t * (controlB - controlA)) + (3.0f * t2 * (anchorB - controlB));
         }
+
+        readonly public float ClosestTimeToPosition(Vector2 _position)
+            => (this as IParametricCurve<Vector2>).ClosestTimeToPosition(_position);
+
+        readonly public float GetDistanceToPointAtTime(float _time, Vector2 _position)
+            => Vector2.SqrMagnitude(this.EvaluatePositionAtTime(_time) - _position);
         #endregion
     }
 }

@@ -5,6 +5,8 @@ namespace MaroonSeal.Maths.Geometry {
     [System.Serializable]
     public struct Line : ILine<Vector3>
     {
+        readonly public bool IsLoop => false;
+        
         public Vector3 p1;
         public Vector3 p2;
 
@@ -54,9 +56,16 @@ namespace MaroonSeal.Maths.Geometry {
             p2 += _translation;
         }
 
-        #region IInterpolationShape
+        #region ICurve
         public readonly Vector3 EvaluatePositionAtTime(float _time) { return Vector3.Lerp(p1, p2, _time); }
         public readonly Vector3 EvaluateTangentAtTime(float _time) { return GetDirection(); }
+
+        public readonly float ClosestTimeToPosition(Vector3 _position)
+        {
+            Vector3 AB = p2 - p1;
+            Vector3 AV = _position - p1;
+            return Vector3.Dot(AV, AB) / Vector3.Dot(AB, AB);
+        }
         #endregion
     }
 }

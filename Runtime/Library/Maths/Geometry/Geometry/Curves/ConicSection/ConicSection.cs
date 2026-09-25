@@ -11,6 +11,8 @@ namespace MaroonSeal.Maths.Geometry {
 
         [field : SerializeField] public Transform3D Transform { get; set; }
         
+        readonly public bool IsLoop => eccentricity <= 1.0f;
+
         [Space]
         [Min(-1.0f)] public float eccentricity;
         readonly public float Eccentricity => eccentricity;
@@ -87,18 +89,22 @@ namespace MaroonSeal.Maths.Geometry {
         }
         #endregion
 
-        #region ICurve
-        readonly public Vector3 EvaluatePositionAtTime(float _t) {
-            return EvaluatePointAtTheta(_t * Mathf.PI * 2.0f);
-        }
+        #region IParametricCurve
+        readonly public Vector3 EvaluatePositionAtTime(float _t)
+            => EvaluatePointAtTheta(_t * Mathf.PI * 2.0f);
 
-        readonly public Vector3 EvaluateTangentAtTime(float _t) {
-            return EvaluateTangentAtTheta(_t * Mathf.PI * 2.0f);
-        }
+        readonly public Vector3 EvaluateTangentAtTime(float _t)
+            => EvaluateTangentAtTheta(_t * Mathf.PI * 2.0f);
+
+        readonly public float ClosestTimeToPosition(Vector3 _position)
+            => (this as IParametricCurve<Vector3>).ClosestTimeToPosition(_position);
+
+        readonly public float GetDistanceToPointAtTime(float _time, Vector3 _position)
+            => Vector3.SqrMagnitude(this.EvaluatePositionAtTime(_time) - _position);
         #endregion
 
         #region ISDFShape
-        public float GetSignedDistance(Vector3 _sample) {
+        readonly public float GetSignedDistance(Vector3 _sample) {
             _sample = Transform.InverseTransformPoint(_sample);
 
             throw new NotImplementedException();
